@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Text?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.maternacare.controller.DashboardController"
+      spacing="20">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <HBox alignment="CENTER_LEFT" spacing="20">
+        <Text styleClass="form-title" text="Dashboard"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Logout" onAction="#handleLogout" styleClass="logout-button"/>
+    </HBox>
+    
+    <HBox spacing="20" VBox.vgrow="ALWAYS">
+        <!-- Bar Chart -->
+        <BarChart fx:id="barChart" title="Patient Statistics" HBox.hgrow="ALWAYS">
+            <xAxis>
+                <CategoryAxis label="Categories"/>
+            </xAxis>
+            <yAxis>
+                <NumberAxis label="Values"/>
+            </yAxis>
+        </BarChart>
+
+        <!-- Pie Chart -->
+        <PieChart fx:id="pieChart" title="Gender Distribution" HBox.hgrow="ALWAYS"/>
+    </HBox>
+
+    <!-- Patient Records Table -->
+    <VBox spacing="10" VBox.vgrow="ALWAYS">
+        <HBox spacing="10" alignment="CENTER_RIGHT">
+            <TextField fx:id="searchField" promptText="Search in records..." HBox.hgrow="ALWAYS"/>
+            <Button text="Refresh" onAction="#handleRefresh" styleClass="search-button"/>
+        </HBox>
+        
+        <TableView fx:id="recordsTable" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="nameColumn" text="Name"/>
+                <TableColumn fx:id="ageColumn" text="Age"/>
+                <TableColumn fx:id="sexColumn" text="Sex"/>
+                <TableColumn fx:id="valueColumn" text="Value"/>
+            </columns>
+        </TableView>
+    </VBox>
+</VBox> 

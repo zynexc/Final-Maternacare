@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Text?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.maternacare.controller.MaternalRecordsController"
+      spacing="10">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Text styleClass="form-title" text="Maternal Health Records"/>
+    
+    <VBox spacing="10">
+        <HBox spacing="10" alignment="CENTER_RIGHT">
+            <TextField fx:id="searchField" promptText="Search in records..." HBox.hgrow="ALWAYS"/>
+            <Button text="Refresh" onAction="#handleRefresh" styleClass="search-button"/>
+        </HBox>
+        
+        <TableView fx:id="recordsTable" prefHeight="250" styleClass="records-table" onMouseClicked="#handleRecordClick">
+            <columns>
+                <TableColumn fx:id="patientIdColumn" text="Patient ID" prefWidth="100" resizable="false"/>
+                <TableColumn fx:id="lastNameColumn" text="Last Name" prefWidth="150" resizable="false"/>
+                <TableColumn fx:id="firstNameColumn" text="First Name" prefWidth="150" resizable="false"/>
+                <TableColumn fx:id="ageColumn" text="Age" prefWidth="80" resizable="false"/>
+            </columns>
+        </TableView>
+    </VBox>
+</VBox> 

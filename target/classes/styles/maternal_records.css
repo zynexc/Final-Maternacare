@@ -1,0 +1,126 @@
+.root {
+    -fx-background-color: #f8f9fa;
+}
+
+.form-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-fill: #2c3e50;
+}
+
+.search-button {
+    -fx-background-color: #007bff;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8 15;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+
+.search-button:hover {
+    -fx-background-color: #0056b3;
+}
+
+.records-table {
+    -fx-background-color: white;
+    -fx-table-cell-border-color: #eb0000;
+}
+
+.records-table .column-header-background, .records-table .column-header {
+    -fx-background-color: #eb0000;
+}
+
+.records-table .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.records-table .table-row-cell {
+    -fx-background-color: white;
+    -fx-text-fill: #222;
+}
+
+.records-table .table-row-cell:selected {
+    -fx-background-color: #b30000;
+    -fx-text-fill: white;
+}
+
+.records-table .table-cell {
+    -fx-padding: 8;
+    -fx-text-fill: #212529;
+}
+
+.records-table .table-cell:empty {
+    -fx-border-color: transparent;
+}
+
+/* Make the table scrollable */
+.records-table {
+    -fx-table-cell-border-color: transparent;
+    -fx-table-header-border-color: transparent;
+}
+
+/* Style the scrollbars */
+.records-table .scroll-bar:vertical {
+    -fx-background-color: #f8f9fa;
+    -fx-pref-width: 12;
+    -fx-padding: 0 2 0 2;
+}
+
+.records-table .scroll-bar:vertical .thumb {
+    -fx-background-color: #adb5bd;
+    -fx-background-radius: 6;
+}
+
+.records-table .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #6c757d;
+}
+
+.records-table .scroll-bar:horizontal {
+    -fx-background-color: #f8f9fa;
+    -fx-pref-height: 12;
+    -fx-padding: 2 0 2 0;
+}
+
+.records-table .scroll-bar:horizontal .thumb {
+    -fx-background-color: #adb5bd;
+    -fx-background-radius: 6;
+}
+
+.records-table .scroll-bar:horizontal .thumb:hover {
+    -fx-background-color: #6c757d;
+}
+
+.maternal-records-table .column-header-background {
+    -fx-background-color: #4CAF50;
+    -fx-border-color: #388E3C;
+    -fx-border-width: 0 1 2 0;
+}
+
+.maternal-records-table .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.maternal-records-table .table-cell {
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 0 1 1 0;
+    -fx-padding: 5 10;
+}
+
+.maternal-records-table .table-row-cell:odd {
+    -fx-background-color: #f2f2f2;
+}
+
+.maternal-records-table .table-row-cell:even {
+    -fx-background-color: #ffffff;
+}
+
+.maternal-records-table .table-row-cell:selected {
+    -fx-background-color: #B0D9B0;
+    -fx-text-fill: black;
+}
+
+.maternal-records-table .filler {
+    -fx-background-color: #4CAF50;
+} 
