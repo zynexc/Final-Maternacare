@@ -102,13 +102,47 @@
 }
 
 .combo-box:focused {
-    -fx-border-color: #007bff;
+    -fx-border-color: #dee2e6;
 }
 
 .combo-box .list-cell {
     -fx-background-color: transparent;
     -fx-padding: 8;
     -fx-font-size: 14px;
+    -fx-text-fill: #495057;
+}
+
+.combo-box .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.combo-box .arrow {
+    -fx-background-color: #6c757d;
+}
+
+.combo-box .list-view {
+    -fx-background-color: white;
+    -fx-border-color: #dee2e6;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+}
+
+.combo-box .list-cell:filled:selected {
+    -fx-background-color: #e9ecef;
+    -fx-text-fill: #495057;
+}
+
+.combo-box .list-cell:filled:hover {
+    -fx-background-color: #f8f9fa;
+}
+
+.combo-box .list-cell:empty {
+    -fx-background-color: transparent;
+}
+
+.combo-box .text-field {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
 }
 
 .required-field {
@@ -281,4 +315,63 @@
     .button-container {
         -fx-padding: 15 0 0 0;
     }
+}
+
+.child-details-section {
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #dee2e6;
+    -fx-border-width: 1;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 15;
+    -fx-spacing: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 2);
+}
+
+.child-number-text {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-fill: #2c3e50;
+    -fx-padding: 0 0 10 0;
+}
+
+.child-details-section .form-grid {
+    -fx-hgap: 15;
+    -fx-vgap: 15;
+    -fx-padding: 5;
+}
+
+.child-details-section .form-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #34495e;
+    -fx-font-weight: bold;
+}
+
+.child-details-section .form-field {
+    -fx-font-size: 14px;
+    -fx-pref-width: 200;
+}
+
+.child-details-section .combo-box {
+    -fx-font-size: 14px;
+    -fx-pref-width: 200;
+}
+
+.child-details-section .date-picker {
+    -fx-font-size: 14px;
+    -fx-pref-width: 200;
+}
+
+/* Timestamp styles */
+.timestamp-section {
+    -fx-padding: 10 0;
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #dee2e6;
+    -fx-border-width: 0 0 1 0;
+}
+
+.timestamp-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #6c757d;
+    -fx-font-style: italic;
 }

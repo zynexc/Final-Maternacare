@@ -6,38 +6,54 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.Parent;
+import javafx.scene.Node;
 import javafx.fxml.FXML;
 import com.maternacare.model.MaternalRecord;
+import com.maternacare.model.PregnancyHistory;
 import javafx.scene.control.Alert.AlertType;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.application.Platform;
 import javafx.stage.Modality;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import com.maternacare.model.ChildDetails;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.util.converter.IntegerStringConverter;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.ComboBoxTableCell;
+import javafx.util.converter.LocalDateStringConverter;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.ContentDisplay;
 
 public class MaternalFormController {
 
     @FXML
     private VBox rootPane; // Assuming a VBox or similar as the root in maternal_form.fxml
 
+    // Timestamp display
+    @FXML
+    private Label formTimestampLabel;
+    private final DateTimeFormatter timestampFormatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy 'at' hh:mm a");
+
     // Personal Information Fields
     @FXML
     private TextField patientIdField;
     @FXML
-    private TextField lastNameField;
-    @FXML
-    private TextField firstNameField;
-    @FXML
-    private TextField middleNameField;
+    private TextField fullNameField;
     @FXML
     private DatePicker dateOfBirthPicker;
     @FXML
     private TextField ageField;
     @FXML
-    private ComboBox<String> civilStatusCombo;
-    @FXML
-    private TextField religionField;
+    private TextField husbandNameField;
 
     // Contact Information Fields
     @FXML
@@ -51,13 +67,29 @@ public class MaternalFormController {
 
     // Vital Signs Fields
     @FXML
+    private TextField ageOfGestationField;
+    @FXML
+    private TextField weightField;
+    @FXML
+    private TextField heightField;
+    @FXML
     private TextField bloodPressureField;
+    @FXML
+    private TextField fetalHeartToneField;
+    @FXML
+    private TextField fundalHeightField;
+    @FXML
+    private ComboBox<String> presentationCombo;
+    @FXML
+    private DatePicker toComeBackPicker;
     @FXML
     private TextField temperatureField;
     @FXML
-    private TextField pulseRateField;
+    private TextField chiefComplaintField;
+
+    // Remarks field
     @FXML
-    private TextField respiratoryRateField;
+    private TextArea remarksField;
 
     // Pregnancy Information Fields
     @FXML
@@ -65,65 +97,249 @@ public class MaternalFormController {
     @FXML
     private DatePicker expectedDeliveryDatePicker;
     @FXML
-    private TextField gravidaField;
-    @FXML
     private TextField paraField;
     @FXML
     private TextField abortionField;
     @FXML
     private TextField livingChildrenField;
 
+    @FXML
+    private VBox pregnancyHistoryContainer;
+
+    @FXML
+    private VBox pregnancyHistoryTableInclude;
+
+    @FXML
+    private PregnancyHistoryTableController pregnancyHistoryTableController;
+
     private MaternalRecordsController recordsController;
     private MaternalRecord currentRecord;
+    private List<ChildDetailsController> childDetailsControllers = new ArrayList<>();
+
+    // Add new fields for pregnancy history as normal input fields
+    @FXML
+    private TextField phDeliveryTypeField;
+    @FXML
+    private TextField phGenderField;
+    @FXML
+    private TextField phPlaceField;
+    @FXML
+    private TextField phYearField;
+    @FXML
+    private TextField phAttendedByField;
+    @FXML
+    private TextField phStatusField;
+    @FXML
+    private DatePicker phBirthDatePicker;
+    @FXML
+    private TextField phTTInjectionField;
+
+    @FXML
+    private TableView<PregnancyHistory> pregnancyHistoryTableView;
+    @FXML
+    private TableColumn<PregnancyHistory, Number> phNumberColumn;
+    @FXML
+    private TableColumn<PregnancyHistory, String> phDeliveryTypeColumn;
+    @FXML
+    private TableColumn<PregnancyHistory, String> phGenderColumn;
+    @FXML
+    private TableColumn<PregnancyHistory, String> phPlaceColumn;
+    @FXML
+    private TableColumn<PregnancyHistory, Integer> phYearColumn;
+    @FXML
+    private TableColumn<PregnancyHistory, String> phAttendedByColumn;
+    @FXML
+    private TableColumn<PregnancyHistory, String> phStatusColumn;
+    @FXML
+    private TableColumn<PregnancyHistory, LocalDate> phBirthDateColumn;
+    @FXML
+    private TableColumn<PregnancyHistory, String> phTTInjectionColumn;
+
+    private ObservableList<PregnancyHistory> pregnancyHistoryList = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
-        // Initialize civil status combo box
-        ObservableList<String> civilStatusOptions = FXCollections.observableArrayList(
-                "Single", "Married", "Widowed", "Separated", "Divorced");
-        civilStatusCombo.setItems(civilStatusOptions);
+        System.out.println("MaternalFormController.initialize() called");
+        try {
+            // Initialize pregnancy history container if null
+            if (pregnancyHistoryContainer == null) {
+                pregnancyHistoryContainer = new VBox(10);
+                pregnancyHistoryContainer.getStyleClass().add("form-section");
+            }
 
-        // Initialize purok combo box
-        ObservableList<String> purokOptions = FXCollections.observableArrayList(
-                "Purok 1", "Purok 2", "Purok 3", "Purok 4", "Purok 5", "Purok 6");
-        purokCombo.setItems(purokOptions);
+            System.out.println("Updating timestamp...");
+            updateTimestamp();
+            System.out.println("Timestamp updated.");
 
-        // Add tooltips to fields
-        addTooltips();
+            System.out.println("Initializing combo boxes...");
+            // Initialize combo boxes
+            purokCombo.setItems(FXCollections.observableArrayList("Purok 1", "Purok 2", "Purok 3", "Purok 4", "Purok 5",
+                    "Purok 6"));
+            presentationCombo
+                    .setItems(FXCollections.observableArrayList("Cephalic", "Breech", "Transverse", "Oblique"));
+            System.out.println("Combo boxes initialized.");
 
-        // Add required field indicators
-        markRequiredFields();
+            System.out.println("Adding tooltips...");
+            // Add tooltips
+            addTooltips();
+            System.out.println("Tooltips added.");
 
-        // Add listener to date of birth to calculate age
-        dateOfBirthPicker.valueProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal != null) {
-                int age = Period.between(newVal, LocalDate.now()).getYears();
-                ageField.setText(String.valueOf(age));
+            System.out.println("Marking required fields...");
+            // Mark required fields
+            markRequiredFields();
+            System.out.println("Required fields marked.");
+
+            System.out.println("Setting up date pickers...");
+            // Set up date pickers
+            setupDatePickers();
+            System.out.println("Date pickers set up.");
+
+            System.out.println("Setting up pregnancy history table...");
+            // Set up pregnancy history table - will be initialized after scene is loaded
+            Platform.runLater(this::initializePregnancyHistoryTableView);
+            System.out.println("Pregnancy history table setup scheduled.");
+
+            System.out.println("MaternalFormController initialization completed successfully.");
+        } catch (Exception e) {
+            System.err.println("Error during MaternalFormController initialization: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void initializePregnancyHistoryTableView() {
+        // Set up columns
+        phNumberColumn.setCellValueFactory(cellData -> cellData.getValue().pregnancyNumberProperty());
+        phDeliveryTypeColumn.setCellValueFactory(cellData -> cellData.getValue().deliveryTypeProperty());
+        phGenderColumn.setCellValueFactory(cellData -> cellData.getValue().genderProperty());
+        phPlaceColumn.setCellValueFactory(cellData -> cellData.getValue().placeOfDeliveryProperty());
+        phYearColumn.setCellValueFactory(cellData -> cellData.getValue().yearDeliveredProperty().asObject());
+        phAttendedByColumn.setCellValueFactory(cellData -> cellData.getValue().attendedByProperty());
+        phStatusColumn.setCellValueFactory(cellData -> cellData.getValue().statusProperty());
+        phBirthDateColumn.setCellValueFactory(cellData -> cellData.getValue().birthDateProperty());
+        phTTInjectionColumn.setCellValueFactory(cellData -> cellData.getValue().ttInjectionProperty());
+        pregnancyHistoryTableView.setItems(pregnancyHistoryList);
+
+        // Make columns not sortable and not movable
+        for (TableColumn<?, ?> col : pregnancyHistoryTableView.getColumns()) {
+            col.setSortable(false);
+            col.setReorderable(false);
+        }
+
+        // Make columns auto-resize to fill available space
+        pregnancyHistoryTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        // Enable editing
+        pregnancyHistoryTableView.setEditable(true);
+        phDeliveryTypeColumn.setCellFactory(
+                ComboBoxTableCell.forTableColumn(FXCollections.observableArrayList("Normal", "Caesarian")));
+        phGenderColumn
+                .setCellFactory(ComboBoxTableCell.forTableColumn(FXCollections.observableArrayList("Male", "Female")));
+        phStatusColumn.setCellFactory(
+                ComboBoxTableCell.forTableColumn(FXCollections.observableArrayList("Alive", "Not Alive")));
+        phPlaceColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        phYearColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+        phAttendedByColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        phTTInjectionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        phBirthDateColumn.setCellFactory(column -> new TableCell<PregnancyHistory, LocalDate>() {
+            private final DatePicker datePicker = new DatePicker();
+            {
+                datePicker.setOnAction(event -> {
+                    if (getTableRow() != null && getTableRow().getItem() != null) {
+                        commitEdit(datePicker.getValue());
+                    }
+                });
+                datePicker.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
+                    if (!isNowFocused) {
+                        commitEdit(datePicker.getValue());
+                    }
+                });
+            }
+
+            @Override
+            public void startEdit() {
+                super.startEdit();
+                setGraphic(datePicker);
+                setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+                datePicker.setValue(getItem());
+                datePicker.requestFocus();
+            }
+
+            @Override
+            public void cancelEdit() {
+                super.cancelEdit();
+                setText(getItem() != null ? getItem().toString() : "");
+                setContentDisplay(ContentDisplay.TEXT_ONLY);
+                setGraphic(null);
+            }
+
+            @Override
+            public void updateItem(LocalDate item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setText(null);
+                    setGraphic(null);
+                } else if (isEditing()) {
+                    setGraphic(datePicker);
+                    setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+                    datePicker.setValue(item);
+                } else {
+                    setText(item != null ? item.toString() : "");
+                    setContentDisplay(ContentDisplay.TEXT_ONLY);
+                    setGraphic(null);
+                }
             }
         });
 
-        // Add listener to last menstrual period to calculate expected delivery date
-        lastMenstrualPeriodPicker.valueProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal != null) {
-                // Add 280 days (40 weeks) to LMP to get EDD
-                LocalDate edd = newVal.plusDays(280);
-                expectedDeliveryDatePicker.setValue(edd);
+        // Commit handlers with autosave
+        phDeliveryTypeColumn.setOnEditCommit(event -> {
+            event.getRowValue().setDeliveryType(event.getNewValue());
+            savePregnancyHistoryOnly();
+        });
+        phGenderColumn.setOnEditCommit(event -> {
+            event.getRowValue().setGender(event.getNewValue());
+            savePregnancyHistoryOnly();
+        });
+        phPlaceColumn.setOnEditCommit(event -> {
+            event.getRowValue().setPlaceOfDelivery(event.getNewValue());
+            savePregnancyHistoryOnly();
+        });
+        phYearColumn.setOnEditCommit(event -> {
+            try {
+                event.getRowValue().setYearDelivered(event.getNewValue().intValue());
+                savePregnancyHistoryOnly();
+            } catch (Exception e) {
+                showAlert(Alert.AlertType.ERROR, "Invalid Input", "Please enter a valid year.");
             }
         });
+        phAttendedByColumn.setOnEditCommit(event -> {
+            event.getRowValue().setAttendedBy(event.getNewValue());
+            savePregnancyHistoryOnly();
+        });
+        phStatusColumn.setOnEditCommit(event -> {
+            event.getRowValue().setStatus(event.getNewValue());
+            savePregnancyHistoryOnly();
+        });
+        phTTInjectionColumn.setOnEditCommit(event -> {
+            event.getRowValue().setTtInjection(event.getNewValue());
+            savePregnancyHistoryOnly();
+        });
+        phBirthDateColumn.setOnEditCommit(event -> {
+            event.getRowValue().setBirthDate(event.getNewValue());
+            savePregnancyHistoryOnly();
+        });
 
-        // Set up input validation
-        setupValidation();
+        // Commit edit on focus lost for all editable columns
+        for (TableColumn<PregnancyHistory, ?> col : pregnancyHistoryTableView.getColumns()) {
+            col.setOnEditCancel(event -> pregnancyHistoryTableView.edit(-1, null));
+        }
     }
 
     private void addTooltips() {
         // Personal Information
         patientIdField.setTooltip(new Tooltip("Enter the patient's unique identifier"));
-        lastNameField.setTooltip(new Tooltip("Enter the patient's last name"));
-        firstNameField.setTooltip(new Tooltip("Enter the patient's first name"));
-        middleNameField.setTooltip(new Tooltip("Enter the patient's middle name (optional)"));
+        fullNameField.setTooltip(new Tooltip("Enter the patient's full name"));
         dateOfBirthPicker.setTooltip(new Tooltip("Select the patient's date of birth"));
-        civilStatusCombo.setTooltip(new Tooltip("Select the patient's civil status"));
-        religionField.setTooltip(new Tooltip("Enter the patient's religion (optional)"));
+        husbandNameField.setTooltip(new Tooltip("Enter husband's full name"));
 
         // Contact Information
         addressField.setTooltip(new Tooltip("Enter the patient's complete address"));
@@ -132,31 +348,38 @@ public class MaternalFormController {
         purokCombo.setTooltip(new Tooltip("Select the patient's purok"));
 
         // Vital Signs
-        bloodPressureField.setTooltip(new Tooltip("Enter blood pressure in format: 120/80 or 120-80"));
-        temperatureField.setTooltip(new Tooltip("Enter temperature in Celsius (e.g., 37.5 or 37)"));
-        pulseRateField.setTooltip(new Tooltip("Enter pulse rate in beats per minute"));
-        respiratoryRateField.setTooltip(new Tooltip("Enter respiratory rate in breaths per minute"));
+        ageOfGestationField.setTooltip(new Tooltip("Enter age of gestation in weeks (e.g., 28wks)"));
+        weightField.setTooltip(new Tooltip("Enter weight in pounds"));
+        heightField.setTooltip(new Tooltip("Enter height in centimeters"));
+        bloodPressureField.setTooltip(new Tooltip("Enter blood pressure in format: 120/80"));
+        fetalHeartToneField.setTooltip(new Tooltip("Enter fetal heart tone in beats per minute"));
+        fundalHeightField.setTooltip(new Tooltip("Enter fundal height in centimeters"));
+        presentationCombo.setTooltip(new Tooltip("Select the position of the baby"));
+        toComeBackPicker.setTooltip(new Tooltip("Select the next appointment date"));
+        temperatureField.setTooltip(new Tooltip("Enter body temperature in Celsius"));
+        chiefComplaintField.setTooltip(new Tooltip("Enter chief complaint"));
 
         // Pregnancy Information
         lastMenstrualPeriodPicker.setTooltip(new Tooltip("Select the first day of last menstrual period"));
         expectedDeliveryDatePicker.setTooltip(new Tooltip("Expected delivery date (auto-calculated from LMP)"));
-        gravidaField.setTooltip(new Tooltip("Number of pregnancies (including current)"));
         paraField.setTooltip(new Tooltip("Number of live births"));
         abortionField.setTooltip(new Tooltip("Number of abortions/miscarriages"));
         livingChildrenField.setTooltip(new Tooltip("Number of living children"));
+
+        // Add tooltips for new fields
+        remarksField.setTooltip(new Tooltip("Enter any additional remarks or notes"));
     }
 
     private void markRequiredFields() {
         // Only set prompt text, do not add 'required-field' style class
         addRequiredIndicator(patientIdField, "Patient ID *");
-        addRequiredIndicator(lastNameField, "Last Name *");
-        addRequiredIndicator(firstNameField, "First Name *");
+        addRequiredIndicator(fullNameField, "Full Name *");
         addRequiredIndicator(dateOfBirthPicker, "Date of Birth *");
         addRequiredIndicator(addressField, "Address *");
         addRequiredIndicator(purokCombo, "Purok *");
         addRequiredIndicator(contactNumberField, "Contact Number *");
         addRequiredIndicator(bloodPressureField, "Blood Pressure *");
-        addRequiredIndicator(temperatureField, "Temperature *");
+        addRequiredIndicator(temperatureField, "Body Temperature *");
         addRequiredIndicator(lastMenstrualPeriodPicker, "Last Menstrual Period *");
     }
 
@@ -173,32 +396,26 @@ public class MaternalFormController {
 
     private void setupValidation() {
         // Add validation for numeric fields
-        addNumericValidation(pulseRateField);
-        addNumericValidation(respiratoryRateField);
-        addNumericValidation(gravidaField);
+        addNumericValidation(chiefComplaintField);
         addNumericValidation(paraField);
         addNumericValidation(abortionField);
         addNumericValidation(livingChildrenField);
 
         // Add validation for blood pressure format (e.g., "120/80" or "120-80")
         bloodPressureField.textProperty().addListener((obs, oldVal, newVal) -> {
-            if (!newVal.isEmpty() && !newVal.matches("\\d{2,3}[/-]\\d{2,3}")) {
+            if (!newVal.isEmpty() && !newVal.matches("\\d+/\\d+")) {
                 bloodPressureField.setStyle("-fx-border-color: #dc3545;");
-                bloodPressureField.setTooltip(new Tooltip("Enter blood pressure in format: 120/80 or 120-80"));
             } else {
                 bloodPressureField.setStyle("");
-                bloodPressureField.setTooltip(new Tooltip("Enter blood pressure in format: 120/80 or 120-80"));
             }
         });
 
-        // Add validation for temperature format (e.g., "37.5" or "37")
+        // Add validation for body temperature format (e.g., "37.5" or "37")
         temperatureField.textProperty().addListener((obs, oldVal, newVal) -> {
-            if (!newVal.isEmpty() && !newVal.matches("\\d{2}(\\.\\d{1})?")) {
+            if (!newVal.isEmpty() && !newVal.matches("\\d+(\\.\\d+)?")) {
                 temperatureField.setStyle("-fx-border-color: #dc3545;");
-                temperatureField.setTooltip(new Tooltip("Enter temperature in Celsius (e.g., 37.5 or 37)"));
             } else {
                 temperatureField.setStyle("");
-                temperatureField.setTooltip(new Tooltip("Enter temperature in Celsius (e.g., 37.5 or 37)"));
             }
         });
 
@@ -223,6 +440,39 @@ public class MaternalFormController {
                 emailField.setTooltip(new Tooltip("Enter a valid email address (e.g., name@example.com)"));
             }
         });
+
+        // Add validation for vital signs
+        ageOfGestationField.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal.matches("\\d+wks?")) {
+                ageOfGestationField.setStyle("-fx-border-color: #dc3545;");
+            } else {
+                ageOfGestationField.setStyle("");
+            }
+        });
+
+        weightField.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal.matches("\\d+(\\.\\d+)?")) {
+                weightField.setStyle("-fx-border-color: #dc3545;");
+            } else {
+                weightField.setStyle("");
+            }
+        });
+
+        fetalHeartToneField.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal.matches("\\d+")) {
+                fetalHeartToneField.setStyle("-fx-border-color: #dc3545;");
+            } else {
+                fetalHeartToneField.setStyle("");
+            }
+        });
+
+        fundalHeightField.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal.matches("\\d+(\\.\\d+)?")) {
+                fundalHeightField.setStyle("-fx-border-color: #dc3545;");
+            } else {
+                fundalHeightField.setStyle("");
+            }
+        });
     }
 
     private void addNumericValidation(TextField field) {
@@ -237,120 +487,147 @@ public class MaternalFormController {
         this.recordsController = controller;
     }
 
-    public void loadRecord(MaternalRecord record) {
-        if (record == null) {
-            clearForm();
-            return;
-        }
-
-        // Load personal information
+    public void editRecord(MaternalRecord record) {
+        this.currentRecord = record; // Store the current record being edited
+        // Populate fields with record data
         patientIdField.setText(record.getPatientId());
-        lastNameField.setText(record.getLastName());
-        firstNameField.setText(record.getFirstName());
-        middleNameField.setText(record.getMiddleName());
+        fullNameField.setText(record.getFullName());
         dateOfBirthPicker.setValue(record.getDateOfBirth());
-        civilStatusCombo.setValue(record.getCivilStatus());
-        religionField.setText(record.getReligion());
-
-        // Load contact information
+        husbandNameField.setText(record.getHusbandName());
         addressField.setText(record.getAddress());
-        purokCombo.setValue(record.getPurok());
         contactNumberField.setText(record.getContactNumber());
         emailField.setText(record.getEmail());
-
-        // Load vital signs
+        purokCombo.setValue(record.getPurok());
+        ageOfGestationField.setText(String.valueOf(record.getAgeOfGestation()));
+        weightField.setText(String.valueOf(record.getWeight()));
+        heightField.setText(String.valueOf(record.getHeight()));
         bloodPressureField.setText(record.getBloodPressure());
-        temperatureField.setText(record.getTemperature());
-        pulseRateField.setText(record.getPulseRate());
-        respiratoryRateField.setText(record.getRespiratoryRate());
+        fetalHeartToneField.setText(String.valueOf(record.getFetalHeartTone()));
+        fundalHeightField.setText(String.valueOf(record.getFundalHeight()));
+        presentationCombo.setValue(record.getPresentation());
+        toComeBackPicker.setValue(record.getNextAppointment());
+        temperatureField.setText(String.valueOf(record.getTemperature()));
+        chiefComplaintField.setText(record.getChiefComplaint());
+        remarksField.setText(record.getRemarks());
 
-        // Load pregnancy information
         lastMenstrualPeriodPicker.setValue(record.getLastMenstrualPeriod());
         expectedDeliveryDatePicker.setValue(record.getExpectedDeliveryDate());
-        gravidaField.setText(record.getGravida());
-        paraField.setText(record.getPara());
-        abortionField.setText(record.getAbortion());
-        livingChildrenField.setText(record.getLivingChildren());
+        paraField.setText(String.valueOf(record.getPara()));
+        abortionField.setText(String.valueOf(record.getAbortion()));
+        livingChildrenField.setText(String.valueOf(record.getLivingChildren()));
+
+        // Update child details forms based on pregnancy history size
+        if (record.getPregnancyHistory() != null) {
+            updateChildDetailsForms(record.getPregnancyHistory().size());
+        } else {
+            updateChildDetailsForms(0);
+        }
+
+        if (record.getChildDetails() != null) {
+            for (int i = 0; i < record.getChildDetails().size() && i < childDetailsControllers.size(); i++) {
+                childDetailsControllers.get(i).setChildDetails(record.getChildDetails().get(i));
+            }
+        }
+
+        // Load pregnancy history
+        if (pregnancyHistoryTableController != null && record.getPregnancyHistory() != null) {
+            System.out
+                    .println("Debug - Loading pregnancy history: " + record.getPregnancyHistory().size() + " entries");
+            for (PregnancyHistory history : record.getPregnancyHistory()) {
+                System.out.println("Debug - Loading pregnancy history entry: " +
+                        "Number=" + history.getPregnancyNumber() +
+                        ", Delivery=" + history.getDeliveryType() +
+                        ", Gender=" + history.getGender() +
+                        ", Place=" + history.getPlaceOfDelivery() +
+                        ", Year=" + history.getYearDelivered() +
+                        ", AttendedBy=" + history.getAttendedBy() +
+                        ", Status=" + history.getStatus() +
+                        ", BirthDate="
+                        + (history.getBirthDate() != null ? history.getBirthDate().toString() : "null") +
+                        ", TT=" + history.getTtInjection());
+            }
+            pregnancyHistoryTableView.setItems(FXCollections.observableArrayList(record.getPregnancyHistory()));
+        } else {
+            System.out.println("Debug - Pregnancy history table controller is null or no pregnancy history data");
+            if (pregnancyHistoryTableController == null) {
+                System.out.println("Debug - Pregnancy history table controller is null");
+            }
+            if (record.getPregnancyHistory() == null) {
+                System.out.println("Debug - Record pregnancy history is null");
+            }
+        }
+    }
+
+    public void loadRecord(MaternalRecord record) {
+        editRecord(record);
     }
 
     @FXML
     private void handleSave() {
-        // Validate required fields
         if (!validateRequiredFields()) {
-            showAlert(Alert.AlertType.ERROR, "Validation Error", "Please fill in all required fields.");
             return;
         }
 
-        // Create new record
-        MaternalRecord record = new MaternalRecord();
+        try {
+            MaternalRecord record = new MaternalRecord();
+            record.setFormTimestamp(LocalDateTime.now());
 
-        // Set personal information
-        record.setPatientId(patientIdField.getText());
-        record.setLastName(lastNameField.getText());
-        record.setFirstName(firstNameField.getText());
-        record.setMiddleName(middleNameField.getText());
-        record.setDateOfBirth(dateOfBirthPicker.getValue());
-        record.setCivilStatus(civilStatusCombo.getValue());
-        record.setReligion(religionField.getText());
+            // Set personal information
+            record.setPatientId(patientIdField.getText());
+            record.setFullName(fullNameField.getText());
+            record.setDateOfBirth(dateOfBirthPicker.getValue());
+            record.setHusbandName(husbandNameField.getText());
 
-        // Set contact information
-        record.setAddress(addressField.getText());
-        record.setPurok(purokCombo.getValue());
-        record.setContactNumber(contactNumberField.getText());
-        record.setEmail(emailField.getText());
+            // Set contact information
+            record.setAddress(addressField.getText());
+            record.setPurok(purokCombo.getValue());
+            record.setContactNumber(contactNumberField.getText());
+            record.setEmail(emailField.getText());
 
-        // Set vital signs
-        record.setBloodPressure(bloodPressureField.getText());
-        record.setTemperature(temperatureField.getText());
-        record.setPulseRate(pulseRateField.getText());
-        record.setRespiratoryRate(respiratoryRateField.getText());
+            // Set vital signs
+            record.setAgeOfGestation(parseDouble(ageOfGestationField.getText()));
+            record.setWeight(parseDouble(weightField.getText()));
+            record.setHeight(parseDouble(heightField.getText()));
+            record.setBloodPressure(bloodPressureField.getText());
+            record.setTemperature(temperatureField.getText());
+            record.setChiefComplaint(chiefComplaintField.getText());
+            record.setFetalHeartTone(parseInt(fetalHeartToneField.getText()));
+            record.setFundalHeight(parseDouble(fundalHeightField.getText()));
+            record.setPresentation(presentationCombo.getValue());
+            record.setNextAppointment(toComeBackPicker.getValue());
 
-        // Set pregnancy information
-        record.setLastMenstrualPeriod(lastMenstrualPeriodPicker.getValue());
-        record.setExpectedDeliveryDate(expectedDeliveryDatePicker.getValue());
-        record.setGravida(gravidaField.getText());
-        record.setPara(paraField.getText());
-        record.setAbortion(abortionField.getText());
-        record.setLivingChildren(livingChildrenField.getText());
+            // Set pregnancy information
+            record.setLastMenstrualPeriod(lastMenstrualPeriodPicker.getValue());
+            record.setExpectedDeliveryDate(expectedDeliveryDatePicker.getValue());
+            record.setPara(paraField.getText());
+            record.setAbortion(abortionField.getText());
+            record.setLivingChildren(livingChildrenField.getText());
 
-        // Save record
-        if (recordsController != null) {
-            try {
-                recordsController.saveRecord(record);
+            // Set remarks
+            record.setRemarks(remarksField.getText());
 
-                // Show success alert
-                Platform.runLater(() -> {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Success");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Record saved successfully.");
-                    alert.initModality(Modality.APPLICATION_MODAL);
-                    alert.showAndWait();
-
-                    // Clear form after alert is closed
-                    clearForm();
-                });
-            } catch (Exception e) {
-                // Show error alert if save fails
-                Platform.runLater(() -> {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Error");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Failed to save record: " + e.getMessage());
-                    alert.initModality(Modality.APPLICATION_MODAL);
-                    alert.showAndWait();
-                });
+            // Set child details
+            List<ChildDetails> childDetails = new ArrayList<>();
+            for (ChildDetailsController controller : childDetailsControllers) {
+                childDetails.add(controller.getData());
             }
-        } else {
-            // Show error if records controller is not available
-            Platform.runLater(() -> {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText(null);
-                alert.setContentText("Records controller is not available.");
-                alert.initModality(Modality.APPLICATION_MODAL);
-                alert.showAndWait();
-            });
+            record.setChildDetails(childDetails);
+
+            // Save all pregnancy history entries
+            record.setPregnancyHistory(new ArrayList<>(pregnancyHistoryList));
+
+            // Save record
+            if (recordsController != null) {
+                recordsController.saveRecord(record);
+            }
+
+            showAlert(Alert.AlertType.INFORMATION, "Success", "Maternal record saved successfully!");
+            clearForm();
+            pregnancyHistoryList.clear();
+            updatePregnancyHistoryTableView();
+        } catch (Exception e) {
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to save maternal record: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -360,14 +637,14 @@ public class MaternalFormController {
     }
 
     private void clearForm() {
+        // Update timestamp when form is cleared
+        updateTimestamp();
+
         // Clear personal information
         patientIdField.clear();
-        lastNameField.clear();
-        firstNameField.clear();
-        middleNameField.clear();
+        fullNameField.clear();
         dateOfBirthPicker.setValue(null);
-        civilStatusCombo.setValue(null);
-        religionField.clear();
+        husbandNameField.clear();
 
         // Clear contact information
         addressField.clear();
@@ -376,18 +653,30 @@ public class MaternalFormController {
         emailField.clear();
 
         // Clear vital signs
+        ageOfGestationField.clear();
+        weightField.clear();
+        heightField.clear();
         bloodPressureField.clear();
+        fetalHeartToneField.clear();
+        fundalHeightField.clear();
+        presentationCombo.setValue(null);
+        toComeBackPicker.setValue(null);
         temperatureField.clear();
-        pulseRateField.clear();
-        respiratoryRateField.clear();
+        chiefComplaintField.clear();
 
         // Clear pregnancy information
         lastMenstrualPeriodPicker.setValue(null);
         expectedDeliveryDatePicker.setValue(null);
-        gravidaField.clear();
         paraField.clear();
         abortionField.clear();
         livingChildrenField.clear();
+
+        // Clear pregnancy history
+        pregnancyHistoryList.clear();
+        updatePregnancyHistoryTableView();
+
+        // Clear remarks
+        remarksField.clear();
     }
 
     private boolean validateRequiredFields() {
@@ -399,13 +688,8 @@ public class MaternalFormController {
             isValid = false;
         }
 
-        if (lastNameField.getText().trim().isEmpty()) {
-            showFieldError(lastNameField, "Last name is required");
-            isValid = false;
-        }
-
-        if (firstNameField.getText().trim().isEmpty()) {
-            showFieldError(firstNameField, "First name is required");
+        if (fullNameField.getText().trim().isEmpty()) {
+            showFieldError(fullNameField, "Full name is required");
             isValid = false;
         }
 
@@ -431,19 +715,61 @@ public class MaternalFormController {
         }
 
         // Vital Signs
-        if (bloodPressureField.getText().trim().isEmpty()) {
-            showFieldError(bloodPressureField, "Blood pressure is required");
+        if (ageOfGestationField.getText().isEmpty()) {
+            showFieldError(ageOfGestationField, "Age of gestation is required");
             isValid = false;
-        } else if (!bloodPressureField.getText().matches("\\d{2,3}[/-]\\d{2,3}")) {
-            showFieldError(bloodPressureField, "Invalid blood pressure format (e.g., 120/80 or 120-80)");
+        } else if (!ageOfGestationField.getText().matches("\\d+wks?")) {
+            showFieldError(ageOfGestationField, "Invalid AOG format (e.g., 28wks)");
             isValid = false;
         }
 
-        if (temperatureField.getText().trim().isEmpty()) {
-            showFieldError(temperatureField, "Temperature is required");
+        if (weightField.getText().isEmpty()) {
+            showFieldError(weightField, "Weight is required");
             isValid = false;
-        } else if (!temperatureField.getText().matches("\\d{2}(\\.\\d{1})?")) {
-            showFieldError(temperatureField, "Invalid temperature format (e.g., 37.5 or 37)");
+        } else if (!weightField.getText().matches("\\d+(\\.\\d+)?")) {
+            showFieldError(weightField, "Invalid weight format");
+            isValid = false;
+        }
+
+        if (heightField.getText().isEmpty()) {
+            showFieldError(heightField, "Height is required");
+            isValid = false;
+        } else if (!heightField.getText().matches("\\d+(\\.\\d+)?")) {
+            showFieldError(heightField, "Invalid height format");
+            isValid = false;
+        }
+
+        if (bloodPressureField.getText().isEmpty()) {
+            showFieldError(bloodPressureField, "Blood pressure is required");
+            isValid = false;
+        } else if (!bloodPressureField.getText().matches("\\d+/\\d+")) {
+            showFieldError(bloodPressureField, "Invalid blood pressure format (e.g., 120/80)");
+            isValid = false;
+        }
+
+        if (fetalHeartToneField.getText().isEmpty()) {
+            showFieldError(fetalHeartToneField, "Fetal heart tone is required");
+            isValid = false;
+        } else if (!fetalHeartToneField.getText().matches("\\d+")) {
+            showFieldError(fetalHeartToneField, "Invalid FHT format");
+            isValid = false;
+        }
+
+        if (fundalHeightField.getText().isEmpty()) {
+            showFieldError(fundalHeightField, "Fundal height is required");
+            isValid = false;
+        } else if (!fundalHeightField.getText().matches("\\d+(\\.\\d+)?")) {
+            showFieldError(fundalHeightField, "Invalid fundal height format");
+            isValid = false;
+        }
+
+        if (presentationCombo.getValue() == null) {
+            showFieldError(presentationCombo, "Presentation is required");
+            isValid = false;
+        }
+
+        if (toComeBackPicker.getValue() == null) {
+            showFieldError(toComeBackPicker, "To come back date is required");
             isValid = false;
         }
 
@@ -470,4 +796,141 @@ public class MaternalFormController {
         alert.setContentText(content);
         alert.showAndWait();
     }
+
+    private void updateChildDetailsForms(int gravida) {
+        try {
+            // Clear existing forms
+            pregnancyHistoryContainer.getChildren().clear();
+            childDetailsControllers.clear();
+
+            // Add new forms based on gravida number
+            for (int i = 1; i <= gravida; i++) {
+                VBox childForm = ChildDetailsController.createChildDetailsForm(i);
+                ChildDetailsController controller = (ChildDetailsController) childForm.getProperties()
+                        .get("controller");
+                if (controller != null) {
+                    childDetailsControllers.add(controller);
+                }
+                pregnancyHistoryContainer.getChildren().add(childForm);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to create child details forms: " + e.getMessage());
+        }
+    }
+
+    private void updateTimestamp() {
+        LocalDateTime now = LocalDateTime.now();
+        formTimestampLabel.setText("Form filled on: " + now.format(timestampFormatter));
+    }
+
+    // Add getter methods for debugging
+    public TextField getPatientIdField() {
+        return patientIdField;
+    }
+
+    public TextField getFullNameField() {
+        return fullNameField;
+    }
+
+    private void setupDatePickers() {
+        // Add listener to date of birth to calculate age
+        dateOfBirthPicker.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                int age = Period.between(newVal, LocalDate.now()).getYears();
+                ageField.setText(String.valueOf(age));
+            }
+        });
+
+        // Add listener to last menstrual period to calculate expected delivery date
+        lastMenstrualPeriodPicker.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                // Add 280 days (40 weeks) to LMP to get EDD
+                LocalDate edd = newVal.plusDays(280);
+                expectedDeliveryDatePicker.setValue(edd);
+            }
+        });
+
+        // Add tooltips for date pickers
+        dateOfBirthPicker.setTooltip(new Tooltip("Select patient's date of birth"));
+        lastMenstrualPeriodPicker.setTooltip(new Tooltip("Select first day of last menstrual period"));
+        expectedDeliveryDatePicker.setTooltip(new Tooltip("Expected delivery date (calculated from LMP)"));
+        toComeBackPicker.setTooltip(new Tooltip("Select next appointment date"));
+    }
+
+    // Method to manually set the pregnancy history table controller
+    public void setPregnancyHistoryTableController(PregnancyHistoryTableController controller) {
+        System.out.println(
+                "Debug - Setting pregnancy history table controller: " + (controller != null ? "not null" : "null"));
+        this.pregnancyHistoryTableController = controller;
+        if (controller != null) {
+            controller.setReadOnly(false);
+            System.out.println("Debug - Pregnancy history table controller set manually and made editable.");
+        } else {
+            System.out.println("Debug - Pregnancy history table controller is null, cannot set read-only mode.");
+        }
+    }
+
+    // Helper method to safely parse double
+    private double parseDouble(String value) {
+        try {
+            if (value == null || value.trim().isEmpty())
+                return 0.0;
+            return Double.parseDouble(value.replaceAll("[^\\d.]", ""));
+        } catch (NumberFormatException e) {
+            return 0.0;
+        }
+    }
+
+    // Helper method to safely parse int
+    private int parseInt(String value) {
+        try {
+            if (value == null || value.trim().isEmpty())
+                return 0;
+            return Integer.parseInt(value.replaceAll("[^\\d]", ""));
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
+    @FXML
+    private void handleAddPregnancyHistory() {
+        // You may want to show a dialog to enter new pregnancy history details
+        // For now, add a blank row for demonstration
+        PregnancyHistory ph = new PregnancyHistory();
+        ph.setPregnancyNumber(pregnancyHistoryList.size() + 1);
+        pregnancyHistoryList.add(ph);
+    }
+
+    @FXML
+    private void handleDeletePregnancyHistory() {
+        PregnancyHistory selected = pregnancyHistoryTableView.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            pregnancyHistoryList.remove(selected);
+            // Re-number the remaining pregnancy histories
+            for (int i = 0; i < pregnancyHistoryList.size(); i++) {
+                pregnancyHistoryList.get(i).setPregnancyNumber(i + 1);
+            }
+        } else {
+            showAlert(Alert.AlertType.WARNING, "No Selection", "Please select a pregnancy history entry to delete.");
+        }
+    }
+
+    private void updatePregnancyHistoryTableView() {
+        pregnancyHistoryTableView.setItems(FXCollections.observableArrayList(pregnancyHistoryList));
+    }
+
+    private void autosaveMaternalRecord() {
+        handleSave();
+    }
+
+    private void savePregnancyHistoryOnly() {
+        if (currentRecord != null) {
+            currentRecord.setPregnancyHistory(new ArrayList<>(pregnancyHistoryList));
+            if (recordsController != null) {
+                recordsController.saveRecord(currentRecord);
+            }
+        }
+    }
+
 }

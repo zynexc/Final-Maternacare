@@ -1,5 +1,6 @@
 package com.maternacare.controller;
 
+import com.maternacare.MainApplication;
 import com.maternacare.model.MaternalRecord;
 import com.maternacare.service.MaternalRecordService;
 import javafx.collections.FXCollections;
@@ -36,11 +37,33 @@ public class MaternalRecordsController {
     private TableColumn<MaternalRecord, String> firstNameColumn;
     @FXML
     private TableColumn<MaternalRecord, String> ageColumn;
+    @FXML
+    private TableColumn<MaternalRecord, LocalDate> lmpColumn;
+    @FXML
+    private TableColumn<MaternalRecord, LocalDate> eddColumn;
+    @FXML
+    private TableColumn<MaternalRecord, String> contactColumn;
+    @FXML
+    private TableColumn<MaternalRecord, String> emailColumn;
+    @FXML
+    private TableColumn<MaternalRecord, Void> viewMoreColumn;
+    @FXML
+    private TableColumn<MaternalRecord, Void> followUpColumn;
 
     private ObservableList<MaternalRecord> records = FXCollections.observableArrayList();
     private FilteredList<MaternalRecord> filteredRecords;
     private MaternalRecordService recordService = new MaternalRecordService();
     private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+
+    private MaternalFormController formController;
+    private MainApplication mainApplication;
+
+    private MaternalRecordDetailsPopupController lastDetailsPopupController = null;
+    private MaternalRecord lastDetailsPopupRecord = null;
+
+    public void setMainApplication(MainApplication mainApplication) {
+        this.mainApplication = mainApplication;
+    }
 
     @FXML
     public void initialize() {
@@ -61,14 +84,38 @@ public class MaternalRecordsController {
 
     private void loadSavedRecords() {
         List<MaternalRecord> savedRecords = recordService.loadRecords();
+        System.out.println("Debug - Loaded " + savedRecords.size() + " records from JSON file");
+
+        // Debug: Check pregnancy history for each record
+        for (MaternalRecord record : savedRecords) {
+            System.out.println("Debug - Record " + record.getPatientId() + " (" + record.getFullName() +
+                    ") has " + (record.getPregnancyHistory() != null ? record.getPregnancyHistory().size() : 0)
+                    + " pregnancy history entries");
+            if (record.getPregnancyHistory() != null && !record.getPregnancyHistory().isEmpty()) {
+                for (var history : record.getPregnancyHistory()) {
+                    System.out.println("  - Pregnancy #" + history.getPregnancyNumber() +
+                            ", Year: " + history.getYearDelivered() +
+                            ", Delivery: " + history.getDeliveryType());
+                }
+            }
+        }
+
         records.setAll(savedRecords);
     }
 
     private void setupTableColumns() {
         try {
+            // Set the table to use fixed column widths
+            recordsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+            // Setup columns with fixed widths and disable sorting/reordering
             patientIdColumn.setCellValueFactory(new PropertyValueFactory<>("patientId"));
-            lastNameColumn.setCellValueFactory(new PropertyValueFactory<>("lastName"));
-            firstNameColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
+
+            lastNameColumn.setCellValueFactory(new PropertyValueFactory<>("fullName"));
+
+            // Hide the firstNameColumn since we now use full name
+            firstNameColumn.setVisible(false);
+
             ageColumn.setCellValueFactory(cellData -> {
                 MaternalRecord record = cellData.getValue();
                 if (record.getDateOfBirth() != null) {
@@ -77,38 +124,124 @@ public class MaternalRecordsController {
                 }
                 return new SimpleStringProperty("");
             });
+
+            // Last Menstrual Period column
+            lmpColumn.setCellValueFactory(new PropertyValueFactory<>("lastMenstrualPeriod"));
+            lmpColumn.setCellFactory(column -> new TableCell<>() {
+                @Override
+                protected void updateItem(LocalDate date, boolean empty) {
+                    super.updateItem(date, empty);
+                    if (empty || date == null) {
+                        setText(null);
+                    } else {
+                        setText(dateFormatter.format(date));
+                    }
+                }
+            });
+
+            // Expected Delivery Date column
+            eddColumn.setCellValueFactory(new PropertyValueFactory<>("expectedDeliveryDate"));
+            eddColumn.setCellFactory(column -> new TableCell<>() {
+                @Override
+                protected void updateItem(LocalDate date, boolean empty) {
+                    super.updateItem(date, empty);
+                    if (empty || date == null) {
+                        setText(null);
+                    } else {
+                        setText(dateFormatter.format(date));
+                    }
+                }
+            });
+
+            // Contact Number column
+            contactColumn.setCellValueFactory(new PropertyValueFactory<>("contactNumber"));
+
+            // Email Address column
+            emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
+
+            // View More button column
+            viewMoreColumn.setCellValueFactory(param -> null);
+            viewMoreColumn.setCellFactory(param -> new TableCell<>() {
+                private final Button viewMoreButton = new Button("View Details");
+
+                {
+                    viewMoreButton.getStyleClass().add("view-more-button");
+                    viewMoreButton.setOnAction(event -> {
+                        MaternalRecord record = getTableView().getItems().get(getIndex());
+                        if (record != null) {
+                            showRecordDetails(record);
+                        }
+                    });
+                }
+
+                @Override
+                protected void updateItem(Void item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setGraphic(null);
+                    } else {
+                        setGraphic(viewMoreButton);
+                    }
+                }
+            });
+
+            // Follow Up Checkup button column
+            followUpColumn.setCellValueFactory(param -> null);
+            followUpColumn.setCellFactory(param -> new TableCell<>() {
+                private final Button followUpButton = new Button("Follow Up Checkup");
+                {
+                    followUpButton.getStyleClass().add("follow-up-button");
+                    followUpButton.setOnAction(event -> {
+                        MaternalRecord record = getTableView().getItems().get(getIndex());
+                        if (record != null) {
+                            openFollowUpForm(record);
+                        }
+                    });
+                }
+
+                @Override
+                protected void updateItem(Void item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setGraphic(null);
+                    } else {
+                        setGraphic(followUpButton);
+                    }
+                }
+            });
+
+            // Remove the column visibility menu since we want a fixed table
+            recordsTable.setTableMenuButtonVisible(false);
         } catch (Exception e) {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Error", "Failed to setup table columns: " + e.getMessage());
         }
     }
 
-    @FXML
-    private void handleRecordClick(javafx.scene.input.MouseEvent event) {
-        if (event.getClickCount() == 2) { // Double click to show details
-            MaternalRecord selectedRecord = recordsTable.getSelectionModel().getSelectedItem();
-            if (selectedRecord != null) {
-                showRecordDetails(selectedRecord);
-            }
-        }
-    }
-
     private void showRecordDetails(MaternalRecord record) {
+        System.out.println("showRecordDetails called for record: " + record.getPatientId());
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/maternal_record_details.fxml"));
-            Parent root = loader.load();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/maternal_record_details_popup.fxml"));
+            Parent popupRoot = loader.load();
+            System.out.println("Popup FXML loaded successfully: " + (popupRoot != null));
 
-            MaternalRecordDetailsController controller = loader.getController();
+            MaternalRecordDetailsPopupController controller = loader.getController();
+            System.out.println("Popup Controller retrieved: " + (controller != null));
             controller.setRecord(record);
+            lastDetailsPopupController = controller;
+            lastDetailsPopupRecord = record;
 
-            Stage stage = new Stage();
-            stage.setTitle("Patient Details");
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setScene(new Scene(root));
-            stage.showAndWait();
+            Stage popupStage = new Stage();
+            popupStage.initModality(Modality.APPLICATION_MODAL);
+            popupStage.setTitle("Maternal Record Details");
+            Scene popupScene = new Scene(popupRoot);
+            popupStage.setScene(popupScene);
+            popupStage.showAndWait();
+            System.out.println("Popup displayed.");
+
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Error", "Could not load patient details.");
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to show record details: " + e.getMessage());
         }
     }
 
@@ -120,8 +253,7 @@ public class MaternalRecordsController {
                     return true;
                 }
                 String lowerCaseFilter = newValue.toLowerCase();
-                return record.getLastName().toLowerCase().contains(lowerCaseFilter) ||
-                        record.getFirstName().toLowerCase().contains(lowerCaseFilter) ||
+                return record.getFullName().toLowerCase().contains(lowerCaseFilter) ||
                         record.getPatientId().toLowerCase().contains(lowerCaseFilter);
             });
         });
@@ -147,10 +279,12 @@ public class MaternalRecordsController {
 
     // Method to add a new record
     public void addRecord(MaternalRecord record) {
-        // Generate a new ID based on the current size of records
-        record.setId(records.stream().mapToInt(MaternalRecord::getId).max().orElse(0) + 1);
         records.add(record);
-        recordService.saveRecords(records); // Save after adding
+        try {
+            recordService.saveRecords(records); // Save after adding
+        } catch (IOException e) {
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to save record: " + e.getMessage());
+        }
     }
 
     // Method to update an existing record
@@ -159,63 +293,83 @@ public class MaternalRecordsController {
         if (index != -1) {
             newRecord.setId(oldRecord.getId()); // Preserve the ID
             records.set(index, newRecord);
-            recordService.saveRecords(records); // Save after updating
+            try {
+                recordService.saveRecords(records); // Save after updating
+            } catch (IOException e) {
+                showAlert(Alert.AlertType.ERROR, "Error", "Failed to save record: " + e.getMessage());
+            }
         }
     }
 
     // Method to find a record by ID
-    public MaternalRecord findRecordById(int id) {
-        return records.stream()
-                .filter(record -> record.getId() == id)
-                .findFirst()
-                .orElse(null);
+    public MaternalRecord getRecordById(int id) {
+        return records.stream().filter(record -> record.getId() == id).findFirst().orElse(null);
     }
 
-    // Method to get the form controller
-    private MaternalFormController formController;
+    // Method to delete a record
+    public void deleteRecord(MaternalRecord record) {
+        records.remove(record);
+        try {
+            recordService.saveRecords(records); // Save after deleting
+        } catch (IOException e) {
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to save record: " + e.getMessage());
+        }
+    }
 
     public void setFormController(MaternalFormController controller) {
         this.formController = controller;
     }
 
-    // Method to load a record into the form
     public void loadRecordIntoForm(MaternalRecord record) {
         if (formController != null) {
-            formController.loadRecord(record);
+            formController.editRecord(record);
         }
     }
 
-    // Method to save a record (add or update)
     public void saveRecord(MaternalRecord record) {
-        boolean found = false;
-        for (int i = 0; i < records.size(); i++) {
-            if (records.get(i).getId() == record.getId() && record.getId() != 0) {
-                // Update existing record
-                records.set(i, record);
-                found = true;
-                break;
-            }
+        // Check if the record already exists based on ID
+        if (records.stream().anyMatch(r -> r.getId() == record.getId())) {
+            // If it exists, update it
+            updateRecord(getRecordById(record.getId()), record);
+        } else {
+            // Otherwise, add it as a new record
+            addRecord(record);
         }
-        if (!found) {
-            // Add new record with a new ID
-            int newId = records.stream().mapToInt(MaternalRecord::getId).max().orElse(0) + 1;
-            record.setId(newId);
-            records.add(record);
-        }
-        recordService.saveRecords(records); // Save after adding or updating
-
-        // Refresh the table
         refreshTable();
     }
 
     private void refreshTable() {
-        // Reload records from file
-        loadSavedRecords();
+        // Instead of clearing the list, update it with the latest data
+        List<MaternalRecord> savedRecords = recordService.loadRecords();
+        records.setAll(savedRecords);
+        filteredRecords.setPredicate(null); // Reset the filter
+    }
 
-        // Refresh the table view
-        recordsTable.refresh();
-
-        // Force the table to update its layout
-        recordsTable.requestLayout();
+    private void openFollowUpForm(MaternalRecord record) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/vital_signs_form.fxml"));
+            Parent root = loader.load();
+            VitalSignsFormController controller = loader.getController();
+            controller.setOnSaveCallback(entry -> {
+                System.out.println("[DEBUG] Adding follow-up entry: " + entry);
+                record.getFollowUpVitalSigns().add(entry);
+                System.out
+                        .println("[DEBUG] Total follow-up entries after add: " + record.getFollowUpVitalSigns().size());
+                saveRecord(record);
+                System.out.println("[DEBUG] Record saved. Refreshing details popup if open.");
+                if (lastDetailsPopupController != null && lastDetailsPopupRecord == record) {
+                    lastDetailsPopupController.refresh(record);
+                    System.out.println("[DEBUG] Details popup refreshed.");
+                }
+            });
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Follow Up Vital Signs");
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to open follow-up form: " + e.getMessage());
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.maternacare.service;
 
 import com.maternacare.model.MaternalRecord;
+import com.maternacare.model.PregnancyHistory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -146,7 +147,7 @@ public class MaternalRecordService {
         }
     }
 
-    public void saveRecords(List<MaternalRecord> newRecords) {
+    public void saveRecords(List<MaternalRecord> newRecords) throws IOException {
         try (Writer writer = new FileWriter(RECORDS_FILE)) {
             // Update IDs for new records
             for (MaternalRecord record : newRecords) {
@@ -158,8 +159,6 @@ public class MaternalRecordService {
             List<MaternalRecord.MaternalRecordDTO> dtos = newRecords.stream().map(MaternalRecord::toDTO)
                     .collect(Collectors.toList());
             gson.toJson(dtos, writer);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
@@ -188,7 +187,26 @@ public class MaternalRecordService {
                 }
                 return new ArrayList<>();
             }
+
+            System.out.println("Debug - Loaded " + dtos.size() + " records from JSON file");
+
             List<MaternalRecord> records = dtos.stream().map(MaternalRecord::fromDTO).collect(Collectors.toList());
+
+            // Debug: Check pregnancy history for each record
+            for (MaternalRecord record : records) {
+                System.out.println("Debug - Record " + record.getPatientId() + " (" + record.getFullName() + ") has " +
+                        (record.getPregnancyHistory() != null ? record.getPregnancyHistory().size() : 0)
+                        + " pregnancy history entries");
+                if (record.getPregnancyHistory() != null && !record.getPregnancyHistory().isEmpty()) {
+                    for (PregnancyHistory history : record.getPregnancyHistory()) {
+                        System.out.println("  Debug - Pregnancy #" + history.getPregnancyNumber() +
+                                ", Delivery: " + history.getDeliveryType() +
+                                ", Gender: " + history.getGender() +
+                                ", Year: " + history.getYearDelivered());
+                    }
+                }
+            }
+
             // Update nextId based on loaded records
             int maxId = records.stream()
                     .mapToInt(MaternalRecord::getId)

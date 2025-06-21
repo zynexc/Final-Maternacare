@@ -1,0 +1,23 @@
+/* Pregnancy History Styles */
+.history-box {
+    -fx-background-color: #f8f8f8;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5;
+    -fx-padding: 10;
+    -fx-spacing: 5;
+}
+
+.history-title {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+}
+
+.form-value {
+    -fx-text-fill: #333333;
+}
+
+.form-label {
+    -fx-text-fill: #666666;
+    -fx-font-weight: bold;
+} 

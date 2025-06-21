@@ -15,6 +15,7 @@
     -fx-padding: 8 15;
     -fx-background-radius: 4;
     -fx-cursor: hand;
+    -fx-min-width: 80px;
 }
 
 .search-button:hover {
@@ -24,30 +25,56 @@
 .records-table {
     -fx-background-color: white;
     -fx-table-cell-border-color: #eb0000;
+    -fx-padding: 0;
+    -fx-background-insets: 0;
 }
 
-.records-table .column-header-background, .records-table .column-header {
+.records-table .column-header-background {
     -fx-background-color: #eb0000;
+    -fx-padding: 0;
+}
+
+.records-table .column-header {
+    -fx-background-color: #eb0000;
+    -fx-padding: 8 5;
+    -fx-border-width: 0 1 0 0;
+    -fx-border-color: #cc0000;
 }
 
 .records-table .column-header .label {
     -fx-text-fill: white;
     -fx-font-weight: bold;
+    -fx-wrap-text: true;
+    -fx-alignment: center-left;
+    -fx-padding: 0 5;
 }
 
 .records-table .table-row-cell {
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: #e0e0e0;
+}
+
+.records-table .table-row-cell:odd {
+    -fx-background-color: #F9FAFB;
+}
+
+.records-table .table-row-cell:even {
     -fx-background-color: white;
-    -fx-text-fill: #222;
 }
 
 .records-table .table-row-cell:selected {
-    -fx-background-color: #b30000;
-    -fx-text-fill: white;
+    -fx-background-color: #eb0000; /* Main red */
+}
+
+.records-table .table-row-cell:selected .text {
+    -fx-fill: white; /* White text for selected cells */
 }
 
 .records-table .table-cell {
-    -fx-padding: 8;
+    -fx-padding: 8 5;
     -fx-text-fill: #212529;
+    -fx-wrap-text: true;
+    -fx-alignment: center-left;
 }
 
 .records-table .table-cell:empty {
@@ -123,4 +150,62 @@
 
 .maternal-records-table .filler {
     -fx-background-color: #4CAF50;
+}
+
+.view-more-button {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 5 10;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+    -fx-min-width: 90px;
+    -fx-max-width: 90px;
+}
+
+.view-more-button:hover {
+    -fx-background-color: #eb0000;
+}
+
+/* Keep button text white when its row is selected by targeting the inner text node */
+.records-table .table-row-cell:selected .view-more-button .text {
+    -fx-fill: white;
+}
+
+/* Responsive column widths */
+#patientIdColumn {
+}
+
+#lastNameColumn {
+}
+
+#firstNameColumn {
+}
+
+#ageColumn {
+}
+
+#ageOfGestationColumn {
+}
+
+#lmpColumn {
+}
+
+#eddColumn {
+}
+
+#contactColumn {
+}
+
+#emailColumn {
+}
+
+#viewMoreColumn {
+}
+
+/* Make the search field responsive */
+#searchField {
+    -fx-min-width: 200px;
+    -fx-pref-width: 400px;
+    -fx-max-width: 800px;
 } 

@@ -10,18 +10,23 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import com.maternacare.controller.MaternalFormController;
 import com.maternacare.controller.MaternalRecordsController;
 import com.maternacare.controller.DashboardController;
+import com.maternacare.controller.MaternalRecordDetailsController;
 import sample.LogIn;
 import java.io.IOException;
 import java.nio.file.Paths;
+import javafx.scene.layout.Priority;
+import com.maternacare.model.MaternalRecord;
 
 public class MainApplication extends Application {
 
     private Stage primaryStage;
     private BorderPane mainLayout;
     private Scene mainScene;
+    private VBox contentContainer; // Make contentContainer accessible
     private MaternalRecordsController recordsController;
     private MaternalFormController formController;
     private LogIn loginController; // Store login controller instance
@@ -76,19 +81,38 @@ public class MainApplication extends Application {
             sidebar.setPadding(new Insets(20, 0, 20, 0));
             sidebar.setPrefWidth(200);
 
-            // Create navigation buttons
-            Button dashboardBtn = createNavButton("Dashboard");
-            Button maternalFormBtn = createNavButton("Maternal Form");
-            Button maternalRecordsBtn = createNavButton("Maternal Records");
-
-            // Add buttons to sidebar
-            sidebar.getChildren().addAll(dashboardBtn, maternalFormBtn, maternalRecordsBtn);
+            // Add logo to the top of the sidebar
+            try {
+                Image logo = new Image(getClass().getResourceAsStream("/images/Tagapo-logo.png"));
+                ImageView logoView = new ImageView(logo);
+                logoView.setFitWidth(100);
+                logoView.setPreserveRatio(true);
+                VBox.setMargin(logoView, new Insets(0, 0, 20, 0)); // Add margin below the logo
+                sidebar.getChildren().add(logoView);
+            } catch (Exception e) {
+                System.err.println("Failed to load sidebar logo: " + e.getMessage());
+            }
 
             // Create content container
-            VBox contentContainer = new VBox();
+            contentContainer = new VBox(); // Initialize contentContainer
             contentContainer.getStyleClass().add("content-container");
+            contentContainer.setMaxWidth(Double.MAX_VALUE);
+            contentContainer.setMaxHeight(Double.MAX_VALUE);
+            contentContainer.setFillWidth(true);
+            VBox.setVgrow(contentContainer, Priority.ALWAYS);
 
-            // Pre-load the records controller
+            // Set the sidebar and content in the border pane
+            mainLayout.setLeft(sidebar);
+            mainLayout.setCenter(contentContainer);
+
+            mainScene = new Scene(mainLayout, 1200, 800);
+            mainScene.getStylesheets()
+                    .add(getClass().getResource("/styles/main_application.css").toExternalForm());
+            primaryStage.setScene(mainScene);
+            primaryStage.setMaximized(true); // Maximize the main window
+            System.out.println("mainScene set.");
+
+            // Pre-load the records controller (moved from original position)
             System.out.println("Attempting to load maternal_records.fxml");
             try {
                 FXMLLoader recordsLoader = new FXMLLoader(getClass().getResource("/fxml/maternal_records.fxml"));
@@ -98,6 +122,7 @@ public class MainApplication extends Application {
                 maternalRecordsRoot.getStylesheets()
                         .add(getClass().getResource("/styles/maternal_records.css").toExternalForm());
                 recordsController = recordsLoader.getController();
+                recordsController.setMainApplication(this); // Pass MainApplication reference
                 System.out.println("Records controller loaded: " + (recordsController != null ? "success" : "null"));
             } catch (IOException ex) {
                 System.err.println("Failed to load maternal_records.fxml: " + ex.getMessage());
@@ -105,7 +130,7 @@ public class MainApplication extends Application {
                 recordsController = null; // Set to null on failure
             }
 
-            // Pre-load the form controller
+            // Pre-load the form controller (moved from original position)
             System.out.println("Attempting to load maternal_form.fxml");
             try {
                 FXMLLoader formLoader = new FXMLLoader(getClass().getResource("/fxml/maternal_form.fxml"));
@@ -135,6 +160,10 @@ public class MainApplication extends Application {
             }
 
             // Set up button actions
+            Button dashboardBtn = createNavButton("Dashboard");
+            Button maternalFormBtn = createNavButton("Maternal Form");
+            Button maternalRecordsBtn = createNavButton("Maternal Records");
+
             dashboardBtn.setOnAction(e -> {
                 System.out.println("Dashboard button clicked. Clearing contentContainer...");
                 contentContainer.getChildren().clear();
@@ -164,10 +193,57 @@ public class MainApplication extends Application {
                 System.out.println("Maternal Form button clicked. Clearing contentContainer...");
                 contentContainer.getChildren().clear();
                 if (maternalFormRoot != null) {
-                    System.out.println("Adding maternalFormRoot to contentContainer.");
+                    System.out.println("maternalFormRoot is not null, attempting to add to contentContainer...");
                     try {
+                        System.out.println("maternalFormRoot class: " + maternalFormRoot.getClass().getName());
+                        System.out.println("maternalFormRoot children count: "
+                                + maternalFormRoot.getChildrenUnmodifiable().size());
+                        System.out.println(
+                                "contentContainer children count before add: " + contentContainer.getChildren().size());
                         contentContainer.getChildren().add(maternalFormRoot);
-                        System.out.println("maternalFormRoot added to contentContainer.");
+                        System.out.println(
+                                "contentContainer children count after add: " + contentContainer.getChildren().size());
+                        System.out.println("maternalFormRoot added to contentContainer successfully.");
+
+                        // Check if the form controller is properly initialized
+                        if (formController != null) {
+                            System.out.println("Form controller is available.");
+                            System.out.println("Form controller class: " + formController.getClass().getName());
+                            // Try to access some form fields to verify initialization
+                            try {
+                                System.out.println("Checking form fields...");
+                                System.out.println("patientIdField: "
+                                        + (formController.getPatientIdField() != null ? "initialized" : "null"));
+                                System.out.println("fullNameField: "
+                                        + (formController.getFullNameField() != null ? "initialized" : "null"));
+
+                                // Set up pregnancy history controller
+                                System.out.println("Setting up pregnancy history controller...");
+                                try {
+                                    FXMLLoader pregnancyHistoryLoader = new FXMLLoader(
+                                            getClass().getResource("/fxml/pregnancy_history_table.fxml"));
+                                    Parent pregnancyHistoryRoot = pregnancyHistoryLoader.load();
+                                    com.maternacare.controller.PregnancyHistoryTableController pregnancyHistoryController = pregnancyHistoryLoader
+                                            .getController();
+
+                                    if (pregnancyHistoryController != null) {
+                                        formController.setPregnancyHistoryTableController(pregnancyHistoryController);
+                                        System.out.println("Pregnancy history controller set successfully");
+                                    } else {
+                                        System.err.println("Failed to get pregnancy history controller");
+                                    }
+                                } catch (Exception ex) {
+                                    System.err.println(
+                                            "Error setting up pregnancy history controller: " + ex.getMessage());
+                                    ex.printStackTrace();
+                                }
+                            } catch (Exception ex) {
+                                System.err.println("Error checking form fields: " + ex.getMessage());
+                                ex.printStackTrace();
+                            }
+                        } else {
+                            System.err.println("Form controller is null!");
+                        }
                     } catch (Exception ex) {
                         System.err.println("Error adding maternalFormRoot to contentContainer: " + ex.getMessage());
                         ex.printStackTrace();
@@ -189,27 +265,27 @@ public class MainApplication extends Application {
                 contentContainer.getChildren().clear();
                 try {
                     System.out.println("Attempting to load maternal_records.fxml for display...");
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/maternal_records.fxml"));
-                    Parent recordsRoot = loader.load();
-                    System.out.println("Successfully loaded maternal_records.fxml for display.");
-                    recordsRoot.getStylesheets()
-                            .add(getClass().getResource("/styles/maternal_records.css").toExternalForm());
-                    MaternalRecordsController currentRecordsController = loader.getController();
-
+                    // No need to reload recordsRoot if it's already pre-loaded
+                    // Use the instance variable maternalRecordsRoot directly
+                    if (maternalRecordsRoot != null) {
+                        contentContainer.getChildren().add(maternalRecordsRoot);
+                        System.out.println("recordsRoot added to contentContainer.");
+                    } else {
+                        System.err.println("maternalRecordsRoot is null, cannot add to contentContainer.");
+                        if (loginController != null) {
+                            loginController.setWrongLogInText("Error: Maternal Records not loaded.");
+                        }
+                    }
                     // Ensure controllers are connected even when reloading
-                    if (formController != null && currentRecordsController != null) {
-                        formController.setRecordsController(currentRecordsController);
-                        currentRecordsController.setFormController(formController);
+                    if (formController != null && recordsController != null) {
+                        formController.setRecordsController(recordsController);
+                        recordsController.setFormController(formController);
                         System.out.println("Controllers connected after reloading maternal records.");
                     } else {
                         System.err
                                 .println("Controllers not available after reloading maternal records, cannot connect.");
                     }
-
-                    System.out.println("Adding recordsRoot to contentContainer.");
-                    contentContainer.getChildren().add(recordsRoot);
-                    System.out.println("recordsRoot added to contentContainer.");
-                } catch (IOException ex) {
+                } catch (Exception ex) { // Catch Exception to catch any potential errors
                     System.err.println("Failed to load maternal_records.fxml for display: " + ex.getMessage());
                     ex.printStackTrace();
                     // Optionally show an error message to the user
@@ -220,11 +296,10 @@ public class MainApplication extends Application {
                 updateButtonStyles(maternalRecordsBtn, dashboardBtn, maternalFormBtn);
             });
 
+            sidebar.getChildren().addAll(dashboardBtn, maternalFormBtn, maternalRecordsBtn);
+
             // Set initial button style (Dashboard is default)
             updateButtonStyles(dashboardBtn, maternalFormBtn, maternalRecordsBtn);
-
-            // Set the sidebar and content in the border pane
-            mainLayout.setLeft(sidebar);
 
             // Load and set initial content (Dashboard) into the content container
             System.out.println("Attempting to load initial dashboard.fxml...");
@@ -245,35 +320,27 @@ public class MainApplication extends Application {
                     loginController.setWrongLogInText("Error loading initial dashboard: " + ex.getMessage());
                 }
             }
-            mainLayout.setCenter(contentContainer);
-            System.out.println("contentContainer set as center of mainLayout.");
-
-            // Create the main scene once and store it
-            mainScene = new Scene(mainLayout, 1200, 800);
-            mainScene.getStylesheets().add(getClass().getResource("/styles/main.css").toExternalForm());
-            System.out.println("mainScene created.");
-        } else {
-            System.out.println("mainLayout already exists.");
         }
 
-        // Set the main scene to the primary stage directly without animation
-        System.out.println("Setting mainScene directly...");
-        primaryStage.setScene(mainScene);
-        System.out.println("mainScene set.");
+        // If mainLayout is already loaded, just ensure contentContainer has the current
+        // view
+        if (primaryStage.getScene() != mainScene) {
+            primaryStage.setScene(mainScene);
+            primaryStage.setMaximized(true);
+        }
     }
 
     private Button createNavButton(String text) {
         Button button = new Button(text);
-        button.getStyleClass().add("nav-button");
         button.setMaxWidth(Double.MAX_VALUE);
-        button.setPadding(new Insets(15, 20, 15, 20));
+        button.getStyleClass().add("nav-button");
         return button;
     }
 
     private void updateButtonStyles(Button selected, Button... others) {
         selected.getStyleClass().add("selected");
-        for (Button button : others) {
-            button.getStyleClass().remove("selected");
+        for (Button other : others) {
+            other.getStyleClass().remove("selected");
         }
     }
 

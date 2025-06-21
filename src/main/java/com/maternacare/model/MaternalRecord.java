@@ -2,16 +2,25 @@ package com.maternacare.model;
 
 import javafx.beans.property.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class MaternalRecord {
     // Personal Information
     private final transient StringProperty patientId;
-    private final transient StringProperty lastName;
-    private final transient StringProperty firstName;
-    private final transient StringProperty middleName;
+    private final transient StringProperty fullName;
     private final transient ObjectProperty<LocalDate> dateOfBirth;
-    private final transient StringProperty civilStatus;
-    private final transient StringProperty religion;
+
+    // New fields for husband's name and pregnancy details
+    private final transient StringProperty husbandName;
+    private final transient StringProperty deliveryType;
+    private final transient StringProperty gender;
+    private final transient StringProperty remarks;
+
+    // Timestamp for form creation
+    private final transient ObjectProperty<LocalDateTime> formTimestamp;
 
     // Contact Information
     private final transient StringProperty address;
@@ -21,14 +30,12 @@ public class MaternalRecord {
 
     // Vital Signs
     private final transient StringProperty bloodPressure;
-    private final transient StringProperty temperature;
-    private final transient StringProperty pulseRate;
-    private final transient StringProperty respiratoryRate;
+    private final transient StringProperty temperature; // Body Temperature
+    private final transient StringProperty chiefComplaint;
 
     // Pregnancy Information
     private final transient ObjectProperty<LocalDate> lastMenstrualPeriod;
     private final transient ObjectProperty<LocalDate> expectedDeliveryDate;
-    private final transient StringProperty gravida;
     private final transient StringProperty para;
     private final transient StringProperty abortion;
     private final transient StringProperty livingChildren;
@@ -42,17 +49,27 @@ public class MaternalRecord {
     private final transient StringProperty presentation;
     private final transient DoubleProperty fundalHeight;
     private final transient ObjectProperty<LocalDate> nextAppointment;
+    private final transient List<ChildDetails> childDetails;
+
+    // Pregnancy History
+    private final List<PregnancyHistory> pregnancyHistory;
+
+    // Follow-up Vital Signs
+    private final List<VitalSignsEntry> followUpVitalSigns;
 
     // Default constructor
     public MaternalRecord() {
         // Personal Information
         this.patientId = new SimpleStringProperty("");
-        this.lastName = new SimpleStringProperty("");
-        this.firstName = new SimpleStringProperty("");
-        this.middleName = new SimpleStringProperty("");
+        this.fullName = new SimpleStringProperty("");
         this.dateOfBirth = new SimpleObjectProperty<>(null);
-        this.civilStatus = new SimpleStringProperty("");
-        this.religion = new SimpleStringProperty("");
+
+        // New fields initialization
+        this.husbandName = new SimpleStringProperty("");
+        this.deliveryType = new SimpleStringProperty("");
+        this.gender = new SimpleStringProperty("");
+        this.remarks = new SimpleStringProperty("");
+        this.formTimestamp = new SimpleObjectProperty<>(LocalDateTime.now());
 
         // Contact Information
         this.address = new SimpleStringProperty("");
@@ -62,14 +79,12 @@ public class MaternalRecord {
 
         // Vital Signs
         this.bloodPressure = new SimpleStringProperty("");
-        this.temperature = new SimpleStringProperty("");
-        this.pulseRate = new SimpleStringProperty("");
-        this.respiratoryRate = new SimpleStringProperty("");
+        this.temperature = new SimpleStringProperty(""); // Body Temperature
+        this.chiefComplaint = new SimpleStringProperty("");
 
         // Pregnancy Information
         this.lastMenstrualPeriod = new SimpleObjectProperty<>(null);
         this.expectedDeliveryDate = new SimpleObjectProperty<>(null);
-        this.gravida = new SimpleStringProperty("");
         this.para = new SimpleStringProperty("");
         this.abortion = new SimpleStringProperty("");
         this.livingChildren = new SimpleStringProperty("");
@@ -83,6 +98,11 @@ public class MaternalRecord {
         this.presentation = new SimpleStringProperty("");
         this.fundalHeight = new SimpleDoubleProperty(0.0);
         this.nextAppointment = new SimpleObjectProperty<>(LocalDate.now());
+        this.childDetails = new ArrayList<>();
+
+        // Initialize pregnancy history
+        this.pregnancyHistory = new ArrayList<>();
+        this.followUpVitalSigns = new ArrayList<>();
     }
 
     // Getters and Setters for Personal Information
@@ -98,40 +118,16 @@ public class MaternalRecord {
         return patientId;
     }
 
-    public String getLastName() {
-        return lastName.get();
+    public String getFullName() {
+        return fullName.get();
     }
 
-    public void setLastName(String value) {
-        lastName.set(value);
+    public void setFullName(String value) {
+        fullName.set(value);
     }
 
-    public StringProperty lastNameProperty() {
-        return lastName;
-    }
-
-    public String getFirstName() {
-        return firstName.get();
-    }
-
-    public void setFirstName(String value) {
-        firstName.set(value);
-    }
-
-    public StringProperty firstNameProperty() {
-        return firstName;
-    }
-
-    public String getMiddleName() {
-        return middleName.get();
-    }
-
-    public void setMiddleName(String value) {
-        middleName.set(value);
-    }
-
-    public StringProperty middleNameProperty() {
-        return middleName;
+    public StringProperty fullNameProperty() {
+        return fullName;
     }
 
     public LocalDate getDateOfBirth() {
@@ -146,28 +142,66 @@ public class MaternalRecord {
         return dateOfBirth;
     }
 
-    public String getCivilStatus() {
-        return civilStatus.get();
+    // Getters and Setters for New Fields
+    public String getHusbandName() {
+        return husbandName.get();
     }
 
-    public void setCivilStatus(String value) {
-        civilStatus.set(value);
+    public void setHusbandName(String value) {
+        husbandName.set(value);
     }
 
-    public StringProperty civilStatusProperty() {
-        return civilStatus;
+    public StringProperty husbandNameProperty() {
+        return husbandName;
     }
 
-    public String getReligion() {
-        return religion.get();
+    public String getDeliveryType() {
+        return deliveryType.get();
     }
 
-    public void setReligion(String value) {
-        religion.set(value);
+    public void setDeliveryType(String value) {
+        deliveryType.set(value);
     }
 
-    public StringProperty religionProperty() {
-        return religion;
+    public StringProperty deliveryTypeProperty() {
+        return deliveryType;
+    }
+
+    public String getGender() {
+        return gender.get();
+    }
+
+    public void setGender(String value) {
+        gender.set(value);
+    }
+
+    public StringProperty genderProperty() {
+        return gender;
+    }
+
+    public String getRemarks() {
+        return remarks.get();
+    }
+
+    public void setRemarks(String value) {
+        remarks.set(value);
+    }
+
+    public StringProperty remarksProperty() {
+        return remarks;
+    }
+
+    // Getters and Setters for Timestamp
+    public LocalDateTime getFormTimestamp() {
+        return formTimestamp.get();
+    }
+
+    public void setFormTimestamp(LocalDateTime value) {
+        formTimestamp.set(value);
+    }
+
+    public ObjectProperty<LocalDateTime> formTimestampProperty() {
+        return formTimestamp;
     }
 
     // Getters and Setters for Contact Information
@@ -232,40 +266,28 @@ public class MaternalRecord {
         return bloodPressure;
     }
 
-    public String getTemperature() {
+    public String getTemperature() { // Body Temperature
         return temperature.get();
     }
 
-    public void setTemperature(String value) {
+    public void setTemperature(String value) { // Body Temperature
         temperature.set(value);
     }
 
-    public StringProperty temperatureProperty() {
+    public StringProperty temperatureProperty() { // Body Temperature
         return temperature;
     }
 
-    public String getPulseRate() {
-        return pulseRate.get();
+    public String getChiefComplaint() {
+        return chiefComplaint.get();
     }
 
-    public void setPulseRate(String value) {
-        pulseRate.set(value);
+    public void setChiefComplaint(String value) {
+        chiefComplaint.set(value);
     }
 
-    public StringProperty pulseRateProperty() {
-        return pulseRate;
-    }
-
-    public String getRespiratoryRate() {
-        return respiratoryRate.get();
-    }
-
-    public void setRespiratoryRate(String value) {
-        respiratoryRate.set(value);
-    }
-
-    public StringProperty respiratoryRateProperty() {
-        return respiratoryRate;
+    public StringProperty chiefComplaintProperty() {
+        return chiefComplaint;
     }
 
     // Getters and Setters for Pregnancy Information
@@ -291,18 +313,6 @@ public class MaternalRecord {
 
     public ObjectProperty<LocalDate> expectedDeliveryDateProperty() {
         return expectedDeliveryDate;
-    }
-
-    public String getGravida() {
-        return gravida.get();
-    }
-
-    public void setGravida(String value) {
-        gravida.set(value);
-    }
-
-    public StringProperty gravidaProperty() {
-        return gravida;
     }
 
     public String getPara() {
@@ -438,24 +448,60 @@ public class MaternalRecord {
         return nextAppointment;
     }
 
+    public List<ChildDetails> getChildDetails() {
+        return childDetails;
+    }
+
+    public void setChildDetails(List<ChildDetails> details) {
+        childDetails.clear();
+        if (details != null) {
+            childDetails.addAll(details);
+        }
+    }
+
+    // Getters and Setters for Pregnancy History
+    public List<PregnancyHistory> getPregnancyHistory() {
+        return pregnancyHistory;
+    }
+
+    public void setPregnancyHistory(List<PregnancyHistory> history) {
+        pregnancyHistory.clear();
+        if (history != null) {
+            pregnancyHistory.addAll(history);
+        }
+    }
+
+    // Getters and Setters for Follow-up Vital Signs
+    public List<VitalSignsEntry> getFollowUpVitalSigns() {
+        return followUpVitalSigns;
+    }
+
+    public void setFollowUpVitalSigns(List<VitalSignsEntry> followUpVitalSigns) {
+        this.followUpVitalSigns.clear();
+        if (followUpVitalSigns != null) {
+            this.followUpVitalSigns.addAll(followUpVitalSigns);
+        }
+    }
+
     // Add DTO class for serialization
     public static class MaternalRecordDTO {
         public int id;
         public String patientId;
+        public String fullName;
+        // Backward compatibility fields
         public String lastName;
         public String firstName;
         public String middleName;
-        public String civilStatus;
-        public String religion;
         public String address;
         public String purok;
         public String contactNumber;
         public String email;
         public String bloodPressure;
         public String temperature;
+        public String chiefComplaint;
+        // Backward compatibility fields
         public String pulseRate;
         public String respiratoryRate;
-        public String gravida;
         public String para;
         public String abortion;
         public String livingChildren;
@@ -469,26 +515,33 @@ public class MaternalRecord {
         public String lastMenstrualPeriod;
         public String expectedDeliveryDate;
         public String nextAppointment;
+        public List<ChildDetails> childDetails;
+        public String husbandName;
+        public String deliveryType;
+        public String gender;
+        public String remarks;
+        public String formTimestamp;
+        public List<PregnancyHistory.PregnancyHistoryDTO> pregnancyHistory;
+        public List<VitalSignsEntry> followUpVitalSigns;
+
+        public MaternalRecordDTO() {
+            this.childDetails = new ArrayList<>();
+            this.pregnancyHistory = new ArrayList<>();
+        }
     }
 
     public MaternalRecordDTO toDTO() {
         MaternalRecordDTO dto = new MaternalRecordDTO();
         dto.id = getId();
         dto.patientId = getPatientId();
-        dto.lastName = getLastName();
-        dto.firstName = getFirstName();
-        dto.middleName = getMiddleName();
-        dto.civilStatus = getCivilStatus();
-        dto.religion = getReligion();
+        dto.fullName = getFullName();
         dto.address = getAddress();
         dto.purok = getPurok();
         dto.contactNumber = getContactNumber();
         dto.email = getEmail();
         dto.bloodPressure = getBloodPressure();
         dto.temperature = getTemperature();
-        dto.pulseRate = getPulseRate();
-        dto.respiratoryRate = getRespiratoryRate();
-        dto.gravida = getGravida();
+        dto.chiefComplaint = getChiefComplaint();
         dto.para = getPara();
         dto.abortion = getAbortion();
         dto.livingChildren = getLivingChildren();
@@ -502,6 +555,16 @@ public class MaternalRecord {
         dto.lastMenstrualPeriod = getLastMenstrualPeriod() != null ? getLastMenstrualPeriod().toString() : null;
         dto.expectedDeliveryDate = getExpectedDeliveryDate() != null ? getExpectedDeliveryDate().toString() : null;
         dto.nextAppointment = getNextAppointment() != null ? getNextAppointment().toString() : null;
+        dto.childDetails = new ArrayList<>(childDetails);
+        dto.husbandName = getHusbandName();
+        dto.deliveryType = getDeliveryType();
+        dto.gender = getGender();
+        dto.remarks = getRemarks();
+        dto.formTimestamp = getFormTimestamp() != null ? getFormTimestamp().toString() : null;
+        dto.pregnancyHistory = pregnancyHistory.stream()
+                .map(PregnancyHistory::toDTO)
+                .collect(Collectors.toList());
+        dto.followUpVitalSigns = new ArrayList<>(followUpVitalSigns);
         return dto;
     }
 
@@ -509,20 +572,45 @@ public class MaternalRecord {
         MaternalRecord record = new MaternalRecord();
         record.setId(dto.id);
         record.setPatientId(dto.patientId);
-        record.setLastName(dto.lastName);
-        record.setFirstName(dto.firstName);
-        record.setMiddleName(dto.middleName);
-        record.setCivilStatus(dto.civilStatus);
-        record.setReligion(dto.religion);
+
+        // Handle migration from old field structure to new one
+        if (dto.fullName != null && !dto.fullName.isEmpty()) {
+            record.setFullName(dto.fullName);
+        } else if (dto.lastName != null || dto.firstName != null || dto.middleName != null) {
+            // Migrate from old structure: combine lastName, firstName, middleName into
+            // fullName
+            StringBuilder fullName = new StringBuilder();
+            if (dto.lastName != null && !dto.lastName.isEmpty()) {
+                fullName.append(dto.lastName);
+            }
+            if (dto.firstName != null && !dto.firstName.isEmpty()) {
+                if (fullName.length() > 0)
+                    fullName.append(" ");
+                fullName.append(dto.firstName);
+            }
+            if (dto.middleName != null && !dto.middleName.isEmpty()) {
+                if (fullName.length() > 0)
+                    fullName.append(" ");
+                fullName.append(dto.middleName);
+            }
+            record.setFullName(fullName.toString());
+        }
+
         record.setAddress(dto.address);
         record.setPurok(dto.purok);
         record.setContactNumber(dto.contactNumber);
         record.setEmail(dto.email);
         record.setBloodPressure(dto.bloodPressure);
         record.setTemperature(dto.temperature);
-        record.setPulseRate(dto.pulseRate);
-        record.setRespiratoryRate(dto.respiratoryRate);
-        record.setGravida(dto.gravida);
+
+        // Handle migration for chief complaint
+        if (dto.chiefComplaint != null && !dto.chiefComplaint.isEmpty()) {
+            record.setChiefComplaint(dto.chiefComplaint);
+        } else {
+            // Set empty string for old records that don't have chief complaint
+            record.setChiefComplaint("");
+        }
+
         record.setPara(dto.para);
         record.setAbortion(dto.abortion);
         record.setLivingChildren(dto.livingChildren);
@@ -532,12 +620,43 @@ public class MaternalRecord {
         record.setHeight(dto.height);
         record.setFetalHeartTone(dto.fetalHeartTone);
         record.setFundalHeight(dto.fundalHeight);
-        record.setDateOfBirth(dto.dateOfBirth != null ? java.time.LocalDate.parse(dto.dateOfBirth) : null);
+        record.setDateOfBirth(dto.dateOfBirth != null ? LocalDate.parse(dto.dateOfBirth) : null);
         record.setLastMenstrualPeriod(
-                dto.lastMenstrualPeriod != null ? java.time.LocalDate.parse(dto.lastMenstrualPeriod) : null);
+                dto.lastMenstrualPeriod != null ? LocalDate.parse(dto.lastMenstrualPeriod) : null);
         record.setExpectedDeliveryDate(
-                dto.expectedDeliveryDate != null ? java.time.LocalDate.parse(dto.expectedDeliveryDate) : null);
-        record.setNextAppointment(dto.nextAppointment != null ? java.time.LocalDate.parse(dto.nextAppointment) : null);
+                dto.expectedDeliveryDate != null ? LocalDate.parse(dto.expectedDeliveryDate) : null);
+        record.setNextAppointment(
+                dto.nextAppointment != null ? LocalDate.parse(dto.nextAppointment) : null);
+        record.setChildDetails(dto.childDetails != null ? dto.childDetails : new ArrayList<>());
+        record.setHusbandName(dto.husbandName);
+        record.setDeliveryType(dto.deliveryType);
+        record.setGender(dto.gender);
+        record.setRemarks(dto.remarks);
+        record.setFormTimestamp(
+                dto.formTimestamp != null ? LocalDateTime.parse(dto.formTimestamp) : LocalDateTime.now());
+        if (dto.pregnancyHistory != null) {
+            record.pregnancyHistory.addAll(
+                    dto.pregnancyHistory.stream().map(PregnancyHistory::fromDTO).collect(Collectors.toList()));
+        }
+        record.setFollowUpVitalSigns(dto.followUpVitalSigns);
         return record;
+    }
+
+    public void loadRecord(MaternalRecord record) {
+        // ... existing code ...
+        lastMenstrualPeriod.set(record.getLastMenstrualPeriod());
+        expectedDeliveryDate.set(record.getExpectedDeliveryDate());
+        para.set(record.getPara());
+        abortion.set(record.getAbortion());
+        // ... existing code ...
+    }
+
+    public void saveRecord(MaternalRecord record) {
+        // ... existing code ...
+        record.setLastMenstrualPeriod(lastMenstrualPeriod.get());
+        record.setExpectedDeliveryDate(expectedDeliveryDate.get());
+        record.setPara(para.get());
+        record.setAbortion(abortion.get());
+        // ... existing code ...
     }
 }

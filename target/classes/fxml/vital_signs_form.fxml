@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.maternacare.controller.VitalSignsFormController" spacing="12" alignment="CENTER" styleClass="form-root">
+    <padding>
+        <Insets top="24" right="24" bottom="24" left="24"/>
+    </padding>
+    <Label text="Follow Up Vital Signs" styleClass="form-title"/>
+    <GridPane hgap="12" vgap="12">
+        <Label text="Blood Pressure:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <TextField fx:id="bloodPressureField" promptText="e.g. 120/80" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+        <Label text="Temperature (°C):" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <TextField fx:id="temperatureField" promptText="e.g. 36.7" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+        <Label text="Pulse Rate:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <TextField fx:id="pulseRateField" promptText="e.g. 75" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+        <Label text="Respiratory Rate:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <TextField fx:id="respiratoryRateField" promptText="e.g. 18" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+        <Label text="Age of Gestation (AOG):" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+        <TextField fx:id="aogField" promptText="e.g. 28" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+        <Label text="Height (cm):" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+        <TextField fx:id="heightField" promptText="e.g. 160" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+        <Label text="Weight (lbs):" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+        <TextField fx:id="weightField" promptText="e.g. 120" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+        <Label text="Fetal Heart Tone (FHT):" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
+        <TextField fx:id="fhtField" promptText="e.g. 140" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+        <Label text="Presentation:" GridPane.rowIndex="8" GridPane.columnIndex="0"/>
+        <TextField fx:id="presentationField" promptText="e.g. Cephalic" GridPane.rowIndex="8" GridPane.columnIndex="1"/>
+        <Label text="Chief Complaint:" GridPane.rowIndex="9" GridPane.columnIndex="0"/>
+        <TextField fx:id="chiefComplaintField" promptText="e.g. Headache" GridPane.rowIndex="9" GridPane.columnIndex="1"/>
+        <Label text="To come Back:" GridPane.rowIndex="10" GridPane.columnIndex="0"/>
+        <DatePicker fx:id="toComeBackPicker" GridPane.rowIndex="10" GridPane.columnIndex="1"/>
+        <Label text="Remarks:" GridPane.rowIndex="11" GridPane.columnIndex="0"/>
+        <TextArea fx:id="remarksField" promptText="Optional remarks..." GridPane.rowIndex="11" GridPane.columnIndex="1" prefRowCount="2"/>
+    </GridPane>
+    <Button text="Save" fx:id="saveButton" minWidth="100"/>
+</VBox> 

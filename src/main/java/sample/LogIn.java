@@ -49,8 +49,8 @@ public class LogIn {
 
     private void checkLogin() {
         // Simple hardcoded credentials for demonstration
-        String validUsername = "admin";
-        String validPassword = "admin123";
+        String validUsername = "";
+        String validPassword = "";
 
         if (username.getText().equals(validUsername) && password.getText().equals(validPassword)) {
             wrongLogIn.setText("Success!");

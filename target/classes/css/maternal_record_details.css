@@ -1,0 +1,75 @@
+.details-scroll-pane {
+    -fx-background-color: white;
+}
+
+.details-container {
+    -fx-background-color: white;
+    -fx-padding: 20;
+}
+
+.timestamp-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #666666;
+    -fx-font-style: italic;
+}
+
+.titled-pane {
+    -fx-text-fill: #2c3e50;
+    -fx-font-weight: bold;
+}
+
+.titled-pane > .title {
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #dee2e6;
+    -fx-border-width: 1;
+    -fx-border-radius: 4;
+}
+
+.titled-pane > .title > .arrow-button .arrow {
+    -fx-background-color: #2c3e50;
+}
+
+.titled-pane > *.content {
+    -fx-background-color: white;
+    -fx-border-color: #dee2e6;
+    -fx-border-width: 1;
+    -fx-border-radius: 4;
+    -fx-padding: 10;
+}
+
+.grid-pane {
+    -fx-hgap: 10;
+    -fx-vgap: 10;
+}
+
+.grid-pane .label {
+    -fx-font-size: 12px;
+}
+
+.grid-pane .label:first-child {
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.close-button {
+    -fx-background-color: #6c757d;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-padding: 8 16;
+    -fx-background-radius: 4;
+}
+
+.close-button:hover {
+    -fx-background-color: #5a6268;
+}
+
+.close-button:pressed {
+    -fx-background-color: #545b62;
+}
+
+/* Style for remarks section */
+.titled-pane:last-of-type .label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #2c3e50;
+    -fx-wrap-text: true;
+} 
