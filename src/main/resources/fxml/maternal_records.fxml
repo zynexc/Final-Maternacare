@@ -8,6 +8,8 @@
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.maternacare.controller.MaternalRecordsController"
+      style="-fx-background-color: #FEE2E2; -fx-background-radius: 15;"
+      styleClass="content-container"
       spacing="10"
       VBox.vgrow="ALWAYS">
     <padding>

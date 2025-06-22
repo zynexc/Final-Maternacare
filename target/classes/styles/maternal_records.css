@@ -1,5 +1,6 @@
 .root {
-    -fx-background-color: #f8f9fa;
+    -fx-background-color: #FEE2E2;
+    -fx-background-radius: 15;
 }
 
 .form-title {
@@ -208,4 +209,11 @@
     -fx-min-width: 200px;
     -fx-pref-width: 400px;
     -fx-max-width: 800px;
+}
+
+/* Maternal Records Styles */
+.content-container {
+    -fx-background-color: #FEE2E2 !important;
+    -fx-background-radius: 15 !important;
+    -fx-padding: 20 !important;
 } 

@@ -1,12 +1,22 @@
 /* Maternal Form Styles */
 .root {
-    -fx-background-color: #f8f9fa;
+    -fx-background-color: #FEE2E2 !important;
+    -fx-background-radius: 15 !important;
 }
 
 .form-container {
-    -fx-background-color: #fff;
-    -fx-padding: 20;
-    -fx-spacing: 20;
+    -fx-background-color: #FEE2E2 !important;
+    -fx-background-radius: 15 !important;
+    -fx-padding: 20 !important;
+    -fx-spacing: 20 !important;
+}
+
+/* Make it even more specific for the maternal form */
+.content-container .form-container {
+    -fx-background-color: #FEE2E2 !important;
+    -fx-background-radius: 15 !important;
+    -fx-padding: 20 !important;
+    -fx-spacing: 20 !important;
 }
 
 .form-section {

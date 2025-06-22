@@ -6,7 +6,8 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.layout.ColumnConstraints?>
 
-<VBox fx:id="rootPane" styleClass="form-container" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.maternacare.controller.MaternalFormController">
+<VBox fx:id="rootPane" styleClass="form-container" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.maternacare.controller.MaternalFormController"
+      style="-fx-background-color: #FEE2E2; -fx-background-radius: 15;">
     <padding>
         <Insets top="20" right="20" bottom="20" left="20"/>
     </padding>

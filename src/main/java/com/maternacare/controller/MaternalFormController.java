@@ -160,6 +160,18 @@ public class MaternalFormController {
     @FXML
     public void initialize() {
         System.out.println("MaternalFormController.initialize() called");
+
+        // Debug CSS application
+        System.out.println("Checking CSS application...");
+        if (rootPane != null) {
+            System.out.println("Root pane found: " + rootPane.getClass().getSimpleName());
+            System.out.println("Root pane style classes: " + rootPane.getStyleClass());
+            System.out.println("Root pane stylesheets: " + rootPane.getStylesheets());
+            System.out.println("Root pane background: " + rootPane.getBackground());
+        } else {
+            System.out.println("Root pane is null!");
+        }
+
         try {
             // Initialize pregnancy history container if null
             if (pregnancyHistoryContainer == null) {
