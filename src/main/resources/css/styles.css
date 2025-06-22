@@ -1,3 +1,8 @@
+/* Global Font Settings */
+.root {
+    -fx-font-family: 'Poppins', sans-serif;
+}
+
 /* Pregnancy History Styles */
 .history-box {
     -fx-background-color: #f8f8f8;

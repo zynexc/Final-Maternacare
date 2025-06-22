@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import javafx.scene.layout.Priority;
 import com.maternacare.model.MaternalRecord;
+import javafx.scene.text.Font;
 
 public class MainApplication extends Application {
 
@@ -47,6 +48,14 @@ public class MainApplication extends Application {
         } catch (Exception e) {
             System.err.println("Failed to load application icon: " + e.getMessage());
             e.printStackTrace();
+        }
+
+        // Load Poppins font
+        try {
+            Font.loadFont(getClass().getResourceAsStream("/fonts/Poppins-Regular.ttf"), 12);
+            System.out.println("Poppins font loaded successfully");
+        } catch (Exception e) {
+            System.err.println("Failed to load Poppins font: " + e.getMessage());
         }
 
         // Load the login screen initially
