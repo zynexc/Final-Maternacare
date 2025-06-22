@@ -338,7 +338,7 @@ public class MainApplication extends Application {
         // view
         if (primaryStage.getScene() != mainScene) {
             primaryStage.setScene(mainScene);
-            primaryStage.setMaximized(true);
+            primaryStage.setMaximized(true); // Ensure dashboard is full screen
         }
     }
 
