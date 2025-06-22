@@ -2,51 +2,60 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.text.Font?>
+<?import javafx.beans.binding.DoubleBinding?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.LogIn">
+<AnchorPane prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.LogIn" styleClass="login-root">
    <children>
-      <HBox prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <HBox fx:id="rootHBox" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0">
          <children>
-            <VBox alignment="CENTER" prefHeight="400.0" prefWidth="300.0" spacing="20.0" style="-fx-background-color: #f8f3ed; -fx-padding: 40;">
+            <!-- Left: Login Form (70%) -->
+            <VBox fx:id="loginContainer" alignment="CENTER" spacing="18.0" style="-fx-background-color: #fff;" HBox.hgrow="ALWAYS">
                <children>
-                  <Label text="Login">
-                     <font>
-                        <Font name="System Bold" size="24.0" />
-                     </font>
-                  </Label>
-                  <TextField fx:id="username" promptText="Email Address" />
-                  <PasswordField fx:id="password" promptText="Password" />
-                  <StackPane prefWidth="Infinity">
+                  <Label text="Login" style="-fx-font-size: 40px; -fx-font-family: 'Poppins Bold', 'Poppins', Arial, sans-serif; -fx-font-weight: bold;" />
+                  <Label text="Welcome back! Please enter your details" style="-fx-font-size: 14px; -fx-text-fill: #888; -fx-font-family: 'Poppins', Arial, sans-serif;" />
+                  <VBox spacing="8.0" maxWidth="320.0" minWidth="320.0">
                      <children>
-                        <Button fx:id="button" mnemonicParsing="false" onAction="#userLogIn" prefWidth="Infinity" text="Log in" style="-fx-background-color: black; -fx-text-fill: white; -fx-font-weight: bold;" />
-                        <ProgressIndicator fx:id="loginProgress" visible="false" maxWidth="20" maxHeight="20" />
+                        <Label text="Email" styleClass="login-label" />
+                        <TextField fx:id="username" promptText="Enter your email" styleClass="login-field" />
+                        <Label text="Password" styleClass="login-label" />
+                        <PasswordField fx:id="password" promptText="********" styleClass="login-field" />
+                        <Region prefHeight="20.0" />
+                        <Button fx:id="button" mnemonicParsing="false" onAction="#userLogIn" text="Sign in" styleClass="login-button" style="-fx-font-weight: bold; -fx-font-family: 'Poppins Bold', 'Poppins', Arial, sans-serif;" minWidth="320.0" maxWidth="320.0" />
+                        <Label fx:id="wrongLogIn" textFill="RED" />
                      </children>
-                  </StackPane>
-                  <Region VBox.vgrow="ALWAYS" />
-                  <Label fx:id="wrongLogIn" textFill="RED" />
+                  </VBox>
                </children>
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
             </VBox>
-            <ImageView fitHeight="400.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" style="-fx-background-color: #f0ebe3;">
-               <image>
-                  <Image url="@/images/preg.png" />
-               </image>
-            </ImageView>
+            <!-- Right: Image (30%) -->
+            <StackPane fx:id="imageContainer" style="-fx-background-image: url('/images/right-image.png'); -fx-background-size: cover; -fx-background-position: center center;" HBox.hgrow="ALWAYS">
+               <children>
+                  <VBox alignment="CENTER" spacing="0.0">
+                     <children>
+                        <ImageView fitHeight="70.0" fitWidth="70.0" preserveRatio="true">
+                           <image>
+                              <Image url="@/images/maternawhite-logo.png" />
+                           </image>
+                        </ImageView>
+                        <Label text="Welcome to" style="-fx-font-size: 24px; -fx-text-fill: white; -fx-font-family: 'Poppins', Arial, sans-serif; -fx-font-weight: 600; -fx-alignment: center;" />
+                        <Label text="MaternaCare" style="-fx-font-size: 48px; -fx-text-fill: white; -fx-font-family: 'Poppins Bold', 'Poppins', Arial, sans-serif; -fx-font-weight: bold; -fx-alignment: center;" />
+                        <Label text="Login to access your account" style="-fx-font-size: 15px; -fx-text-fill: white; -fx-font-family: 'Poppins', Arial, sans-serif; -fx-font-weight: 400; -fx-underline: true; -fx-padding: 18 0 0 0; -fx-alignment: center;" />
+                     </children>
+                  </VBox>
+               </children>
+            </StackPane>
          </children>
       </HBox>
    </children>

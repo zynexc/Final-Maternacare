@@ -25,4 +25,61 @@
 .form-label {
     -fx-text-fill: #666666;
     -fx-font-weight: bold;
+}
+
+/* Login Screen Styles */
+.login-root {
+    -fx-background-color: #fff;
+    -fx-font-family: 'Poppins', Arial, sans-serif;
+}
+
+.login-logo {
+    -fx-padding: 0 0 10 0;
+}
+
+.login-title {
+    -fx-font-size: 48px;
+    -fx-font-family: 'Poppins', Arial, sans-serif;
+    -fx-font-weight: bold;
+    -fx-text-fill: #000000;
+    -fx-padding: 0 0 10 0;
+}
+
+.login-card {
+    -fx-background-color: #fdf7f7;
+    -fx-background-radius: 32;
+    -fx-padding: 32 32 32 32;
+    -fx-effect: dropshadow(gaussian, #e0e0e0, 20, 0.2, 0, 4);
+    -fx-spacing: 12;
+}
+
+.login-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #222;
+    -fx-font-family: 'Poppins', Arial, sans-serif;
+    -fx-font-weight: 500;
+}
+
+.login-field {
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-color: #ccc;
+    -fx-padding: 8 16;
+    -fx-font-size: 16px;
+    -fx-pref-width: 100%;
+}
+
+.login-button {
+    -fx-background-color: #ff161f;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 20;
+    -fx-font-size: 15px;
+    -fx-padding: 8 0;
+    -fx-pref-width: 320px;
+    -fx-max-width: 320px;
+    -fx-min-width: 320px;
+    -fx-alignment: center;
+    -fx-cursor: hand;
+    -fx-margin: 10 0 0 0;
 } 

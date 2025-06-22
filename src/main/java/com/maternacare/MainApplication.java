@@ -72,8 +72,11 @@ public class MainApplication extends Application {
         loginController.setMainApplication(this);
 
         Scene loginScene = new Scene(loginRoot, 600, 400);
+        // Add the login stylesheet
+        loginScene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
 
         primaryStage.setScene(loginScene);
+        primaryStage.setMaximized(true); // Make login screen full screen
         System.out.println("Login screen shown.");
     }
 

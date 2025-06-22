@@ -12,6 +12,11 @@ import javafx.stage.Stage;
 import javafx.event.ActionEvent;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.Image;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
 
 import java.io.IOException;
 import com.maternacare.MainApplication;
@@ -32,6 +37,14 @@ public class LogIn {
     private PasswordField password;
     @FXML
     private ProgressIndicator loginProgress;
+    @FXML
+    private ImageView rightImageView;
+    @FXML
+    private VBox loginContainer;
+    @FXML
+    private StackPane imageContainer;
+    @FXML
+    private HBox rootHBox;
 
     public void setMainApplication(MainApplication mainApplication) {
         this.mainApplication = mainApplication;
@@ -65,6 +78,25 @@ public class LogIn {
             }
         } else {
             wrongLogIn.setText("Wrong username or password!");
+        }
+    }
+
+    @FXML
+    public void initialize() {
+        // Ensure the right image fills the right half
+        if (rightImageView != null && rightImageView.getParent() instanceof StackPane) {
+            StackPane parent = (StackPane) rightImageView.getParent();
+            rightImageView.fitWidthProperty().bind(parent.widthProperty());
+            rightImageView.fitHeightProperty().bind(parent.heightProperty());
+            rightImageView.setImage(new Image(getClass().getResource("/images/right-image.png").toExternalForm()));
+        }
+        // Responsive 50/50 split
+        if (rootHBox != null && loginContainer != null && imageContainer != null) {
+            rootHBox.widthProperty().addListener((obs, oldVal, newVal) -> {
+                double totalWidth = newVal.doubleValue();
+                loginContainer.setPrefWidth(totalWidth * 0.5);
+                imageContainer.setPrefWidth(totalWidth * 0.5);
+            });
         }
     }
 }
