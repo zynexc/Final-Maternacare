@@ -78,6 +78,11 @@ public class PregnancyHistoryTableController {
     }
 
     private void setupTableColumns() {
+        pregnancyNumberColumn.setText("GRAVIDA");
+        deliveryTypeColumn.setText("Type of Delivery");
+        placeOfDeliveryColumn.setText("Place of Delivery");
+        yearDeliveredColumn.setText("Year Delivered");
+        ttInjectionColumn.setText("TT Injection Status With Year");
         pregnancyNumberColumn.setCellValueFactory(cellData -> cellData.getValue().pregnancyNumberProperty().asObject());
         deliveryTypeColumn.setCellValueFactory(cellData -> cellData.getValue().deliveryTypeProperty());
         genderColumn.setCellValueFactory(cellData -> cellData.getValue().genderProperty());

@@ -345,6 +345,13 @@ public class MaternalFormController {
         for (TableColumn<PregnancyHistory, ?> col : pregnancyHistoryTableView.getColumns()) {
             col.setOnEditCancel(event -> pregnancyHistoryTableView.edit(-1, null));
         }
+
+        // Set column headers
+        phNumberColumn.setText("GRAVIDA");
+        phDeliveryTypeColumn.setText("Type of Delivery");
+        phPlaceColumn.setText("Place of Delivery");
+        phYearColumn.setText("Year Delivered");
+        phTTInjectionColumn.setText("TT Injection Status With Year");
     }
 
     private void addTooltips() {
@@ -386,14 +393,14 @@ public class MaternalFormController {
     private void markRequiredFields() {
         // Only set prompt text, do not add 'required-field' style class
         addRequiredIndicator(patientIdField, "Patient ID *");
-        addRequiredIndicator(fullNameField, "Full Name *");
-        addRequiredIndicator(dateOfBirthPicker, "Date of Birth *");
-        addRequiredIndicator(addressField, "Address *");
-        addRequiredIndicator(purokCombo, "Purok *");
-        addRequiredIndicator(contactNumberField, "Contact Number *");
-        addRequiredIndicator(bloodPressureField, "Blood Pressure *");
-        addRequiredIndicator(temperatureField, "Body Temperature *");
-        addRequiredIndicator(lastMenstrualPeriodPicker, "Last Menstrual Period *");
+        addRequiredIndicator(fullNameField, "Enter Full Name *");
+        addRequiredIndicator(dateOfBirthPicker, "Select Date of Birth *");
+        addRequiredIndicator(addressField, "Enter Address *");
+        addRequiredIndicator(purokCombo, "Select Purok *");
+        addRequiredIndicator(contactNumberField, "Enter Contact Number *");
+        addRequiredIndicator(bloodPressureField, "Enter Blood Pressure *");
+        addRequiredIndicator(temperatureField, "Enter Body Temperature *");
+        addRequiredIndicator(lastMenstrualPeriodPicker, "Select Last Menstrual Period *");
     }
 
     private void addRequiredIndicator(Control control, String labelText) {
@@ -505,12 +512,12 @@ public class MaternalFormController {
         // Populate fields with record data
         patientIdField.setText(record.getPatientId());
         fullNameField.setText(record.getFullName());
-        dateOfBirthPicker.setValue(record.getDateOfBirth());
+        dateOfBirthPicker.setValue(null);
         husbandNameField.setText(record.getHusbandName());
         addressField.setText(record.getAddress());
         contactNumberField.setText(record.getContactNumber());
         emailField.setText(record.getEmail());
-        purokCombo.setValue(record.getPurok());
+        purokCombo.setValue(null);
         ageOfGestationField.setText(String.valueOf(record.getAgeOfGestation()));
         weightField.setText(String.valueOf(record.getWeight()));
         heightField.setText(String.valueOf(record.getHeight()));
@@ -523,7 +530,7 @@ public class MaternalFormController {
         chiefComplaintField.setText(record.getChiefComplaint());
         remarksField.setText(record.getRemarks());
 
-        lastMenstrualPeriodPicker.setValue(record.getLastMenstrualPeriod());
+        lastMenstrualPeriodPicker.setValue(null);
         expectedDeliveryDatePicker.setValue(record.getExpectedDeliveryDate());
         paraField.setText(String.valueOf(record.getPara()));
         abortionField.setText(String.valueOf(record.getAbortion()));

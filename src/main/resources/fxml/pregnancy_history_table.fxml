@@ -26,8 +26,8 @@
 
     <TableView fx:id="pregnancyHistoryTable" VBox.vgrow="ALWAYS">
         <columns>
-            <!-- Pregnancy Number -->
-            <TableColumn fx:id="pregnancyNumberColumn" prefWidth="80" text="Gravida" />
+            <!-- GRAVIDA -->
+            <TableColumn fx:id="pregnancyNumberColumn" prefWidth="80" text="GRAVIDA" />
             
             <!-- Type of Delivery -->
             <TableColumn fx:id="deliveryTypeColumn" prefWidth="120" text="Type of Delivery" />
@@ -50,8 +50,8 @@
             <!-- Birth Date -->
             <TableColumn fx:id="birthDateColumn" prefWidth="120" text="Birth Date" />
             
-            <!-- TT Injection -->
-            <TableColumn fx:id="ttInjectionColumn" prefWidth="100" text="TT Injection" />
+            <!-- TT Injection Status With Year -->
+            <TableColumn fx:id="ttInjectionColumn" prefWidth="100" text="TT Injection Status With Year" />
         </columns>
     </TableView>
 
