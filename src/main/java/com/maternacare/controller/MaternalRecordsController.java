@@ -188,7 +188,7 @@ public class MaternalRecordsController {
             // Follow Up Checkup button column
             followUpColumn.setCellValueFactory(param -> null);
             followUpColumn.setCellFactory(param -> new TableCell<>() {
-                private final Button followUpButton = new Button("Follow Up Checkup");
+                private final Button followUpButton = new Button("Follow Up");
                 {
                     followUpButton.getStyleClass().add("follow-up-button");
                     followUpButton.setOnAction(event -> {

@@ -10,7 +10,7 @@
 }
 
 .search-button {
-    -fx-background-color: #007bff;
+    -fx-background-color: #eb0000;
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-padding: 8 15;
@@ -20,43 +20,50 @@
 }
 
 .search-button:hover {
-    -fx-background-color: #0056b3;
+    -fx-background-color: #a33c3c;
 }
 
 .records-table {
     -fx-background-color: white;
-    -fx-table-cell-border-color: #eb0000;
+    -fx-table-cell-border-color: transparent;
     -fx-padding: 0;
     -fx-background-insets: 0;
+    -fx-font-family: 'Poppins', Arial, sans-serif;
+    -fx-text-fill: black;
+    -fx-effect: dropshadow(gaussian, #e0e0e0, 8, 0.2, 0, 2);
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
 }
 
 .records-table .column-header-background {
-    -fx-background-color: #eb0000;
+    -fx-background-color: white;
+    -fx-border-width: 0;
     -fx-padding: 0;
 }
 
 .records-table .column-header {
-    -fx-background-color: #eb0000;
+    -fx-background-color: #f0f0f0;
     -fx-padding: 8 5;
-    -fx-border-width: 0 1 0 0;
-    -fx-border-color: #cc0000;
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
 }
 
 .records-table .column-header .label {
-    -fx-text-fill: white;
+    -fx-text-fill: black;
     -fx-font-weight: bold;
-    -fx-wrap-text: true;
-    -fx-alignment: center-left;
-    -fx-padding: 0 5;
+    -fx-font-family: 'Poppins', Arial, sans-serif;
+    -fx-alignment: center;
+    -fx-font-size: 14px;
 }
 
 .records-table .table-row-cell {
     -fx-border-width: 0 0 1 0;
-    -fx-border-color: #e0e0e0;
+    -fx-border-color: #f0f0f0;
+    -fx-background-radius: 0 0 10 10;
 }
 
 .records-table .table-row-cell:odd {
-    -fx-background-color: #F9FAFB;
+    -fx-background-color: white;
 }
 
 .records-table .table-row-cell:even {
@@ -64,17 +71,19 @@
 }
 
 .records-table .table-row-cell:selected {
-    -fx-background-color: #eb0000; /* Main red */
+    -fx-background-color: #f5f5f5;
+    -fx-text-fill: black;
 }
 
 .records-table .table-row-cell:selected .text {
-    -fx-fill: white; /* White text for selected cells */
+    -fx-fill: black;
 }
 
 .records-table .table-cell {
+    -fx-text-fill: black;
+    -fx-font-family: 'Poppins', Arial, sans-serif;
+    -fx-font-size: 13px;
     -fx-padding: 8 5;
-    -fx-text-fill: #212529;
-    -fx-wrap-text: true;
     -fx-alignment: center-left;
 }
 
@@ -154,18 +163,18 @@
 }
 
 .view-more-button {
-    -fx-background-color: #4CAF50;
+    -fx-background-color: #eb0000;
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-padding: 5 10;
     -fx-background-radius: 4;
     -fx-cursor: hand;
-    -fx-min-width: 90px;
-    -fx-max-width: 90px;
+    -fx-min-width: 120px;
+    -fx-max-width: 120px;
 }
 
 .view-more-button:hover {
-    -fx-background-color: #eb0000;
+    -fx-background-color: #a33c3c;
 }
 
 /* Keep button text white when its row is selected by targeting the inner text node */
@@ -216,4 +225,29 @@
     -fx-background-color: #FEE2E2 !important;
     -fx-background-radius: 15 !important;
     -fx-padding: 20 !important;
+    -fx-font-family: 'Poppins', Arial, sans-serif !important;
+    -fx-text-fill: black !important;
+}
+
+.content-container TextField,
+.content-container ComboBox,
+.content-container DatePicker {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-font-family: 'Poppins', Arial, sans-serif;
+}
+
+.follow-up-button {
+    -fx-background-color: #eb0000;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 5 10;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+    -fx-min-width: 90px;
+    -fx-max-width: 90px;
+}
+
+.follow-up-button:hover {
+    -fx-background-color: #a33c3c;
 } 
