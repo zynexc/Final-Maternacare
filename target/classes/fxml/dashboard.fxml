@@ -62,11 +62,11 @@
     </HBox>
 
     <!-- Charts Card -->
-    <VBox styleClass="demographics-card" spacing="10" VBox.vgrow="ALWAYS">
+    <VBox styleClass="demographics-card" spacing="10" VBox.vgrow="NEVER" prefHeight="420">
         <Text styleClass="chart-title" text="Patient Demographics"/>
         <VBox styleClass="chart-wrapper" VBox.vgrow="ALWAYS">
             <HBox spacing="20" VBox.vgrow="ALWAYS">
-                <AreaChart fx:id="barChart" title="Age Distribution (Severe Cases)" HBox.hgrow="ALWAYS" minWidth="600.0" prefWidth="900.0" prefHeight="600.0">
+                <AreaChart fx:id="barChart" title="Age Distribution (Severe Cases)" HBox.hgrow="ALWAYS" minWidth="400.0" prefWidth="420.0" prefHeight="350.0">
                     <xAxis>
                         <CategoryAxis label="Age Groups"/>
                     </xAxis>
@@ -74,7 +74,7 @@
                         <NumberAxis label="Number of Patients"/>
                     </yAxis>
                 </AreaChart>
-                <PieChart fx:id="pieChart" title="Patients per Purok" HBox.hgrow="ALWAYS" minWidth="400.0" prefWidth="700.0" prefHeight="600.0"/>
+                <PieChart fx:id="pieChart" title="Patients per Purok" HBox.hgrow="ALWAYS" minWidth="300.0" prefWidth="350.0" prefHeight="350.0"/>
             </HBox>
         </VBox>
     </VBox>
@@ -88,7 +88,7 @@
             <Button text="Refresh" onAction="#handleRefresh" styleClass="search-button"/>
         </HBox>
         
-        <TableView fx:id="recordsTable" VBox.vgrow="ALWAYS" styleClass="table-view">
+        <TableView fx:id="recordsTable" VBox.vgrow="NEVER" styleClass="table-view" prefHeight="200.0">
             <columns>
                 <TableColumn fx:id="patientIdColumn" text="Patient ID"/>
                 <TableColumn fx:id="lastNameColumn" text="Full Name"/>
