@@ -66,7 +66,7 @@
         <Text styleClass="chart-title" text="Patient Demographics"/>
         <VBox styleClass="chart-wrapper" VBox.vgrow="ALWAYS">
             <HBox spacing="20" VBox.vgrow="ALWAYS">
-                <AreaChart fx:id="barChart" title="Age Distribution (Severe Cases)" HBox.hgrow="ALWAYS" prefWidth="800.0" prefHeight="500.0" minWidth="400.0" minHeight="300.0" maxWidth="1200.0" maxHeight="800.0">
+                <AreaChart fx:id="barChart" title="Age Distribution (Severe Cases)" HBox.hgrow="ALWAYS" minWidth="600.0" prefWidth="900.0" prefHeight="600.0">
                     <xAxis>
                         <CategoryAxis label="Age Groups"/>
                     </xAxis>
@@ -74,7 +74,7 @@
                         <NumberAxis label="Number of Patients"/>
                     </yAxis>
                 </AreaChart>
-                <PieChart fx:id="pieChart" title="Patients per Purok" HBox.hgrow="ALWAYS" prefWidth="600.0" prefHeight="500.0" minWidth="300.0" minHeight="300.0" maxWidth="900.0" maxHeight="800.0"/>
+                <PieChart fx:id="pieChart" title="Patients per Purok" HBox.hgrow="ALWAYS" minWidth="400.0" prefWidth="700.0" prefHeight="600.0"/>
             </HBox>
         </VBox>
     </VBox>

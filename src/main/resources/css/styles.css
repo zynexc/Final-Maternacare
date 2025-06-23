@@ -82,4 +82,9 @@
     -fx-alignment: center;
     -fx-cursor: hand;
     -fx-margin: 10 0 0 0;
+}
+
+.section-title {
+    -fx-font-family: 'Poppins', Arial, sans-serif;
+    -fx-font-weight: bold;
 } 

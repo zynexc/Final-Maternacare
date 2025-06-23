@@ -188,7 +188,8 @@ public class MaternalFormController {
             purokCombo.setItems(FXCollections.observableArrayList("Purok 1", "Purok 2", "Purok 3", "Purok 4", "Purok 5",
                     "Purok 6"));
             presentationCombo
-                    .setItems(FXCollections.observableArrayList("Cephalic", "Breech", "Transverse", "Oblique"));
+                    .setItems(FXCollections.observableArrayList("Cephalic", "Breech", "Transverse", "Oblique",
+                            "No Information"));
             System.out.println("Combo boxes initialized.");
 
             System.out.println("Adding tooltips...");
