@@ -674,7 +674,23 @@
         "ttInjection": "asdas"
       }
     ],
-    "followUpVitalSigns": []
+    "followUpVitalSigns": [
+      {
+        "date": "2025-06-23",
+        "bloodPressure": "12/213",
+        "temperature": "123",
+        "pulseRate": "4213",
+        "respiratoryRate": "213",
+        "remarks": "asdawd",
+        "aog": "42",
+        "height": "123",
+        "weight": "14512",
+        "fht": "123",
+        "presentation": "54124",
+        "chiefComplaint": "123123",
+        "toComeBack": "2025-06-16"
+      }
+    ]
   },
   {
     "id": 18,
@@ -942,6 +958,22 @@
         "ttInjection": "yes"
       }
     ],
-    "followUpVitalSigns": []
+    "followUpVitalSigns": [
+      {
+        "date": "2025-06-23",
+        "bloodPressure": "12/12",
+        "temperature": "12",
+        "pulseRate": "12",
+        "respiratoryRate": "12",
+        "remarks": "asdwdasd",
+        "aog": "12",
+        "height": "12",
+        "weight": "12",
+        "fht": "12",
+        "presentation": "12",
+        "chiefComplaint": "12",
+        "toComeBack": "2025-06-11"
+      }
+    ]
   }
 ]

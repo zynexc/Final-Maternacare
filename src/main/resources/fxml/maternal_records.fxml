@@ -11,7 +11,8 @@
       style="-fx-background-color: #FEE2E2; -fx-background-radius: 15;"
       styleClass="content-container"
       spacing="10"
-      VBox.vgrow="ALWAYS">
+      VBox.vgrow="ALWAYS"
+      fx:id="rootVBox">
     <padding>
         <Insets top="20" right="20" bottom="20" left="20"/>
     </padding>

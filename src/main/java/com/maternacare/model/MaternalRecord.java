@@ -483,6 +483,11 @@ public class MaternalRecord {
         }
     }
 
+    // Returns the number of pregnancies (gravida) as a String
+    public String getGravida() {
+        return String.valueOf(pregnancyHistory.size());
+    }
+
     // Add DTO class for serialization
     public static class MaternalRecordDTO {
         public int id;

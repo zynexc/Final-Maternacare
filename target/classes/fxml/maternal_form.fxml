@@ -86,7 +86,7 @@
                     <!-- Row 2 -->
                     <Label text="Gravida:" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
                     <StackPane GridPane.columnIndex="1" GridPane.rowIndex="1" alignment="CENTER_RIGHT">
-                        <TextField fx:id="gravidaField" styleClass="form-field padded-text-field" maxWidth="Infinity" promptText="Enter Gravida *"/>
+                        <TextField fx:id="gravidaField" styleClass="form-field padded-text-field" maxWidth="Infinity" promptText="Enter Gravida *" editable="false"/>
                     </StackPane>
                     <Label text="Preterm:" styleClass="form-label" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
                     <StackPane GridPane.columnIndex="3" GridPane.rowIndex="1" alignment="CENTER_RIGHT">

@@ -21,6 +21,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import javafx.scene.layout.VBox;
 
 public class MaternalRecordsController {
     @FXML
@@ -60,6 +61,9 @@ public class MaternalRecordsController {
 
     private MaternalRecordDetailsPopupController lastDetailsPopupController = null;
     private MaternalRecord lastDetailsPopupRecord = null;
+
+    @FXML
+    private VBox rootVBox;
 
     public void setMainApplication(MainApplication mainApplication) {
         this.mainApplication = mainApplication;
@@ -221,24 +225,22 @@ public class MaternalRecordsController {
     private void showRecordDetails(MaternalRecord record) {
         System.out.println("showRecordDetails called for record: " + record.getPatientId());
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/maternal_record_details_popup.fxml"));
-            Parent popupRoot = loader.load();
-            System.out.println("Popup FXML loaded successfully: " + (popupRoot != null));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/maternal_record_details_page.fxml"));
+            Parent detailsPage = loader.load();
+            MaternalRecordDetailsPageController controller = loader.getController();
+            controller.setMaternalRecord(record);
 
-            MaternalRecordDetailsPopupController controller = loader.getController();
-            System.out.println("Popup Controller retrieved: " + (controller != null));
-            controller.setRecord(record);
-            lastDetailsPopupController = controller;
-            lastDetailsPopupRecord = record;
+            // Save the current content to restore later
+            var originalContent = new java.util.ArrayList<>(rootVBox.getChildren());
 
-            Stage popupStage = new Stage();
-            popupStage.initModality(Modality.APPLICATION_MODAL);
-            popupStage.setTitle("Maternal Record Details");
-            Scene popupScene = new Scene(popupRoot);
-            popupStage.setScene(popupScene);
-            popupStage.showAndWait();
-            System.out.println("Popup displayed.");
+            // Set up a back callback to restore the records table view
+            controller.setOnBackCallback(() -> {
+                rootVBox.getChildren().setAll(originalContent);
+                refreshTable();
+            });
 
+            // Replace the VBox content with the details page
+            rootVBox.getChildren().setAll(detailsPage);
         } catch (IOException e) {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Error", "Failed to show record details: " + e.getMessage());

@@ -32,6 +32,7 @@ import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.util.converter.LocalDateStringConverter;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.ContentDisplay;
+import javafx.collections.ListChangeListener;
 
 public class MaternalFormController {
 
@@ -158,6 +159,9 @@ public class MaternalFormController {
     private ObservableList<PregnancyHistory> pregnancyHistoryList = FXCollections.observableArrayList();
 
     @FXML
+    private TextField gravidaField;
+
+    @FXML
     public void initialize() {
         System.out.println("MaternalFormController.initialize() called");
 
@@ -211,6 +215,15 @@ public class MaternalFormController {
             // Set up pregnancy history table - will be initialized after scene is loaded
             Platform.runLater(this::initializePregnancyHistoryTableView);
             System.out.println("Pregnancy history table setup scheduled.");
+
+            // Make gravidaField non-editable
+            gravidaField.setEditable(false);
+            // Bind gravidaField to pregnancyHistoryList size
+            pregnancyHistoryList.addListener((ListChangeListener<PregnancyHistory>) change -> {
+                updateGravidaField();
+            });
+            // Set initial value
+            updateGravidaField();
 
             System.out.println("MaternalFormController initialization completed successfully.");
         } catch (Exception e) {
@@ -950,6 +963,12 @@ public class MaternalFormController {
             if (recordsController != null) {
                 recordsController.saveRecord(currentRecord);
             }
+        }
+    }
+
+    private void updateGravidaField() {
+        if (gravidaField != null) {
+            gravidaField.setText(String.valueOf(pregnancyHistoryList.size()));
         }
     }
 

@@ -30,6 +30,7 @@ com\maternacare\model\PregnancyHistory$PregnancyHistoryDTO.class
 com\maternacare\controller\MaternalRecordsController$2.class
 com\maternacare\TestDataLoading.class
 com\maternacare\model\VitalSignsEntry.class
+com\maternacare\controller\MaternalRecordDetailsPageController.class
 com\maternacare\service\LocalDateAdapter.class
 com\maternacare\controller\MaternalRecordsController.class
 com\maternacare\controller\PatientRecordsController.class
