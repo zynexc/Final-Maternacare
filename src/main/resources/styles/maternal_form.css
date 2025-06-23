@@ -67,23 +67,31 @@
 }
 
 .save-button {
-    -fx-background-color: #28a745;
+    -fx-background-color: #eb0000;
     -fx-text-fill: white;
     -fx-font-size: 14px;
     -fx-font-weight: bold;
+    -fx-min-width: 140px;
+    -fx-max-width: 140px;
+    -fx-min-height: 48px;
+    -fx-max-height: 48px;
     -fx-padding: 10 20;
     -fx-background-radius: 5;
     -fx-cursor: hand;
 }
 
 .save-button:hover {
-    -fx-background-color: #218838;
+    -fx-background-color: #a33c3c;
 }
 
 .clear-button {
     -fx-background-color: #6c757d;
     -fx-text-fill: white;
     -fx-font-size: 14px;
+    -fx-min-width: 140px;
+    -fx-max-width: 140px;
+    -fx-min-height: 48px;
+    -fx-max-height: 48px;
     -fx-padding: 10 20;
     -fx-background-radius: 5;
     -fx-cursor: hand;
@@ -384,4 +392,31 @@
     -fx-font-size: 14px;
     -fx-text-fill: #6c757d;
     -fx-font-style: italic;
+}
+
+.add-more-button {
+    -fx-background-color: #eb0000;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+
+.add-more-button:hover {
+    -fx-background-color: #a33c3c;
+}
+
+.delete-button {
+    -fx-background-color: #6c757d;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 10 20;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+
+.delete-button:hover {
+    -fx-background-color: #5a6268;
 }

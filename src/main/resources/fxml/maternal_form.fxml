@@ -129,9 +129,9 @@
                         <TableColumn fx:id="phTTInjectionColumn" text="TT Injection Status With Year" />
                     </columns>
                 </TableView>
-                <HBox spacing="10" alignment="CENTER_RIGHT">
-                    <Button text="Add More" onAction="#handleAddPregnancyHistory" styleClass="action-button"/>
-                    <Button text="Delete" onAction="#handleDeletePregnancyHistory" styleClass="action-button"/>
+                <HBox spacing="10" alignment="CENTER_RIGHT" style="-fx-padding: 20 0 0 0;">
+                    <Button text="Add More" onAction="#handleAddPregnancyHistory" styleClass="add-more-button"/>
+                    <Button text="Delete" onAction="#handleDeletePregnancyHistory" styleClass="delete-button"/>
                 </HBox>
             </VBox>
 
@@ -197,8 +197,8 @@
 
             <!-- Button Container -->
             <HBox styleClass="button-container">
-                <Button text="Clear" onAction="#handleClear" styleClass="clear-button,action-button"/>
-                <Button text="Save" onAction="#handleSave" styleClass="save-button,action-button"/>
+                <Button text="Clear" styleClass="clear-button"/>
+                <Button text="Save" styleClass="save-button"/>
             </HBox>
         </VBox>
     </ScrollPane>
