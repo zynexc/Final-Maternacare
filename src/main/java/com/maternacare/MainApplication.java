@@ -21,6 +21,7 @@ import java.nio.file.Paths;
 import javafx.scene.layout.Priority;
 import com.maternacare.model.MaternalRecord;
 import javafx.scene.text.Font;
+import javafx.scene.input.KeyCombination;
 
 public class MainApplication extends Application {
 
@@ -60,8 +61,8 @@ public class MainApplication extends Application {
 
         // Load the login screen initially
         showLoginScreen();
-
         primaryStage.show();
+        primaryStage.setMaximized(true);
     }
 
     public void showLoginScreen() throws IOException {
@@ -95,9 +96,9 @@ public class MainApplication extends Application {
 
             // Add logo to the top of the sidebar
             try {
-                Image logo = new Image(getClass().getResourceAsStream("/images/Tagapo-logo.png"));
+                Image logo = new Image(getClass().getResourceAsStream("/images/dashboard-logo.png"));
                 ImageView logoView = new ImageView(logo);
-                logoView.setFitWidth(100);
+                logoView.setFitWidth(90);
                 logoView.setPreserveRatio(true);
                 VBox.setMargin(logoView, new Insets(0, 0, 20, 0)); // Add margin below the logo
                 sidebar.getChildren().add(logoView);
@@ -122,6 +123,8 @@ public class MainApplication extends Application {
                     .add(getClass().getResource("/styles/main_application.css").toExternalForm());
             primaryStage.setScene(mainScene);
             primaryStage.setMaximized(true); // Maximize the main window
+            primaryStage.setFullScreenExitHint("");
+            primaryStage.setFullScreen(true);
             System.out.println("mainScene set.");
 
             // Pre-load the records controller (moved from original position)
@@ -338,7 +341,7 @@ public class MainApplication extends Application {
         // view
         if (primaryStage.getScene() != mainScene) {
             primaryStage.setScene(mainScene);
-            primaryStage.setMaximized(true); // Ensure dashboard is full screen
+            primaryStage.setMaximized(true); // Ensure dashboard is maximized
         }
     }
 
