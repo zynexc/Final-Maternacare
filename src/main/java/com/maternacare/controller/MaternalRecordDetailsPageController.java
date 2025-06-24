@@ -161,15 +161,16 @@ public class MaternalRecordDetailsPageController {
     }
 
     private Node createPregnancyHistoryCard(PregnancyHistory history, int number) {
-        VBox card = new VBox(10);
-        card.getStyleClass().add("pregnancy-history-card");
-        card.setPadding(new Insets(0, 0, 12, 0));
+        VBox card = new VBox(8);
+        card.getStyleClass().add("history-box");
+        card.setPadding(new Insets(12));
+        card.setStyle("-fx-border-color: #e0e0e0; -fx-border-radius: 4; -fx-background-color: #fff;");
 
-        // Header
-        HBox header = new HBox();
-        header.getStyleClass().add("pregnancy-header");
-        header.getChildren().add(new Label("Pregnancy # " + number));
-        card.getChildren().add(header);
+        // Title with pregnancy number
+        Label titleLabel = new Label("Patient #" + number);
+        titleLabel.getStyleClass().add("history-title");
+        titleLabel.setStyle(
+                "-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: white; -fx-background-color: #eb0000; -fx-background-radius: 6; -fx-padding: 4 12;");
 
         // Details grid (single column, label and value per row)
         GridPane grid = new GridPane();
@@ -195,20 +196,21 @@ public class MaternalRecordDetailsPageController {
         grid.add(new Label("TT Injection:"), 0, row);
         grid.add(new Label(history.getTtInjection()), 1, row++);
 
-        card.getChildren().add(grid);
+        card.getChildren().addAll(titleLabel, grid);
         return card;
     }
 
     private Node createFollowUpCard(VitalSignsEntry entry) {
-        VBox card = new VBox(10);
-        card.getStyleClass().add("vital-signs-card");
-        card.setPadding(new Insets(0, 0, 12, 0));
+        VBox card = new VBox(8);
+        card.getStyleClass().add("followup-box");
+        card.setPadding(new Insets(12));
+        card.setStyle("-fx-border-color: #e0e0e0; -fx-border-radius: 4; -fx-background-color: #fafafa;");
 
-        // Date header
-        HBox dateHeader = new HBox();
-        dateHeader.getStyleClass().add("vital-signs-date");
-        dateHeader.getChildren().add(new Label("Date: " + formatDate(entry.getDate())));
-        card.getChildren().add(dateHeader);
+        // Date label
+        Label dateLabel = new Label(entry.getDate() != null ? entry.getDate().format(dateFormatter) : "N/A");
+        dateLabel.getStyleClass().add("followup-date-label");
+        dateLabel.setStyle(
+                "-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: white; -fx-background-color: #eb0000; -fx-background-radius: 6; -fx-padding: 4 12;");
 
         // Details grid (single column, label and value per row)
         GridPane grid = new GridPane();
@@ -242,6 +244,7 @@ public class MaternalRecordDetailsPageController {
         grid.add(new Label("Remarks:"), 0, row);
         grid.add(new Label(entry.getRemarks()), 1, row++);
 
+        card.getChildren().add(dateLabel);
         card.getChildren().add(grid);
         return card;
     }

@@ -173,3 +173,11 @@
 #severeCasesLabel {
     -fx-text-fill: #eb0000;
 }
+
+.section-title {
+    -fx-font-family: 'Poppins Bold';
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #d32f2f;
+    -fx-padding: 0 0 10 0;
+}

@@ -8,7 +8,7 @@
       spacing="12" styleClass="details-root" style="-fx-background-color: #fff;">
 
     <HBox styleClass="header-bar" alignment="CENTER" spacing="10">
-        <Label text="Maternal Record Details" styleClass="header-title" />
+        <Label text="Maternal Record Details" styleClass="header-titles" />
         <Pane HBox.hgrow="ALWAYS" />
         <Button text="Back to Records" onAction="#handleBack" styleClass="back-button" />
     </HBox>
@@ -16,8 +16,8 @@
     <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
         <VBox spacing="18">
             <VBox styleClass="section-card">
-                <Label text="Personal Information" styleClass="header-title" />
                 <VBox styleClass="personal-info-container">
+                    <Label text="Personal Information" styleClass="header-title" />
                     <GridPane hgap="10" vgap="6">
                         <columnConstraints>
                             <ColumnConstraints percentWidth="25"/>
@@ -26,11 +26,11 @@
                             <ColumnConstraints percentWidth="25"/>
                         </columnConstraints>
 
-                        <Label text="Patient ID :" />
-                        <Label fx:id="patientIdLabel" styleClass="bold-label" GridPane.columnIndex="1" />
+                        <Label text="Patient ID :" styleClass="bold-text" />
+                        <Label fx:id="patientIdLabel" styleClass="bold-text" GridPane.columnIndex="1" />
 
-                        <Label text="Full Name :" GridPane.columnIndex="2" />
-                        <Label fx:id="fullNameLabel" styleClass="bold-label" GridPane.columnIndex="3" />
+                        <Label text="Full Name :" styleClass="bold-text" GridPane.columnIndex="2" />
+                        <Label fx:id="fullNameLabel" styleClass="bold-text" GridPane.columnIndex="3" />
 
                         <Label text="Date of Birth :" GridPane.rowIndex="1" />
                         <Label fx:id="dobLabel" GridPane.columnIndex="1" GridPane.rowIndex="1" />
@@ -63,8 +63,8 @@
             </VBox>
 
             <VBox styleClass="section-card">
-                <Label text="Vital Signs" styleClass="header-title"/>
                 <VBox styleClass="vital-signs-container">
+                    <Label text="Vital Signs" styleClass="header-title"/>
                     <GridPane hgap="10" vgap="14">
                         <columnConstraints>
                             <ColumnConstraints percentWidth="25"/>
@@ -105,32 +105,36 @@
             </VBox>
 
             <HBox spacing="16" alignment="CENTER" styleClass="stat-boxes">
-                <VBox styleClass="stat-box">
+                <VBox styleClass="stat-box" HBox.hgrow="ALWAYS">
                     <Label text="Gravida" />
                     <Label fx:id="gravidaLabel" styleClass="stat-value" />
                 </VBox>
-                <VBox styleClass="stat-box">
+                <VBox styleClass="stat-box" HBox.hgrow="ALWAYS">
                     <Label text="Para" />
                     <Label fx:id="paraLabel" styleClass="stat-value" />
                 </VBox>
-                <VBox styleClass="stat-box">
+                <VBox styleClass="stat-box" HBox.hgrow="ALWAYS">
                     <Label text="Living Children" />
                     <Label fx:id="livingChildrenLabel" styleClass="stat-value" />
                 </VBox>
-                <VBox styleClass="stat-box">
+                <VBox styleClass="stat-box" HBox.hgrow="ALWAYS">
                     <Label text="Abortion" />
                     <Label fx:id="abortionLabel" styleClass="stat-value" />
                 </VBox>
             </HBox>
 
             <VBox styleClass="section-card">
-                <Label text="Pregnancy History Details" styleClass="header-title"/>
-                <VBox fx:id="pregnancyHistoryContainer" spacing="18" />
+                <VBox styleClass="pregnancy-history-container">
+                    <Label text="Pregnancy History Details" styleClass="header-title"/>
+                    <VBox fx:id="pregnancyHistoryContainer" spacing="18" />
+                </VBox>
             </VBox>
 
             <VBox styleClass="section-card">
-                <Label text="Follow-Up Vital Signs" styleClass="header-title"/>
-                <VBox fx:id="followUpContainer" spacing="18" />
+                <VBox styleClass="follow-up-container">
+                    <Label text="Follow-Up Vital Signs" styleClass="header-title"/>
+                    <VBox fx:id="followUpContainer" spacing="18" />
+                </VBox>
             </VBox>
         </VBox>
     </ScrollPane>

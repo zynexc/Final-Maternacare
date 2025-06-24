@@ -63,7 +63,7 @@
 
     <!-- Charts Card -->
     <VBox styleClass="demographics-card" spacing="10" VBox.vgrow="NEVER" prefHeight="420">
-        <Text styleClass="chart-title" text="Patient Demographics"/>
+        <Text styleClass="section-title" text="Patient Demographics"/>
         <VBox styleClass="chart-wrapper" VBox.vgrow="ALWAYS">
             <HBox spacing="20" VBox.vgrow="ALWAYS">
                 <AreaChart fx:id="barChart" title="Age Distribution (Severe Cases)" HBox.hgrow="ALWAYS" minWidth="400.0" prefWidth="420.0" prefHeight="350.0">
@@ -82,7 +82,7 @@
     <!-- Patient Records Table Card -->
     <VBox styleClass="card" spacing="10" VBox.vgrow="ALWAYS">
         <HBox spacing="10" alignment="CENTER_LEFT">
-            <Text styleClass="chart-title" text="High-Risk Patient Records"/>
+            <Text styleClass="section-title" text="High-Risk Patient Records"/>
             <Region HBox.hgrow="ALWAYS"/>
             <TextField fx:id="searchField" promptText="Search records..." HBox.hgrow="NEVER"/>
             <Button text="Refresh" onAction="#handleRefresh" styleClass="search-button"/>
