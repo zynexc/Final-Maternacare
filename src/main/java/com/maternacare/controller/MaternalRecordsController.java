@@ -174,7 +174,7 @@ public class MaternalRecordsController {
             viewMoreColumn.setCellFactory(param -> new TableCell<>() {
                 private final Button viewMoreButton = new Button("View Details");
                 {
-                    viewMoreButton.getStyleClass().add("table-button");
+                    viewMoreButton.getStyleClass().addAll("table-button", "view-more-button");
                     viewMoreButton.setOnAction(event -> {
                         MaternalRecord record = getTableView().getItems().get(getIndex());
                         if (record != null) {
@@ -198,7 +198,7 @@ public class MaternalRecordsController {
             followUpColumn.setCellFactory(param -> new TableCell<>() {
                 private final Button followUpButton = new Button("Follow Up");
                 {
-                    followUpButton.getStyleClass().add("table-button");
+                    followUpButton.getStyleClass().addAll("table-button", "follow-up-button");
                 }
 
                 @Override
@@ -231,6 +231,7 @@ public class MaternalRecordsController {
             Parent detailsPage = loader.load();
             MaternalRecordDetailsPageController controller = loader.getController();
             controller.setMaternalRecord(record);
+            controller.setRecordsController(this, records);
 
             // Save the current content to restore later
             var originalContent = new java.util.ArrayList<>(rootVBox.getChildren());

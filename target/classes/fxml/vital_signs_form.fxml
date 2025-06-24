@@ -53,7 +53,7 @@
         </GridPane>
         <Label fx:id="messageLabel" styleClass="message-label" managed="false" visible="false"/>
         <HBox spacing="10" alignment="CENTER_RIGHT">
-            <Button text="Back" fx:id="backButton" minWidth="100" styleClass="clear-button"/>
+            <Button text="Back" fx:id="backButton" minWidth="100" styleClass="back-button"/>
             <Button text="Save" fx:id="saveButton" minWidth="100" styleClass="save-button"/>
         </HBox>
     </VBox>

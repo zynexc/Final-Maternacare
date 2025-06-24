@@ -277,7 +277,7 @@
     -fx-font-weight: bold;
 }
 
-.table-button {
+.edit-button {
     -fx-background-color: #d32f2f;
     -fx-text-fill: white;
     -fx-font-size: 12px;
@@ -313,6 +313,17 @@
     -fx-background-color: #5a6268;
 }
 
+.delete-button {
+    -fx-background-color: #6c757d;
+    -fx-text-fill: white;
+    -fx-background-radius: 5;
+    -fx-font-family: "Poppins Regular";
+    -fx-cursor: hand;
+}
+.delete-button:hover {
+    -fx-background-color: #5a6268;
+}
+
 .inline-form-container {
     -fx-background-color: white;
     -fx-background-radius: 10;
@@ -341,4 +352,15 @@
     -fx-font-weight: bold;
     -fx-text-fill: #1f2937;
     -fx-padding: 0 0 10px 0;
+}
+
+.back-button {
+    -fx-background-color: #6c757d;
+    -fx-text-fill: white;
+    -fx-background-radius: 5;
+    -fx-font-family: "Poppins Regular";
+    -fx-cursor: hand;
+}
+.back-button:hover {
+    -fx-background-color: #5a6268;
 }

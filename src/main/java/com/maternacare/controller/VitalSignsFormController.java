@@ -128,4 +128,19 @@ public class VitalSignsFormController {
             patientNameLabel.setText(name);
         }
     }
+
+    public void prefillFields(VitalSignsEntry entry) {
+        bloodPressureField.setText(entry.getBloodPressure());
+        temperatureField.setText(entry.getTemperature());
+        pulseRateField.setText(entry.getPulseRate());
+        respiratoryRateField.setText(entry.getRespiratoryRate());
+        aogField.setText(entry.getAog());
+        heightField.setText(entry.getHeight());
+        weightField.setText(entry.getWeight());
+        fhtField.setText(entry.getFht());
+        presentationField.setText(entry.getPresentation());
+        chiefComplaintField.setText(entry.getChiefComplaint());
+        remarksField.setText(entry.getRemarks());
+        toComeBackPicker.setValue(entry.getToComeBack());
+    }
 }
