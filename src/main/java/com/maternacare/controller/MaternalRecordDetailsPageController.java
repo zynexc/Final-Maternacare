@@ -9,6 +9,7 @@ import javafx.scene.control.Separator;
 import javafx.scene.Node;
 import javafx.geometry.Insets;
 import javafx.event.ActionEvent;
+import javafx.scene.layout.ColumnConstraints;
 
 import com.maternacare.model.MaternalRecord;
 import com.maternacare.model.PregnancyHistory;
@@ -160,7 +161,7 @@ public class MaternalRecordDetailsPageController {
     }
 
     private Node createPregnancyHistoryCard(PregnancyHistory history, int number) {
-        VBox card = new VBox(6);
+        VBox card = new VBox(10);
         card.getStyleClass().add("pregnancy-history-card");
         card.setPadding(new Insets(0, 0, 12, 0));
 
@@ -170,38 +171,36 @@ public class MaternalRecordDetailsPageController {
         header.getChildren().add(new Label("Pregnancy # " + number));
         card.getChildren().add(header);
 
-        // Details grid
+        // Details grid (single column, label and value per row)
         GridPane grid = new GridPane();
-        grid.setHgap(18);
-        grid.setVgap(6);
-
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.getColumnConstraints().addAll(
+                new ColumnConstraints(), new ColumnConstraints());
         int row = 0;
         grid.add(new Label("Delivery:"), 0, row);
-        grid.add(new Label(history.getDeliveryType()), 1, row);
-        grid.add(new Label("Gender:"), 2, row);
-        grid.add(new Label(history.getGender()), 3, row);
-        row++;
+        grid.add(new Label(history.getDeliveryType()), 1, row++);
+        grid.add(new Label("Gender:"), 0, row);
+        grid.add(new Label(history.getGender()), 1, row++);
         grid.add(new Label("Place:"), 0, row);
-        grid.add(new Label(history.getPlaceOfDelivery()), 1, row);
-        grid.add(new Label("Year:"), 2, row);
-        grid.add(new Label(String.valueOf(history.getYearDelivered())), 3, row);
-        row++;
+        grid.add(new Label(history.getPlaceOfDelivery()), 1, row++);
+        grid.add(new Label("Year:"), 0, row);
+        grid.add(new Label(String.valueOf(history.getYearDelivered())), 1, row++);
         grid.add(new Label("Attended By:"), 0, row);
-        grid.add(new Label(history.getAttendedBy()), 1, row);
-        grid.add(new Label("Status:"), 2, row);
-        grid.add(new Label(history.getStatus()), 3, row);
-        row++;
+        grid.add(new Label(history.getAttendedBy()), 1, row++);
+        grid.add(new Label("Status:"), 0, row);
+        grid.add(new Label(history.getStatus()), 1, row++);
         grid.add(new Label("Birth Date:"), 0, row);
-        grid.add(new Label(formatDate(history.getBirthDate())), 1, row);
-        grid.add(new Label("TT Injection:"), 2, row);
-        grid.add(new Label(history.getTtInjection()), 3, row);
+        grid.add(new Label(formatDate(history.getBirthDate())), 1, row++);
+        grid.add(new Label("TT Injection:"), 0, row);
+        grid.add(new Label(history.getTtInjection()), 1, row++);
 
         card.getChildren().add(grid);
         return card;
     }
 
     private Node createFollowUpCard(VitalSignsEntry entry) {
-        VBox card = new VBox(6);
+        VBox card = new VBox(10);
         card.getStyleClass().add("vital-signs-card");
         card.setPadding(new Insets(0, 0, 12, 0));
 
@@ -211,41 +210,37 @@ public class MaternalRecordDetailsPageController {
         dateHeader.getChildren().add(new Label("Date: " + formatDate(entry.getDate())));
         card.getChildren().add(dateHeader);
 
-        // Details grid
+        // Details grid (single column, label and value per row)
         GridPane grid = new GridPane();
-        grid.setHgap(18);
-        grid.setVgap(6);
-
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.getColumnConstraints().addAll(
+                new ColumnConstraints(), new ColumnConstraints());
         int row = 0;
         grid.add(new Label("Blood Pressure:"), 0, row);
-        grid.add(new Label(entry.getBloodPressure()), 1, row);
-        grid.add(new Label("Temperature:"), 2, row);
-        grid.add(new Label(entry.getTemperature()), 3, row);
-        row++;
+        grid.add(new Label(entry.getBloodPressure()), 1, row++);
+        grid.add(new Label("Temperature:"), 0, row);
+        grid.add(new Label(entry.getTemperature()), 1, row++);
         grid.add(new Label("Pulse Rate:"), 0, row);
-        grid.add(new Label(entry.getPulseRate()), 1, row);
-        grid.add(new Label("Respiratory Rate:"), 2, row);
-        grid.add(new Label(entry.getRespiratoryRate()), 3, row);
-        row++;
+        grid.add(new Label(entry.getPulseRate()), 1, row++);
+        grid.add(new Label("Respiratory Rate:"), 0, row);
+        grid.add(new Label(entry.getRespiratoryRate()), 1, row++);
         grid.add(new Label("Age of Gestation:"), 0, row);
-        grid.add(new Label(entry.getAog()), 1, row);
-        grid.add(new Label("Height (cm):"), 2, row);
-        grid.add(new Label(entry.getHeight()), 3, row);
-        row++;
+        grid.add(new Label(entry.getAog()), 1, row++);
+        grid.add(new Label("Height (cm):"), 0, row);
+        grid.add(new Label(entry.getHeight()), 1, row++);
         grid.add(new Label("Weight (lbs):"), 0, row);
-        grid.add(new Label(entry.getWeight()), 1, row);
-        grid.add(new Label("Fetal Heart Tone:"), 2, row);
-        grid.add(new Label(entry.getFht()), 3, row);
-        row++;
+        grid.add(new Label(entry.getWeight()), 1, row++);
+        grid.add(new Label("Fetal Heart Tone:"), 0, row);
+        grid.add(new Label(entry.getFht()), 1, row++);
         grid.add(new Label("Presentation:"), 0, row);
-        grid.add(new Label(entry.getPresentation()), 1, row);
-        grid.add(new Label("Chief Complaint:"), 2, row);
-        grid.add(new Label(entry.getChiefComplaint()), 3, row);
-        row++;
+        grid.add(new Label(entry.getPresentation()), 1, row++);
+        grid.add(new Label("Chief Complaint:"), 0, row);
+        grid.add(new Label(entry.getChiefComplaint()), 1, row++);
         grid.add(new Label("To come Back:"), 0, row);
-        grid.add(new Label(formatDate(entry.getToComeBack())), 1, row);
-        grid.add(new Label("Remarks:"), 2, row);
-        grid.add(new Label(entry.getRemarks()), 3, row);
+        grid.add(new Label(formatDate(entry.getToComeBack())), 1, row++);
+        grid.add(new Label("Remarks:"), 0, row);
+        grid.add(new Label(entry.getRemarks()), 1, row++);
 
         card.getChildren().add(grid);
         return card;

@@ -1,106 +1,137 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 
-<ScrollPane fitToWidth="true" xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.maternacare.controller.MaternalRecordDetailsPageController">
-    <content>
-        <VBox xmlns="http://javafx.com/javafx"
-              xmlns:fx="http://javafx.com/fxml"
-              fx:id="detailsRoot"
-              spacing="20" alignment="TOP_CENTER" prefWidth="900" styleClass="details-page-root">
-            <!-- Header Bar -->
-            <HBox styleClass="section-header" alignment="CENTER_LEFT" spacing="10">
-                <Label text="Maternal Record Details" styleClass="section-header-title"/>
-                <Region HBox.hgrow="ALWAYS"/>
-                <Button text="✕" onAction="#handleBack" styleClass="close-btn"/>
-            </HBox>
+<VBox fx:id="detailsRoot" xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml" fx:controller="com.maternacare.controller.MaternalRecordDetailsPageController"
+      spacing="12" styleClass="details-root" style="-fx-background-color: #fff;">
 
-            <!-- Grouped Personal Information and Details -->
-            <VBox styleClass="card-group" spacing="20">
-                <VBox styleClass="pregnancy-history-card" spacing="10">
-                    <Label text="Personal Information" styleClass="pregnancy-header"/>
-                    <GridPane hgap="10" vgap="8">
-                        <Label text="Patient ID :" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                        <Label fx:id="patientIdLabel" styleClass="info-value-bold" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
-                        <Label text="Full Name :" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
-                        <Label fx:id="fullNameLabel" styleClass="info-value-bold" GridPane.rowIndex="0" GridPane.columnIndex="3"/>
-                        <Label text="Date of Birth :" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                        <Label fx:id="dobLabel" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-                        <Label text="Address :" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
-                        <Label fx:id="addressLabel" GridPane.rowIndex="1" GridPane.columnIndex="3"/>
-                        <Label text="Purok :" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                        <Label fx:id="purokLabel" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-                        <Label text="Contact Number :" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
-                        <Label fx:id="contactNumberLabel" GridPane.rowIndex="2" GridPane.columnIndex="3"/>
-                        <Label text="Email :" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-                        <Label fx:id="emailLabel" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
-                        <Label text="Last Menstrual Period :" GridPane.rowIndex="3" GridPane.columnIndex="2"/>
-                        <Label fx:id="lmpLabel" GridPane.rowIndex="3" GridPane.columnIndex="3"/>
-                        <Label text="Expected Delivery Date :" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-                        <Label fx:id="eddLabel" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
-                        <Label text="Age :" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
-                        <Label fx:id="ageLabel" GridPane.rowIndex="1" GridPane.columnIndex="3"/>
-                        <Label text="Next Appointment :" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
-                        <Label fx:id="nextAppointmentLabel" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
-                    </GridPane>
-                    <GridPane hgap="10" vgap="8">
-                        <Label text="Temperature :" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                        <Label fx:id="temperatureLabel" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
-                        <Label text="Pulse Rate :" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
-                        <Label fx:id="pulseRateLabel" GridPane.rowIndex="0" GridPane.columnIndex="3"/>
-                        <Label text="Respiratory Rate :" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                        <Label fx:id="respiratoryRateLabel" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-                        <Label text="Age of Gestation (AOG) :" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
-                        <Label fx:id="aogLabel" GridPane.rowIndex="1" GridPane.columnIndex="3"/>
-                        <Label text="Height (cm) :" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                        <Label fx:id="heightLabel" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-                        <Label text="Weight (lbs) :" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
-                        <Label fx:id="weightLabel" GridPane.rowIndex="2" GridPane.columnIndex="3"/>
-                        <Label text="Fetal Heart Tone (FHT) :" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-                        <Label fx:id="fhtLabel" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
-                        <Label text="Presentation :" GridPane.rowIndex="3" GridPane.columnIndex="2"/>
-                        <Label fx:id="presentationLabel" GridPane.rowIndex="3" GridPane.columnIndex="3"/>
-                        <Label text="Chief Complaint :" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-                        <Label fx:id="chiefComplaintLabel" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
-                        <Label text="To come Back :" GridPane.rowIndex="4" GridPane.columnIndex="2"/>
-                        <Label fx:id="toComeBackLabel" GridPane.rowIndex="4" GridPane.columnIndex="3"/>
-                        <Label text="Remarks :" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
-                        <Label fx:id="remarksLabel" GridPane.rowIndex="5" GridPane.columnIndex="1" GridPane.columnSpan="3"/>
+    <HBox styleClass="header-bar" alignment="CENTER" spacing="10">
+        <Label text="Maternal Record Details" styleClass="header-title" />
+        <Pane HBox.hgrow="ALWAYS" />
+        <Button text="Back to Records" onAction="#handleBack" styleClass="back-button" />
+    </HBox>
+
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
+        <VBox spacing="18">
+            <VBox styleClass="section-card">
+                <Label text="Personal Information" styleClass="header-title" />
+                <VBox styleClass="personal-info-container">
+                    <GridPane hgap="10" vgap="6">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="25"/>
+                            <ColumnConstraints percentWidth="25"/>
+                            <ColumnConstraints percentWidth="25"/>
+                            <ColumnConstraints percentWidth="25"/>
+                        </columnConstraints>
+
+                        <Label text="Patient ID :" />
+                        <Label fx:id="patientIdLabel" styleClass="bold-label" GridPane.columnIndex="1" />
+
+                        <Label text="Full Name :" GridPane.columnIndex="2" />
+                        <Label fx:id="fullNameLabel" styleClass="bold-label" GridPane.columnIndex="3" />
+
+                        <Label text="Date of Birth :" GridPane.rowIndex="1" />
+                        <Label fx:id="dobLabel" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                        <Label text="Age :" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <Label fx:id="ageLabel" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+
+                        <Label text="Address :" GridPane.rowIndex="2" />
+                        <Label fx:id="addressLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                        <Label text="Purok :" GridPane.rowIndex="3" />
+                        <Label fx:id="purokLabel" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                        <Label text="Contact Number :" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                        <Label fx:id="contactNumberLabel" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+
+                        <Label text="Email :" GridPane.rowIndex="4" />
+                        <Label fx:id="emailLabel" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+                        <Label text="Last Menstrual Period :" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                        <Label fx:id="lmpLabel" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+
+                        <Label text="Expected Delivery Date :" GridPane.rowIndex="5" />
+                        <Label fx:id="eddLabel" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+
+                        <Label text="Next Appointment :" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                        <Label fx:id="nextAppointmentLabel" GridPane.columnIndex="3" GridPane.rowIndex="5" />
                     </GridPane>
                 </VBox>
             </VBox>
 
-            <!-- Stats Row -->
-            <HBox spacing="16" alignment="CENTER" styleClass="stats-row">
-                <VBox styleClass="stats-card" alignment="CENTER" HBox.hgrow="ALWAYS">
-                    <Label text="Gravida" styleClass="stats-label"/>
-                    <Label fx:id="gravidaLabel" styleClass="highlight-number"/>
+            <VBox styleClass="section-card">
+                <Label text="Vital Signs" styleClass="header-title"/>
+                <VBox styleClass="vital-signs-container">
+                    <GridPane hgap="10" vgap="14">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="25"/>
+                            <ColumnConstraints percentWidth="25"/>
+                            <ColumnConstraints percentWidth="25"/>
+                            <ColumnConstraints percentWidth="25"/>
+                        </columnConstraints>
+
+                        <Label text="Temperature :" />
+                        <Label fx:id="temperatureLabel" GridPane.columnIndex="1" />
+                        <Label text="Pulse Rate :" GridPane.columnIndex="2" />
+                        <Label fx:id="pulseRateLabel" GridPane.columnIndex="3" />
+
+                        <Label text="Respiratory Rate :" GridPane.rowIndex="1" />
+                        <Label fx:id="respiratoryRateLabel" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label text="Age of Gestation (AOG) :" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <Label fx:id="aogLabel" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+
+                        <Label text="Height (cm) :" GridPane.rowIndex="2" />
+                        <Label fx:id="heightLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Label text="Weight (lbs) :" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                        <Label fx:id="weightLabel" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+
+                        <Label text="Fetal Heart Tone (FHT) :" GridPane.rowIndex="3" />
+                        <Label fx:id="fhtLabel" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Label text="Presentation :" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                        <Label fx:id="presentationLabel" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+
+                        <Label text="Chief Complaint :" GridPane.rowIndex="4" />
+                        <Label fx:id="chiefComplaintLabel" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <Label text="To come Back :" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                        <Label fx:id="toComeBackLabel" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+
+                        <Label text="Remarks :" GridPane.rowIndex="5" />
+                        <Label fx:id="remarksLabel" GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.columnSpan="3" />
+                    </GridPane>
                 </VBox>
-                <VBox styleClass="stats-card" alignment="CENTER" HBox.hgrow="ALWAYS">
-                    <Label text="Para" styleClass="stats-label"/>
-                    <Label fx:id="paraLabel" styleClass="highlight-number"/>
+            </VBox>
+
+            <HBox spacing="16" alignment="CENTER" styleClass="stat-boxes">
+                <VBox styleClass="stat-box">
+                    <Label text="Gravida" />
+                    <Label fx:id="gravidaLabel" styleClass="stat-value" />
                 </VBox>
-                <VBox styleClass="stats-card" alignment="CENTER" HBox.hgrow="ALWAYS">
-                    <Label text="Living Children" styleClass="stats-label"/>
-                    <Label fx:id="livingChildrenLabel" styleClass="highlight-number"/>
+                <VBox styleClass="stat-box">
+                    <Label text="Para" />
+                    <Label fx:id="paraLabel" styleClass="stat-value" />
                 </VBox>
-                <VBox styleClass="stats-card" alignment="CENTER" HBox.hgrow="ALWAYS">
-                    <Label text="Abortion" styleClass="stats-label"/>
-                    <Label fx:id="abortionLabel" styleClass="highlight-number"/>
+                <VBox styleClass="stat-box">
+                    <Label text="Living Children" />
+                    <Label fx:id="livingChildrenLabel" styleClass="stat-value" />
+                </VBox>
+                <VBox styleClass="stat-box">
+                    <Label text="Abortion" />
+                    <Label fx:id="abortionLabel" styleClass="stat-value" />
                 </VBox>
             </HBox>
 
-            <!-- Pregnancy History Section -->
-            <Label text="Pregnancy History Details" styleClass="subsection-header" alignment="CENTER_LEFT"/>
-            <VBox fx:id="pregnancyHistoryContainer" spacing="14" alignment="TOP_LEFT" styleClass="card" maxWidth="Infinity"/>
+            <VBox styleClass="section-card">
+                <Label text="Pregnancy History Details" styleClass="header-title"/>
+                <VBox fx:id="pregnancyHistoryContainer" spacing="18" />
+            </VBox>
 
-            <!-- Follow-Up Vital Signs Section -->
-            <Label text="Follow-Up Vital Signs" styleClass="subsection-header" alignment="CENTER_LEFT"/>
-            <VBox fx:id="followUpContainer" spacing="14" alignment="TOP_LEFT" styleClass="card" maxWidth="Infinity"/>
+            <VBox styleClass="section-card">
+                <Label text="Follow-Up Vital Signs" styleClass="header-title"/>
+                <VBox fx:id="followUpContainer" spacing="18" />
+            </VBox>
         </VBox>
-    </content>
-</ScrollPane>
+    </ScrollPane>
+</VBox>

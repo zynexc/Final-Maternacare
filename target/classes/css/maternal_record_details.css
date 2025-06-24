@@ -1,153 +1,162 @@
-.details-scroll-pane {
-    -fx-background-color: white;
-}
-
-.details-container {
-    -fx-background-color: white;
+.details-root {
     -fx-padding: 20;
+    -fx-background-color: #ffffff;
 }
 
-.timestamp-label {
-    -fx-font-size: 12px;
-    -fx-text-fill: #666666;
-    -fx-font-style: italic;
-}
-
-.titled-pane {
-    -fx-text-fill: #2c3e50;
-    -fx-font-weight: bold;
-}
-
-.titled-pane > .title {
-    -fx-background-color: #f8f9fa;
-    -fx-border-color: #dee2e6;
-    -fx-border-width: 1;
-    -fx-border-radius: 4;
-}
-
-.titled-pane > .title > .arrow-button .arrow {
-    -fx-background-color: #2c3e50;
-}
-
-.titled-pane > *.content {
-    -fx-background-color: white;
-    -fx-border-color: #dee2e6;
-    -fx-border-width: 1;
-    -fx-border-radius: 4;
-    -fx-padding: 10;
-}
-
-.grid-pane {
-    -fx-hgap: 10;
-    -fx-vgap: 10;
-}
-
-.grid-pane .label {
-    -fx-font-size: 12px;
-}
-
-.grid-pane .label:first-child {
-    -fx-font-weight: bold;
-    -fx-text-fill: #2c3e50;
-}
-
-.close-button {
-    -fx-background-color: #6c757d;
+.back-button {
+    -fx-background-color: #b91c1c;
     -fx-text-fill: white;
-    -fx-font-size: 12px;
-    -fx-padding: 8 16;
-    -fx-background-radius: 4;
-}
-
-.close-button:hover {
-    -fx-background-color: #5a6268;
-}
-
-.close-button:pressed {
-    -fx-background-color: #545b62;
-}
-
-/* Style for remarks section */
-.titled-pane:last-of-type .label {
-    -fx-font-size: 12px;
-    -fx-text-fill: #2c3e50;
-    -fx-wrap-text: true;
-}
-
-/* Card container */
-.card {
-    -fx-background-color: #fff;
-    -fx-background-radius: 15;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0.2, 0, 2);
-    -fx-padding: 24 24 24 24;
-    -fx-spacing: 18;
-    -fx-border-insets: 0;
-    -fx-background-insets: 0;
-}
-
-/* Section header (red bar) */
-.section-header {
-    -fx-background-color: #d32f2f;
-    -fx-background-radius: 8 8 0 0;
-    -fx-padding: 12 24;
-    -fx-font-size: 20px;
     -fx-font-weight: bold;
-    -fx-text-fill: #fff;
+    -fx-padding: 8 16;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
 }
 
-/* Subsection header (light red) */
-.subsection-header {
-    -fx-background-color: #fee2e2;
+.back-button:hover {
+    -fx-background-color: #991b1b;
+}
+
+.section-card {
+    -fx-background-color: #fef2f2;
+    -fx-border-radius: 8;
     -fx-background-radius: 8;
+    -fx-padding: 16;
+    -fx-spacing: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 6, 0, 0, 1);
+}
+
+.header-title {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-background-color: #eb0000;
     -fx-padding: 10 18;
+    -fx-alignment: CENTER_LEFT;
+    -fx-background-radius: 6;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 4, 0, 0, 1);
+    -fx-min-width: 220;
+}
+
+.bold-label {
+    -fx-font-weight: bold;
+}
+
+.stat-boxes {
+    -fx-padding: 12 0 0 0;
+}
+
+.stat-box {
+    -fx-background-color: #fee2e2;
+    -fx-padding: 16;
+    -fx-border-color: #eb0000;
+    -fx-border-width: 2;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-alignment: center;
+    -fx-spacing: 6;
+    -fx-pref-width: 120;
+    -fx-effect: dropshadow(gaussian, rgba(235,0,0,0.08), 4, 0, 0, 1);
+}
+
+.stat-value {
+    -fx-font-size: 20;
+    -fx-font-weight: bold;
+    -fx-text-fill: #b91c1c;
+}
+
+.pregnancy-header, .vital-signs-date {
+    -fx-background-color: #b91c1c;
+    -fx-padding: 8 12;
+    -fx-background-radius: 6;
+    -fx-spacing: 6;
+}
+
+.pregnancy-header > Label, .vital-signs-date > Label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.pregnancy-history-card, .vital-signs-card {
+    -fx-background-color: #ffffff;
+    -fx-padding: 16 18;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-spacing: 10;
+    -fx-max-width: 520px;
+    -fx-min-width: 320px;
+    -fx-alignment: TOP_LEFT;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.03), 4, 0, 0, 1);
+    -fx-translate-x: 0;
+    -fx-translate-y: 0;
+}
+
+.pregnancy-history-card, .vital-signs-card {
+    -fx-hgrow: NEVER;
+}
+
+.subsection-title {
     -fx-font-size: 16px;
     -fx-font-weight: bold;
-    -fx-text-fill: #d32f2f;
-    -fx-margin-bottom: 8;
+    -fx-text-fill: #b91c1c;
+    -fx-padding: 8 0 8 0;
 }
 
-/* Info row */
-.info-row {
-    -fx-padding: 4 0;
-    -fx-font-size: 15px;
-}
-
-/* Key value bold */
-.info-key {
-    -fx-font-weight: bold;
-    -fx-text-fill: #222;
-}
-
-.info-value {
-    -fx-text-fill: #222;
-}
-
-.highlight-number {
-    -fx-font-weight: bold;
-    -fx-font-size: 22px;
-    -fx-text-fill: #d32f2f;
-}
-
-.stats-card {
-    -fx-background-color: #fee2e2;
+.personal-info-container {
+    -fx-background-color: #fff7f7;
+    -fx-border-color: #b91c1c;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
     -fx-background-radius: 10;
-    -fx-padding: 16 0;
-    -fx-alignment: center;
-    -fx-spacing: 2;
+    -fx-padding: 0 0 15 0;
+    -fx-spacing: 8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.03), 4, 0, 0, 1);
 }
 
-.vital-signs-date {
-    -fx-background-color: #fee2e2;
-    -fx-background-radius: 8 8 0 0;
-    -fx-padding: 8 18;
-    -fx-font-size: 15px;
+.pregnancy-history-card Label,
+.vital-signs-card Label {
+    -fx-padding: 2 0 2 0;
+    -fx-font-size: 13px;
+}
+
+.title {
+    -fx-font-size: 32px;
     -fx-font-weight: bold;
-    -fx-text-fill: #d32f2f;
+    -fx-text-fill: #111827;
+    -fx-padding: 0 0 0 2;
+}
+
+.subtitle {
+    -fx-font-size: 16px;
+    -fx-text-fill: #222;
+    -fx-padding: 0 0 0 2;
+    -fx-font-weight: normal;
+    -fx-translate-y: -4;
+}
+
+.title, .header-title, .stat-value, .bold-label {
+    -fx-font-family: 'Poppins Bold';
+    -fx-font-weight: bold;
+}
+.subtitle {
+    -fx-font-family: 'Poppins';
+    -fx-font-weight: normal;
 }
 
 .vital-signs-card {
-    -fx-background-color: #fff;
-    -fx-background-radius: 0 0 8 8;
-    -fx-padding: 16 18;
-    -fx-spacing: 8;
-} 
+    -fx-background-color: #f8fafd;
+    -fx-border-color: #b91c1c;
+    -fx-border-width: 2;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 18;
+    -fx-spacing: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.03), 4, 0, 0, 1);
+}
+
+.header-bar {
+    -fx-background-color: #eb0000;
+    -fx-padding: 12 18;
+    -fx-background-radius: 8 8 0 0;
+    -fx-spacing: 10;
+}

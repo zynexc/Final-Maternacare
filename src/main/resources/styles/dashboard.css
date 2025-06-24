@@ -81,15 +81,18 @@
 }
 
 /* Typography */
-.title { 
-    -fx-font-size: 24px; 
-    -fx-font-weight: bold; 
-    -fx-text-fill: #111827; 
+.title {
+    -fx-font-family: 'Poppins Bold';
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #111827;
 }
 
-.subtitle { 
-    -fx-font-size: 14px; 
-    -fx-text-fill: #6d806b; 
+.subtitle {
+    -fx-font-family: 'Poppins';
+    -fx-font-size: 16px;
+    -fx-text-fill: #222;
+    -fx-font-weight: normal;
 }
 
 /* Chart Styles */

@@ -420,3 +420,33 @@
 .delete-button:hover {
     -fx-background-color: #5a6268;
 }
+
+.title {
+    -fx-font-family: 'Poppins Bold';
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+}
+
+.subtitle {
+    -fx-font-family: 'Poppins';
+    -fx-font-size: 16px;
+    -fx-text-fill: #222;
+    -fx-font-weight: normal;
+}
+
+@font-face {
+    font-family: 'Poppins Bold';
+    src: url('../fonts/Poppins-Bold.ttf');
+    font-weight: bold;
+}
+
+.title, .bold-label {
+    -fx-font-family: 'Poppins Bold';
+    -fx-font-weight: bold;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url('../fonts/Poppins-Regular.ttf');
+    font-weight: normal;
+}

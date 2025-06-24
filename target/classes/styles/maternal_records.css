@@ -1,12 +1,26 @@
+.title, .header-title {
+    -fx-font-family: 'Poppins Bold';
+    -fx-font-weight: bold;
+}
+.subtitle {
+    -fx-font-family: 'Poppins';
+    -fx-font-weight: normal;
+}
+
+* {
+    -fx-font-family: 'Poppins', 'Arial', sans-serif;
+}
+
 .root {
     -fx-background-color: #FEE2E2;
     -fx-background-radius: 15;
 }
 
 .form-title {
-    -fx-font-size: 24px;
+    -fx-font-family: 'Poppins Bold';
+    -fx-font-size: 32px;
     -fx-font-weight: bold;
-    -fx-fill: #2c3e50;
+    -fx-text-fill: #111827;
 }
 
 .search-button {
@@ -250,4 +264,15 @@
 
 .follow-up-button:hover {
     -fx-background-color: #a33c3c;
+}
+
+.header-title { 
+    -fx-font-size: 24px; 
+    -fx-font-weight: bold; 
+    -fx-text-fill: #111827; 
+}
+
+.record-id-bold, .record-id-bold .text {
+    -fx-font-family: 'Poppins Bold';
+    -fx-font-weight: bold;
 }

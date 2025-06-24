@@ -15,6 +15,9 @@
         <Insets top="20" right="20" bottom="20" left="20"/>
     </padding>
 
+    <Label text="Maternal Form" styleClass="title" />
+    <Text styleClass="subtitle" text="Initial Data Entry for New and Ongoing Maternal Cases"/>
+
     <ScrollPane fitToWidth="true" styleClass="scroll-pane" VBox.vgrow="ALWAYS">
         <VBox styleClass="form-content">
             <!-- Form Timestamp Section -->

@@ -61,8 +61,7 @@
 }
 
 .records-container {
-  margin: 40px 0 0 0;
-  padding: 0 40px;
+  -fx-padding: 40 0 0 0;
 }
 
 h2 {
@@ -77,39 +76,39 @@ h2 {
 }
 
 .search-refresh input {
-  width: 400px;
-  padding: 6px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
+  /* width: 400px; */
+  /* padding: 6px; */
+  /* border-radius: 4px; */
+  /* border: 1px solid #ccc; */
 }
 
 .search-refresh button {
-  background: #007bff;
-  color: white;
-  border: none;
-  padding: 7px 18px;
-  border-radius: 4px;
-  cursor: pointer;
+  /* background: #007bff; */
+  /* color: white; */
+  /* border: none; */
+  /* padding: 7px 18px; */
+  /* border-radius: 4px; */
+  /* cursor: pointer; */
 }
 
 .records-table {
-  width: 90%;
-  margin: 0 auto;
-  border-collapse: collapse;
+  /* width: 90%; */
+  /* margin: 0 auto; */
+  /* border-collapse: collapse; */
 }
 
 .records-table th, .records-table td {
-  border: 4px solid black;
-  text-align: center;
-  height: 50px;
-  font-size: 1.3em;
+  /* border: 4px solid black; */
+  /* text-align: center; */
+  /* height: 50px; */
+  /* font-size: 1.3em; */
 }
 
 .records-table th {
-  background: #ff3333;
-  color: black;
-  font-weight: bold;
-  font-size: 1.5em;
+  /* background: #ff3333; */
+  /* color: black; */
+  /* font-weight: bold; */
+  /* font-size: 1.5em; */
 }
 
 /* Maternal Record Details Styles */
@@ -121,7 +120,6 @@ h2 {
 .form-section {
     -fx-background-color: white;
     -fx-padding: 15px;
-    -fx-margin: 10px 0;
     -fx-border-color: #dee2e6;
     -fx-border-radius: 5px;
     -fx-background-radius: 5px;
@@ -131,7 +129,6 @@ h2 {
     -fx-font-size: 18px;
     -fx-font-weight: bold;
     -fx-fill: #2c3e50;
-    -fx-margin-bottom: 10px;
 }
 
 .form-label {
@@ -151,7 +148,6 @@ h2 {
     -fx-border-radius: 5px;
     -fx-background-radius: 5px;
     -fx-padding: 10px;
-    -fx-margin: 5px 0;
 }
 
 .history-title {
@@ -213,7 +209,7 @@ h2 {
 
 /* Button styling */
 .button {
-    -fx-background-color: #007bff;
+    -fx-background-color: #eb0000;
     -fx-text-fill: white;
     -fx-font-size: 12px;
     -fx-padding: 8px 16px;
@@ -222,11 +218,11 @@ h2 {
 }
 
 .button:hover {
-    -fx-background-color: #0056b3;
+    -fx-background-color: #a33c3c;
 }
 
 .button:pressed {
-    -fx-background-color: #004085;
+    -fx-background-color: #823030;
 }
 
 /* TextField styling */
@@ -273,6 +269,14 @@ h2 {
     -fx-background-color: #fee2e2;
 }
 
+.personal-info-container {
+    -fx-background-color: #f8fafc;
+}
+
+.vital-signs-container {
+    -fx-background-color: #f8fafc;
+}
+
 .card-vitals {
     -fx-background-color: #f8fafc;
 }
@@ -286,10 +290,21 @@ h2 {
     -fx-font-weight: bold;
     -fx-text-fill: #fff;
 }
+
+.section-card {
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #dee2e6;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-padding: 10px;
+}
+
 .section-header-title {
-    -fx-text-fill: #fff;
-    -fx-font-size: 20px;
+    -fx-font-family: 'Poppins Bold';
+    -fx-text-fill: #eb0000;
+    -fx-font-size: 32px;
     -fx-font-weight: bold;
+    -fx-text-fill: #111827;
 }
 .close-btn {
     -fx-background-color: transparent;
@@ -307,7 +322,6 @@ h2 {
     -fx-font-size: 16px;
     -fx-font-weight: bold;
     -fx-text-fill: #d32f2f;
-    -fx-margin-bottom: 8;
 }
 
 /* Info row */
@@ -331,8 +345,6 @@ h2 {
     -fx-max-width: 600px;
     -fx-translate-x: 0;
     -fx-translate-y: 0;
-    -fx-margin-left: auto;
-    -fx-margin-right: auto;
 }
 
 .stats-card {

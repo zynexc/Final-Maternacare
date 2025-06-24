@@ -49,8 +49,8 @@
                               <Image url="@/images/maternawhite-logo.png" />
                            </image>
                         </ImageView>
-                        <Label text="Welcome to" style="-fx-font-size: 24px; -fx-text-fill: white; -fx-font-family: 'Poppins', Arial, sans-serif; -fx-font-weight: 600; -fx-alignment: center;" />
-                        <Label text="MaternaCare" style="-fx-font-size: 48px; -fx-text-fill: white; -fx-font-family: 'Poppins Bold', 'Poppins', Arial, sans-serif; -fx-font-weight: bold; -fx-alignment: center;" />
+                        <Label text="Welcome to" style="-fx-font-size: 24px; -fx-text-fill: white; -fx-font-family: 'Poppins', Arial, sans-serif; -fx-font-weight: 600; -fx-alignment: center; -fx-padding: 0 0 0 0;" />
+                        <Label text="MaternaCare" style="-fx-font-size: 58px; -fx-text-fill: white; -fx-font-family: 'Poppins Bold', 'Poppins', Arial, sans-serif; -fx-font-weight: bold; -fx-alignment: center; -fx-padding: -18 0 0 0;" />
                         <Label text="Login to access your account" style="-fx-font-size: 15px; -fx-text-fill: white; -fx-font-family: 'Poppins', Arial, sans-serif; -fx-font-weight: 400; -fx-underline: true; -fx-padding: 18 0 0 0; -fx-alignment: center;" />
                      </children>
                   </VBox>

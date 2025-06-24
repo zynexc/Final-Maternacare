@@ -163,6 +163,8 @@ public class MaternalFormController {
 
     @FXML
     public void initialize() {
+        // Explicitly load Poppins Bold font for JavaFX
+        Font.loadFont(getClass().getResourceAsStream("/fonts/Poppins-Bold.ttf"), 12);
         System.out.println("MaternalFormController.initialize() called");
 
         // Debug CSS application
