@@ -151,6 +151,5 @@
         <Label text="Are you sure you want to delete this maternal record?" style="-fx-font-weight: bold; -fx-text-fill: #d32f2f;" />
         <Button text="Confirm" fx:id="confirmDeleteButton" styleClass="delete-button" />
         <Button text="Cancel" fx:id="cancelDeleteButton" styleClass="back-button" />
-        <Button text="Back" fx:id="backButton" styleClass="back-button" />
     </HBox>
 </VBox>

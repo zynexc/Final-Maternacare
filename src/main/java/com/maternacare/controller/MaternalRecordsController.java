@@ -407,4 +407,8 @@ public class MaternalRecordsController {
     public MainApplication getMainApplication() {
         return mainApplication;
     }
+
+    public List<MaternalRecord> getAllRecords() {
+        return records;
+    }
 }

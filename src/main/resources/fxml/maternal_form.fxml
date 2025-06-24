@@ -200,7 +200,7 @@
 
             <!-- Button Container -->
             <HBox styleClass="button-container">
-                <Button text="Clear" styleClass="clear-button"/>
+                <Button fx:id="clearButton" text="Clear" styleClass="clear-button" onAction="#handleClear"/>
                 <Button text="Save" styleClass="save-button"/>
             </HBox>
         </VBox>

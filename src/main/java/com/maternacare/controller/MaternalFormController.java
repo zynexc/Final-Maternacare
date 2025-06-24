@@ -227,6 +227,10 @@ public class MaternalFormController {
             // Set initial value
             updateGravidaField();
 
+            // Generate and set a new patient ID
+            generateAndSetPatientId();
+            patientIdField.setEditable(false);
+
             System.out.println("MaternalFormController initialization completed successfully.");
         } catch (Exception e) {
             System.err.println("Error during MaternalFormController initialization: " + e.getMessage());
@@ -712,6 +716,8 @@ public class MaternalFormController {
 
         // Clear remarks
         remarksField.clear();
+        // Generate new patient ID
+        generateAndSetPatientId();
     }
 
     private boolean validateRequiredFields() {
@@ -976,6 +982,28 @@ public class MaternalFormController {
 
     public VBox getRootPane() {
         return rootPane;
+    }
+
+    private void generateAndSetPatientId() {
+        if (recordsController != null) {
+            List<MaternalRecord> records = recordsController.getAllRecords();
+            int maxId = 0;
+            for (MaternalRecord record : records) {
+                String pid = record.getPatientId();
+                if (pid != null && pid.startsWith("MC-")) {
+                    try {
+                        int num = Integer.parseInt(pid.substring(3));
+                        if (num > maxId)
+                            maxId = num;
+                    } catch (NumberFormatException ignored) {
+                    }
+                }
+            }
+            String newId = String.format("MC-%04d", maxId + 1);
+            patientIdField.setText(newId);
+        } else {
+            patientIdField.setText("MC-0001");
+        }
     }
 
 }
