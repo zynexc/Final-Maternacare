@@ -13,6 +13,7 @@ com\maternacare\model\PatientData.class
 com\maternacare\controller\MaternalRecordsController$3.class
 com\maternacare\model\MaternalRecord$MaternalRecordDTO.class
 com\maternacare\controller\VitalSignsFormController.class
+com\maternacare\controller\MaternalRecordEditFormController.class
 com\maternacare\service\MaternalRecordService$LocalDateAdapter.class
 com\maternacare\DashboardApplication.class
 com\maternacare\service\MaternalRecordService$DoublePropertyAdapter.class

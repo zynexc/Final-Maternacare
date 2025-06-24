@@ -9,8 +9,8 @@
 <?import javafx.scene.shape.SVGPath?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<VBox fx:id="rootPane" styleClass="form-container" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.maternacare.controller.MaternalFormController"
-      style="-fx-background-color: #FEE2E2; -fx-background-radius: 15;">
+<VBox fx:id="rootPane" styleClass="form-container" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.maternacare.controller.MaternalRecordEditFormController"
+      style="-fx-background-color: #FEE2E2; -fx-background-radius: 15;" stylesheets="@../styles/maternal_record_edit_form.css">
     <padding>
         <Insets top="20" right="20" bottom="20" left="20"/>
     </padding>
@@ -20,6 +20,7 @@
 
     <ScrollPane fitToWidth="true" styleClass="scroll-pane" VBox.vgrow="ALWAYS">
         <VBox styleClass="form-content">
+            <Label fx:id="messageLabel" visible="false" managed="false" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 0 0 10 0;" />
             <!-- Form Timestamp Section -->
             <HBox styleClass="timestamp-section" alignment="CENTER_RIGHT">
                 <Label fx:id="formTimestampLabel" styleClass="timestamp-label"/>
@@ -200,8 +201,8 @@
 
             <!-- Button Container -->
             <HBox styleClass="button-container">
-                <Button text="Clear" styleClass="clear-button"/>
-                <Button text="Save" styleClass="save-button"/>
+                <Button fx:id="backButton" text="Back" styleClass="clear-button" onAction="#handleBack"/>
+                <Button fx:id="saveButton" text="Save" styleClass="save-button" onAction="#handleSave"/>
             </HBox>
         </VBox>
     </ScrollPane>

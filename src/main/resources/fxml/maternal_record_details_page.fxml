@@ -41,6 +41,9 @@
                         <Label text="Address :" GridPane.rowIndex="2" />
                         <Label fx:id="addressLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
+                        <Label text="Husband's Name :" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                        <Label fx:id="husbandNameLabel" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+
                         <Label text="Purok :" GridPane.rowIndex="3" />
                         <Label fx:id="purokLabel" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
@@ -148,5 +151,6 @@
         <Label text="Are you sure you want to delete this maternal record?" style="-fx-font-weight: bold; -fx-text-fill: #d32f2f;" />
         <Button text="Confirm" fx:id="confirmDeleteButton" styleClass="delete-button" />
         <Button text="Cancel" fx:id="cancelDeleteButton" styleClass="back-button" />
+        <Button text="Back" fx:id="backButton" styleClass="back-button" />
     </HBox>
 </VBox>

@@ -162,9 +162,6 @@ public class MaternalFormController {
     private TextField gravidaField;
 
     @FXML
-    private Button backButton;
-
-    @FXML
     public void initialize() {
         // Explicitly load Poppins Bold font for JavaFX
         Font.loadFont(getClass().getResourceAsStream("/fonts/Poppins-Bold.ttf"), 12);
@@ -231,10 +228,6 @@ public class MaternalFormController {
             updateGravidaField();
 
             System.out.println("MaternalFormController initialization completed successfully.");
-
-            if (backButton != null) {
-                backButton.setOnAction(e -> handleBack());
-            }
         } catch (Exception e) {
             System.err.println("Error during MaternalFormController initialization: " + e.getMessage());
             e.printStackTrace();
@@ -983,12 +976,6 @@ public class MaternalFormController {
 
     public VBox getRootPane() {
         return rootPane;
-    }
-
-    private void handleBack() {
-        if (recordsController != null) {
-            recordsController.showRecordsPage();
-        }
     }
 
 }

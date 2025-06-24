@@ -46,6 +46,8 @@ public class MaternalRecordDetailsPageController {
     @FXML
     private Label emailLabel;
     @FXML
+    private Label husbandNameLabel;
+    @FXML
     private Label lmpLabel;
     @FXML
     private Label eddLabel;
@@ -108,6 +110,9 @@ public class MaternalRecordDetailsPageController {
     @FXML
     private Button cancelDeleteButton;
 
+    @FXML
+    private Button backButton;
+
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MMM dd, yyyy");
 
     private Runnable onBackCallback;
@@ -147,6 +152,9 @@ public class MaternalRecordDetailsPageController {
         if (cancelDeleteButton != null) {
             cancelDeleteButton.setOnAction(e -> hideDeleteConfirmation());
         }
+        if (backButton != null) {
+            backButton.setOnAction(e -> handleBack(null));
+        }
         if (deleteConfirmBox != null) {
             deleteConfirmBox.setVisible(false);
             deleteConfirmBox.setManaged(false);
@@ -166,6 +174,7 @@ public class MaternalRecordDetailsPageController {
         purokLabel.setText(record.getPurok());
         contactNumberLabel.setText(record.getContactNumber());
         emailLabel.setText(record.getEmail());
+        husbandNameLabel.setText(record.getHusbandName() != null ? record.getHusbandName() : "N/A");
         lmpLabel.setText(formatDate(record.getLastMenstrualPeriod()));
         eddLabel.setText(formatDate(record.getExpectedDeliveryDate()));
         nextAppointmentLabel.setText(formatDate(record.getNextAppointment()));
@@ -364,8 +373,19 @@ public class MaternalRecordDetailsPageController {
     }
 
     private void handleEditRecord() {
-        if (recordsController != null && currentRecord != null) {
-            recordsController.loadRecordIntoForm(currentRecord);
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/maternal_record_edit_form.fxml"));
+            VBox editFormRoot = loader.load();
+            com.maternacare.controller.MaternalRecordEditFormController editController = loader.getController();
+            editController.setRecordForEditing(currentRecord); // You implement this method in your new controller
+            editController.setRecordsController(recordsController); // Pass the records controller for navigation
+
+            // Replace the main content area
+            if (recordsController != null && recordsController.getMainApplication() != null) {
+                recordsController.getMainApplication().setContent(editFormRoot);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

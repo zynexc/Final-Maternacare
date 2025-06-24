@@ -326,24 +326,21 @@ public class MaternalRecordsController {
     }
 
     public void loadRecordIntoForm(MaternalRecord record) {
-        System.out.println(
-                "[DEBUG] loadRecordIntoForm called for record: " + (record != null ? record.getPatientId() : "null"));
         try {
+            // Load the maternal form FXML
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/maternal_form.fxml"));
             VBox formRoot = loader.load();
-            System.out.println("[DEBUG] Loaded maternal_form.fxml, formRoot: " + (formRoot != null));
+            // Get the controller and pre-fill the form
             MaternalFormController formController = loader.getController();
-            System.out.println("[DEBUG] Got MaternalFormController: " + (formController != null));
-            formController.editRecord(record);
+            formController.editRecord(record); // pre-fill fields for editing
             formController.setRecordsController(this);
+            // Ensure the CSS is applied (in case it's not already)
+            formRoot.getStylesheets().add(getClass().getResource("/styles/maternal_form.css").toExternalForm());
+            // Replace the main content area with the form
             if (mainApplication != null) {
-                System.out.println("[DEBUG] mainApplication is not null, setting content to formRoot");
                 mainApplication.setContent(formRoot);
-            } else {
-                System.out.println("[DEBUG] mainApplication is null!");
             }
         } catch (IOException e) {
-            System.out.println("[DEBUG] Exception in loadRecordIntoForm: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -405,5 +402,9 @@ public class MaternalRecordsController {
         if (mainApplication != null) {
             mainApplication.setContent(mainApplication.getMaternalRecordsRoot());
         }
+    }
+
+    public MainApplication getMainApplication() {
+        return mainApplication;
     }
 }
