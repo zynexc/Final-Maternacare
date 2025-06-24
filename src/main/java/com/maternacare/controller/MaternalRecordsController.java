@@ -22,6 +22,7 @@ import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import javafx.scene.layout.VBox;
+import javafx.scene.Node;
 
 public class MaternalRecordsController {
     @FXML
@@ -53,7 +54,7 @@ public class MaternalRecordsController {
 
     private ObservableList<MaternalRecord> records = FXCollections.observableArrayList();
     private FilteredList<MaternalRecord> filteredRecords;
-    private MaternalRecordService recordService = new MaternalRecordService();
+    private MaternalRecordService maternalRecordService = new MaternalRecordService();
     private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 
     private MaternalFormController formController;
@@ -64,6 +65,11 @@ public class MaternalRecordsController {
 
     @FXML
     private VBox rootVBox;
+
+    @FXML
+    private VBox formContainer;
+
+    private DashboardController dashboardController;
 
     public void setMainApplication(MainApplication mainApplication) {
         this.mainApplication = mainApplication;
@@ -87,7 +93,7 @@ public class MaternalRecordsController {
     }
 
     private void loadSavedRecords() {
-        List<MaternalRecord> savedRecords = recordService.loadRecords();
+        List<MaternalRecord> savedRecords = maternalRecordService.loadRecords();
         System.out.println("Debug - Loaded " + savedRecords.size() + " records from JSON file");
 
         // Debug: Check pregnancy history for each record
@@ -167,9 +173,8 @@ public class MaternalRecordsController {
             viewMoreColumn.setCellValueFactory(param -> null);
             viewMoreColumn.setCellFactory(param -> new TableCell<>() {
                 private final Button viewMoreButton = new Button("View Details");
-
                 {
-                    viewMoreButton.getStyleClass().add("view-more-button");
+                    viewMoreButton.getStyleClass().add("table-button");
                     viewMoreButton.setOnAction(event -> {
                         MaternalRecord record = getTableView().getItems().get(getIndex());
                         if (record != null) {
@@ -190,17 +195,10 @@ public class MaternalRecordsController {
             });
 
             // Follow Up Checkup button column
-            followUpColumn.setCellValueFactory(param -> null);
             followUpColumn.setCellFactory(param -> new TableCell<>() {
                 private final Button followUpButton = new Button("Follow Up");
                 {
-                    followUpButton.getStyleClass().add("follow-up-button");
-                    followUpButton.setOnAction(event -> {
-                        MaternalRecord record = getTableView().getItems().get(getIndex());
-                        if (record != null) {
-                            openFollowUpForm(record);
-                        }
-                    });
+                    followUpButton.getStyleClass().add("table-button");
                 }
 
                 @Override
@@ -210,6 +208,10 @@ public class MaternalRecordsController {
                         setGraphic(null);
                     } else {
                         setGraphic(followUpButton);
+                        followUpButton.setOnAction(event -> {
+                            MaternalRecord record = getTableView().getItems().get(getIndex());
+                            showFollowUpForm(record);
+                        });
                     }
                 }
             });
@@ -283,7 +285,7 @@ public class MaternalRecordsController {
     public void addRecord(MaternalRecord record) {
         records.add(record);
         try {
-            recordService.saveRecords(records); // Save after adding
+            maternalRecordService.saveRecords(records); // Save after adding
         } catch (IOException e) {
             showAlert(Alert.AlertType.ERROR, "Error", "Failed to save record: " + e.getMessage());
         }
@@ -296,7 +298,7 @@ public class MaternalRecordsController {
             newRecord.setId(oldRecord.getId()); // Preserve the ID
             records.set(index, newRecord);
             try {
-                recordService.saveRecords(records); // Save after updating
+                maternalRecordService.saveRecords(records); // Save after updating
             } catch (IOException e) {
                 showAlert(Alert.AlertType.ERROR, "Error", "Failed to save record: " + e.getMessage());
             }
@@ -312,7 +314,7 @@ public class MaternalRecordsController {
     public void deleteRecord(MaternalRecord record) {
         records.remove(record);
         try {
-            recordService.saveRecords(records); // Save after deleting
+            maternalRecordService.saveRecords(records); // Save after deleting
         } catch (IOException e) {
             showAlert(Alert.AlertType.ERROR, "Error", "Failed to save record: " + e.getMessage());
         }
@@ -342,36 +344,42 @@ public class MaternalRecordsController {
 
     private void refreshTable() {
         // Instead of clearing the list, update it with the latest data
-        List<MaternalRecord> savedRecords = recordService.loadRecords();
+        List<MaternalRecord> savedRecords = maternalRecordService.loadRecords();
         records.setAll(savedRecords);
         filteredRecords.setPredicate(null); // Reset the filter
     }
 
-    private void openFollowUpForm(MaternalRecord record) {
+    private void showFollowUpForm(MaternalRecord record) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/vital_signs_form.fxml"));
-            Parent root = loader.load();
+            Node form = loader.load();
+
             VitalSignsFormController controller = loader.getController();
+            String patientName = record.getFullName() != null && !record.getFullName().isEmpty()
+                    ? record.getFullName()
+                    : record.getPatientId();
+            controller.setPatientName(patientName);
             controller.setOnSaveCallback(entry -> {
-                System.out.println("[DEBUG] Adding follow-up entry: " + entry);
                 record.getFollowUpVitalSigns().add(entry);
-                System.out
-                        .println("[DEBUG] Total follow-up entries after add: " + record.getFollowUpVitalSigns().size());
-                saveRecord(record);
-                System.out.println("[DEBUG] Record saved. Refreshing details popup if open.");
-                if (lastDetailsPopupController != null && lastDetailsPopupRecord == record) {
-                    lastDetailsPopupController.refresh(record);
-                    System.out.println("[DEBUG] Details popup refreshed.");
+                try {
+                    maternalRecordService.saveRecords(records);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+                formContainer.getChildren().clear();
+                recordsTable.refresh();
             });
-            Stage stage = new Stage();
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setTitle("Follow Up Vital Signs");
-            stage.setScene(new Scene(root));
-            stage.showAndWait();
+            controller.setOnBackCallback(() -> formContainer.getChildren().clear());
+
+            formContainer.getChildren().setAll(form);
+
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Error", "Failed to open follow-up form: " + e.getMessage());
+            // Handle exception (e.g., show an alert)
         }
+    }
+
+    public void setDashboardController(DashboardController controller) {
+        this.dashboardController = controller;
     }
 }

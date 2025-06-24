@@ -20,6 +20,8 @@
     <Text styleClass="form-title" text="Maternal Health Records"/>
     <Text styleClass="subtitle" text="Comprehensive Record of Maternal Health and Past Consultations."/>
     
+    <VBox fx:id="formContainer" styleClass="inline-form-container" />
+
     <VBox spacing="10" VBox.vgrow="ALWAYS" fillWidth="true">
         <HBox spacing="10" alignment="CENTER_RIGHT">
             <TextField fx:id="searchField" promptText="Search in records..." HBox.hgrow="ALWAYS"/>

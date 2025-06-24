@@ -9,11 +9,15 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
@@ -21,8 +25,6 @@ import java.util.List;
 import java.io.IOException;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 
 public class DashboardController {
     @FXML
@@ -289,5 +291,25 @@ public class DashboardController {
         warningIcon.setSize("3em");
         warningIcon.setFill(Color.web("#eb0000"));
         severeCasesIconContainer.getChildren().add(warningIcon);
+    }
+
+    @FXML
+    private void handleViewRecords() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/maternal_records.fxml"));
+            VBox recordsView = loader.load();
+            recordsView.getStylesheets().add(getClass().getResource("/styles/maternal_records.css").toExternalForm());
+
+            MaternalRecordsController controller = loader.getController();
+            controller.setDashboardController(this);
+
+            // Get the parent of the dashboard VBox and replace it with the records view
+            VBox dashboardVBox = (VBox) totalPatientsLabel.getScene().getRoot();
+            VBox parentContainer = (VBox) dashboardVBox.getParent();
+            parentContainer.getChildren().setAll(recordsView);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

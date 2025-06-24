@@ -133,6 +133,7 @@
             <VBox styleClass="section-card">
                 <VBox styleClass="follow-up-container">
                     <Label text="Follow-Up Vital Signs" styleClass="header-title"/>
+                    <VBox fx:id="followUpFormContainer" />
                     <VBox fx:id="followUpContainer" spacing="18" />
                 </VBox>
             </VBox>

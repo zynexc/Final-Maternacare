@@ -10,7 +10,8 @@ import javafx.scene.Node;
 import javafx.geometry.Insets;
 import javafx.event.ActionEvent;
 import javafx.scene.layout.ColumnConstraints;
-
+import javafx.fxml.FXMLLoader;
+import java.io.IOException;
 import com.maternacare.model.MaternalRecord;
 import com.maternacare.model.PregnancyHistory;
 import com.maternacare.model.VitalSignsEntry;
@@ -83,6 +84,8 @@ public class MaternalRecordDetailsPageController {
     private VBox pregnancyHistoryContainer;
     @FXML
     private VBox followUpContainer;
+    @FXML
+    private VBox followUpFormContainer;
     @FXML
     private VBox detailsRoot;
 
@@ -247,5 +250,24 @@ public class MaternalRecordDetailsPageController {
         card.getChildren().add(dateLabel);
         card.getChildren().add(grid);
         return card;
+    }
+
+    @FXML
+    private void handleFollowUp() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/vital_signs_form.fxml"));
+            Node form = loader.load();
+            followUpFormContainer.getChildren().setAll(form);
+
+            // Set up callback to clear form after save
+            VitalSignsFormController controller = loader.getController();
+            controller.setOnSaveCallback(entry -> {
+                // Add entry to followUpContainer (optional: update list)
+                followUpFormContainer.getChildren().clear();
+                // Optionally, refresh followUpContainer here
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
