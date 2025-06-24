@@ -162,6 +162,14 @@ public class MaternalFormController {
     private TextField gravidaField;
 
     @FXML
+    private TextField termField;
+    @FXML
+    private TextField pretermField;
+
+    @FXML
+    private Label messageLabel;
+
+    @FXML
     public void initialize() {
         // Explicitly load Poppins Bold font for JavaFX
         Font.loadFont(getClass().getResourceAsStream("/fonts/Poppins-Bold.ttf"), 12);
@@ -228,7 +236,6 @@ public class MaternalFormController {
             updateGravidaField();
 
             // Generate and set a new patient ID
-            generateAndSetPatientId();
             patientIdField.setEditable(false);
 
             System.out.println("MaternalFormController initialization completed successfully.");
@@ -524,6 +531,7 @@ public class MaternalFormController {
 
     public void setRecordsController(MaternalRecordsController controller) {
         this.recordsController = controller;
+        generateAndSetPatientId();
     }
 
     public void editRecord(MaternalRecord record) {
@@ -610,20 +618,14 @@ public class MaternalFormController {
         try {
             MaternalRecord record = new MaternalRecord();
             record.setFormTimestamp(LocalDateTime.now());
-
-            // Set personal information
             record.setPatientId(patientIdField.getText());
             record.setFullName(fullNameField.getText());
             record.setDateOfBirth(dateOfBirthPicker.getValue());
             record.setHusbandName(husbandNameField.getText());
-
-            // Set contact information
             record.setAddress(addressField.getText());
             record.setPurok(purokCombo.getValue());
             record.setContactNumber(contactNumberField.getText());
             record.setEmail(emailField.getText());
-
-            // Set vital signs
             record.setAgeOfGestation(parseDouble(ageOfGestationField.getText()));
             record.setWeight(parseDouble(weightField.getText()));
             record.setHeight(parseDouble(heightField.getText()));
@@ -634,38 +636,29 @@ public class MaternalFormController {
             record.setFundalHeight(parseDouble(fundalHeightField.getText()));
             record.setPresentation(presentationCombo.getValue());
             record.setNextAppointment(toComeBackPicker.getValue());
-
-            // Set pregnancy information
             record.setLastMenstrualPeriod(lastMenstrualPeriodPicker.getValue());
             record.setExpectedDeliveryDate(expectedDeliveryDatePicker.getValue());
             record.setPara(paraField.getText());
             record.setAbortion(abortionField.getText());
             record.setLivingChildren(livingChildrenField.getText());
-
-            // Set remarks
+            record.setTerm(termField.getText());
+            record.setPreterm(pretermField.getText());
             record.setRemarks(remarksField.getText());
-
-            // Set child details
             List<ChildDetails> childDetails = new ArrayList<>();
             for (ChildDetailsController controller : childDetailsControllers) {
                 childDetails.add(controller.getData());
             }
             record.setChildDetails(childDetails);
-
-            // Save all pregnancy history entries
             record.setPregnancyHistory(new ArrayList<>(pregnancyHistoryList));
-
-            // Save record
             if (recordsController != null) {
                 recordsController.saveRecord(record);
             }
-
-            showAlert(Alert.AlertType.INFORMATION, "Success", "Maternal record saved successfully!");
+            showMessage("Maternal record saved successfully!", false);
             clearForm();
             pregnancyHistoryList.clear();
             updatePregnancyHistoryTableView();
         } catch (Exception e) {
-            showAlert(Alert.AlertType.ERROR, "Error", "Failed to save maternal record: " + e.getMessage());
+            showMessage("Failed to save maternal record: " + e.getMessage(), true);
             e.printStackTrace();
         }
     }
@@ -990,19 +983,45 @@ public class MaternalFormController {
             int maxId = 0;
             for (MaternalRecord record : records) {
                 String pid = record.getPatientId();
-                if (pid != null && pid.startsWith("MC-")) {
+                if (pid != null && pid.startsWith("P")) {
                     try {
-                        int num = Integer.parseInt(pid.substring(3));
+                        int num = Integer.parseInt(pid.substring(1));
                         if (num > maxId)
                             maxId = num;
                     } catch (NumberFormatException ignored) {
                     }
                 }
             }
-            String newId = String.format("MC-%04d", maxId + 1);
+            String newId = String.format("P%03d", maxId + 1);
             patientIdField.setText(newId);
         } else {
-            patientIdField.setText("MC-0001");
+            patientIdField.setText("P001");
+        }
+    }
+
+    private void showMessage(String message, boolean isError) {
+        if (messageLabel != null) {
+            messageLabel.setText(message);
+            messageLabel.setVisible(true);
+            messageLabel.setManaged(true);
+            if (isError) {
+                messageLabel.setStyle(
+                        "-fx-text-fill: #d32f2f; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 0 0 10 0;");
+            } else {
+                messageLabel.setStyle(
+                        "-fx-text-fill: #28a745; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 0 0 10 0;");
+            }
+            // Hide after 1.2 seconds
+            new Thread(() -> {
+                try {
+                    Thread.sleep(1200);
+                } catch (InterruptedException ignored) {
+                }
+                javafx.application.Platform.runLater(() -> {
+                    messageLabel.setVisible(false);
+                    messageLabel.setManaged(false);
+                });
+            }).start();
         }
     }
 

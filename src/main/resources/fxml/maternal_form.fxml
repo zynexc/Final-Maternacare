@@ -20,6 +20,7 @@
 
     <ScrollPane fitToWidth="true" styleClass="scroll-pane" VBox.vgrow="ALWAYS">
         <VBox styleClass="form-content">
+            <Label fx:id="messageLabel" visible="false" managed="false" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 0 0 10 0;" />
             <!-- Form Timestamp Section -->
             <HBox styleClass="timestamp-section" alignment="CENTER_RIGHT">
                 <Label fx:id="formTimestampLabel" styleClass="timestamp-label"/>
@@ -201,7 +202,7 @@
             <!-- Button Container -->
             <HBox styleClass="button-container">
                 <Button fx:id="clearButton" text="Clear" styleClass="clear-button" onAction="#handleClear"/>
-                <Button text="Save" styleClass="save-button"/>
+                <Button fx:id="saveButton" text="Save" styleClass="save-button" onAction="#handleSave"/>
             </HBox>
         </VBox>
     </ScrollPane>

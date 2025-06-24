@@ -78,18 +78,18 @@
 
                         <Label text="Temperature :" />
                         <Label fx:id="temperatureLabel" GridPane.columnIndex="1" />
-                        <Label text="Pulse Rate :" GridPane.columnIndex="2" />
-                        <Label fx:id="pulseRateLabel" GridPane.columnIndex="3" />
+                        <Label text="Age of Gestation (AOG) :" GridPane.columnIndex="2" />
+                        <Label fx:id="aogLabel" GridPane.columnIndex="3" />
 
-                        <Label text="Respiratory Rate :" GridPane.rowIndex="1" />
-                        <Label fx:id="respiratoryRateLabel" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Label text="Age of Gestation (AOG) :" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                        <Label fx:id="aogLabel" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                        <Label text="Height (cm) :" GridPane.rowIndex="1" />
+                        <Label fx:id="heightLabel" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label text="Weight (lbs) :" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <Label fx:id="weightLabel" GridPane.columnIndex="3" GridPane.rowIndex="1" />
 
-                        <Label text="Height (cm) :" GridPane.rowIndex="2" />
-                        <Label fx:id="heightLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <Label text="Weight (lbs) :" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                        <Label fx:id="weightLabel" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                        <Label text="Term :" GridPane.rowIndex="2" />
+                        <Label fx:id="termLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Label text="Preterm :" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                        <Label fx:id="pretermLabel" GridPane.columnIndex="3" GridPane.rowIndex="2" />
 
                         <Label text="Fetal Heart Tone (FHT) :" GridPane.rowIndex="3" />
                         <Label fx:id="fhtLabel" GridPane.columnIndex="1" GridPane.rowIndex="3" />

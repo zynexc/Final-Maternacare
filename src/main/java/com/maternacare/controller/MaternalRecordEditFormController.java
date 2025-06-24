@@ -91,8 +91,8 @@ public class MaternalRecordEditFormController {
         lastMenstrualPeriodPicker.setValue(record.getLastMenstrualPeriod());
         expectedDeliveryDatePicker.setValue(record.getExpectedDeliveryDate());
         gravidaField.setText(record.getGravida());
-        pretermField.setText("");
-        termField.setText("");
+        pretermField.setText(record.getPreterm());
+        termField.setText(record.getTerm());
         paraField.setText(record.getPara());
         abortionField.setText(record.getAbortion());
         livingChildrenField.setText(record.getLivingChildren());
@@ -151,6 +151,8 @@ public class MaternalRecordEditFormController {
         currentRecord.setPara(paraField.getText());
         currentRecord.setAbortion(abortionField.getText());
         currentRecord.setLivingChildren(livingChildrenField.getText());
+        currentRecord.setTerm(termField.getText());
+        currentRecord.setPreterm(pretermField.getText());
         currentRecord.setChiefComplaint(chiefComplaintField.getText());
         currentRecord.setHeight(parseDouble(heightField.getText()));
         currentRecord.setAgeOfGestation(parseDouble(ageOfGestationField.getText()));

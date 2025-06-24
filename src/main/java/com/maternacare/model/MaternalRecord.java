@@ -57,6 +57,10 @@ public class MaternalRecord {
     // Follow-up Vital Signs
     private final List<VitalSignsEntry> followUpVitalSigns;
 
+    // New fields for term and preterm
+    private final transient StringProperty term;
+    private final transient StringProperty preterm;
+
     // Default constructor
     public MaternalRecord() {
         // Personal Information
@@ -103,6 +107,10 @@ public class MaternalRecord {
         // Initialize pregnancy history
         this.pregnancyHistory = new ArrayList<>();
         this.followUpVitalSigns = new ArrayList<>();
+
+        // New fields for term and preterm
+        this.term = new SimpleStringProperty("");
+        this.preterm = new SimpleStringProperty("");
     }
 
     // Getters and Setters for Personal Information
@@ -488,6 +496,31 @@ public class MaternalRecord {
         return String.valueOf(pregnancyHistory.size());
     }
 
+    // Getters and Setters for Term and Preterm
+    public String getTerm() {
+        return term.get();
+    }
+
+    public void setTerm(String value) {
+        term.set(value);
+    }
+
+    public StringProperty termProperty() {
+        return term;
+    }
+
+    public String getPreterm() {
+        return preterm.get();
+    }
+
+    public void setPreterm(String value) {
+        preterm.set(value);
+    }
+
+    public StringProperty pretermProperty() {
+        return preterm;
+    }
+
     // Add DTO class for serialization
     public static class MaternalRecordDTO {
         public int id;
@@ -528,6 +561,8 @@ public class MaternalRecord {
         public String formTimestamp;
         public List<PregnancyHistory.PregnancyHistoryDTO> pregnancyHistory;
         public List<VitalSignsEntry> followUpVitalSigns;
+        public String term;
+        public String preterm;
 
         public MaternalRecordDTO() {
             this.childDetails = new ArrayList<>();
@@ -570,6 +605,8 @@ public class MaternalRecord {
                 .map(PregnancyHistory::toDTO)
                 .collect(Collectors.toList());
         dto.followUpVitalSigns = new ArrayList<>(followUpVitalSigns);
+        dto.term = getTerm();
+        dto.preterm = getPreterm();
         return dto;
     }
 
@@ -644,6 +681,8 @@ public class MaternalRecord {
                     dto.pregnancyHistory.stream().map(PregnancyHistory::fromDTO).collect(Collectors.toList()));
         }
         record.setFollowUpVitalSigns(dto.followUpVitalSigns);
+        record.setTerm(dto.term);
+        record.setPreterm(dto.preterm);
         return record;
     }
 

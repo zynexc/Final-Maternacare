@@ -58,10 +58,6 @@ public class MaternalRecordDetailsPageController {
     @FXML
     private Label temperatureLabel;
     @FXML
-    private Label pulseRateLabel;
-    @FXML
-    private Label respiratoryRateLabel;
-    @FXML
     private Label aogLabel;
     @FXML
     private Label heightLabel;
@@ -112,6 +108,11 @@ public class MaternalRecordDetailsPageController {
 
     @FXML
     private Button backButton;
+
+    @FXML
+    private Label termLabel;
+    @FXML
+    private Label pretermLabel;
 
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MMM dd, yyyy");
 
@@ -181,8 +182,6 @@ public class MaternalRecordDetailsPageController {
 
         // Vitals & Pregnancy Info
         temperatureLabel.setText(record.getTemperature());
-        pulseRateLabel.setText(""); // If you have a pulse rate field, set it here
-        respiratoryRateLabel.setText(""); // If you have a respiratory rate field, set it here
         aogLabel.setText(String.valueOf(record.getAgeOfGestation()));
         heightLabel.setText(String.valueOf(record.getHeight()));
         weightLabel.setText(String.valueOf(record.getWeight()));
@@ -210,6 +209,9 @@ public class MaternalRecordDetailsPageController {
         for (VitalSignsEntry entry : record.getFollowUpVitalSigns()) {
             followUpContainer.getChildren().add(createFollowUpCard(entry));
         }
+
+        termLabel.setText(record.getTerm());
+        pretermLabel.setText(record.getPreterm());
     }
 
     private String formatDate(LocalDate date) {
