@@ -359,6 +359,14 @@ public class MainApplication extends Application {
         }
     }
 
+    public void setContent(javafx.scene.Node node) {
+        contentContainer.getChildren().setAll(node);
+    }
+
+    public Parent getMaternalRecordsRoot() {
+        return maternalRecordsRoot;
+    }
+
     public static void main(String[] args) {
         launch(args);
     }

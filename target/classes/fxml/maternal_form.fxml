@@ -200,6 +200,7 @@
 
             <!-- Button Container -->
             <HBox styleClass="button-container">
+                <Button text="Back" fx:id="backButton" styleClass="back-button"/>
                 <Button text="Clear" styleClass="clear-button"/>
                 <Button text="Save" styleClass="save-button"/>
             </HBox>

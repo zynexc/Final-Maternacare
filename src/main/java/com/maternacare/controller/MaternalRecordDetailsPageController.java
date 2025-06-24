@@ -96,6 +96,18 @@ public class MaternalRecordDetailsPageController {
     @FXML
     private VBox detailsRoot;
 
+    @FXML
+    private Button editRecordButton;
+    @FXML
+    private Button deleteRecordButton;
+
+    @FXML
+    private HBox deleteConfirmBox;
+    @FXML
+    private Button confirmDeleteButton;
+    @FXML
+    private Button cancelDeleteButton;
+
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MMM dd, yyyy");
 
     private Runnable onBackCallback;
@@ -123,6 +135,22 @@ public class MaternalRecordDetailsPageController {
     private void initialize() {
         detailsRoot.getStylesheets()
                 .add(getClass().getResource("/styles/maternal_record_details.css").toExternalForm());
+        if (editRecordButton != null) {
+            editRecordButton.setOnAction(e -> handleEditRecord());
+        }
+        if (deleteRecordButton != null) {
+            deleteRecordButton.setOnAction(e -> showDeleteConfirmation());
+        }
+        if (confirmDeleteButton != null) {
+            confirmDeleteButton.setOnAction(e -> handleConfirmDelete());
+        }
+        if (cancelDeleteButton != null) {
+            cancelDeleteButton.setOnAction(e -> hideDeleteConfirmation());
+        }
+        if (deleteConfirmBox != null) {
+            deleteConfirmBox.setVisible(false);
+            deleteConfirmBox.setManaged(false);
+        }
     }
 
     public void setMaternalRecord(MaternalRecord record) {
@@ -231,37 +259,8 @@ public class MaternalRecordDetailsPageController {
         dateLabel.setStyle(
                 "-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: white; -fx-background-color: #eb0000; -fx-background-radius: 6; -fx-padding: 4 12;");
 
-        // Edit and Delete buttons
-        Button editButton = new Button("Edit");
-        editButton.getStyleClass().add("table-button");
-        editButton.setOnAction(e -> handleEditFollowUp(entry));
-        Button deleteButton = new Button("Delete");
-        deleteButton.setStyle("-fx-background-color: #b0b0b0; -fx-text-fill: white; -fx-font-weight: bold;");
-        HBox actions = new HBox(6, editButton, deleteButton);
-        actions.setAlignment(Pos.TOP_RIGHT);
-
-        HBox header = new HBox(dateLabel, actions);
-        header.setSpacing(8);
-        header.setAlignment(Pos.TOP_LEFT);
-        HBox.setHgrow(actions, Priority.ALWAYS);
-
-        card.getChildren().add(header);
-
-        // Inline confirmation UI (initially hidden)
-        VBox confirmBox = new VBox(6);
-        confirmBox.setAlignment(Pos.CENTER_LEFT);
-        confirmBox.setPadding(new Insets(6, 0, 0, 0));
-        Label confirmLabel = new Label("Are you sure you want to delete this follow-up entry?");
-        confirmLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: #d32f2f;");
-        Button confirmBtn = new Button("Confirm");
-        confirmBtn.setStyle("-fx-background-color: #eb0000; -fx-text-fill: white; -fx-font-weight: bold;");
-        Button cancelBtn = new Button("Cancel");
-        cancelBtn.setStyle("-fx-background-color: #b0b0b0; -fx-text-fill: white; -fx-font-weight: bold;");
-        HBox confirmActions = new HBox(8, confirmBtn, cancelBtn);
-        confirmBox.getChildren().addAll(confirmLabel, confirmActions);
-        confirmBox.setVisible(false);
-        confirmBox.setManaged(false);
-        card.getChildren().add(confirmBox);
+        // Only show the date label at the top
+        card.getChildren().add(dateLabel);
 
         // Details grid (single column, label and value per row)
         GridPane grid = new GridPane();
@@ -296,34 +295,6 @@ public class MaternalRecordDetailsPageController {
         grid.add(new Label(entry.getRemarks()), 1, row++);
 
         card.getChildren().add(grid);
-
-        // Delete button logic for inline confirmation
-        deleteButton.setOnAction(e -> {
-            // Hide any other confirmation box
-            if (currentlyConfirmingDeleteCard != null && currentlyConfirmingDeleteCard != card) {
-                for (Node n : currentlyConfirmingDeleteCard.getChildren()) {
-                    if (n instanceof VBox && n != grid) {
-                        n.setVisible(false);
-                        n.setManaged(false);
-                    }
-                }
-            }
-            confirmBox.setVisible(true);
-            confirmBox.setManaged(true);
-            currentlyConfirmingDeleteCard = card;
-        });
-        cancelBtn.setOnAction(e -> {
-            confirmBox.setVisible(false);
-            confirmBox.setManaged(false);
-            currentlyConfirmingDeleteCard = null;
-        });
-        confirmBtn.setOnAction(e -> {
-            if (currentRecord != null) {
-                currentRecord.getFollowUpVitalSigns().remove(entry);
-                saveAndRefreshFollowUps();
-            }
-            currentlyConfirmingDeleteCard = null;
-        });
 
         return card;
     }
@@ -390,5 +361,38 @@ public class MaternalRecordDetailsPageController {
     public void setRecordsController(MaternalRecordsController controller, ObservableList<MaternalRecord> records) {
         this.recordsController = controller;
         this.records = records;
+    }
+
+    private void handleEditRecord() {
+        if (recordsController != null && currentRecord != null) {
+            recordsController.loadRecordIntoForm(currentRecord);
+        }
+    }
+
+    private void showDeleteConfirmation() {
+        if (deleteConfirmBox != null) {
+            deleteConfirmBox.setVisible(true);
+            deleteConfirmBox.setManaged(true);
+        }
+    }
+
+    private void hideDeleteConfirmation() {
+        if (deleteConfirmBox != null) {
+            deleteConfirmBox.setVisible(false);
+            deleteConfirmBox.setManaged(false);
+        }
+    }
+
+    private void handleConfirmDelete() {
+        if (recordsController != null && currentRecord != null && records != null) {
+            recordsController.deleteRecord(currentRecord);
+            if (onBackCallback != null) {
+                onBackCallback.run();
+            }
+        }
+    }
+
+    private void handleDeleteRecord() {
+        showDeleteConfirmation();
     }
 }
