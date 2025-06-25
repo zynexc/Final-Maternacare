@@ -17,7 +17,11 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Circle;
+import javafx.geometry.Pos;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
@@ -25,6 +29,7 @@ import java.util.List;
 import java.io.IOException;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import javafx.application.Platform;
 
 public class DashboardController {
     @FXML
@@ -63,6 +68,8 @@ public class DashboardController {
     private StackPane completedFormsIconContainer;
     @FXML
     private StackPane severeCasesIconContainer;
+    @FXML
+    private HBox purokLegendBox;
 
     private ObservableList<PatientData> patientData = FXCollections.observableArrayList();
     private FilteredList<PatientData> filteredData;
@@ -136,6 +143,11 @@ public class DashboardController {
 
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
             filteredData.setPredicate(patient -> {
+                // Only include patients aged 10-17 in the table
+                int age = patient.getAge();
+                if (age < 10 || age > 17) {
+                    return false;
+                }
                 if (newValue == null || newValue.isEmpty()) {
                     return true;
                 }
@@ -173,11 +185,11 @@ public class DashboardController {
         for (MaternalRecord record : records) {
             if (record.getDateOfBirth() != null) {
                 int age = Period.between(record.getDateOfBirth(), LocalDate.now()).getYears();
-                if (age <= 16) { // Only include severe cases
-                    String fullName = record.getFullName();
+                // Only add patients aged 10-17 to patientData for the table
+                if (age >= 10 && age <= 17) {
                     patientData.add(new PatientData(
                             record.getPatientId(),
-                            fullName,
+                            record.getFullName(),
                             age,
                             record.getPurok(),
                             record.getAgeOfGestation(),
@@ -210,42 +222,91 @@ public class DashboardController {
         XYChart.Series<String, Number> ageSeries = new XYChart.Series<>();
         ageSeries.setName("Age Distribution (Severe Cases)");
 
-        // Count patients in age groups (0-16 years)
-        int[] ageGroups = new int[4]; // 0-4, 5-8, 9-12, 13-16
+        // Count patients in age groups (10-17 years)
+        int[] ageGroups = new int[4]; // 10-11, 12-13, 14-15, 16-17
         for (PatientData data : patientData) {
             int age = data.getAge();
-            if (age <= 4)
+            if (age >= 10 && age <= 11)
                 ageGroups[0]++;
-            else if (age <= 8)
+            else if (age >= 12 && age <= 13)
                 ageGroups[1]++;
-            else if (age <= 12)
+            else if (age >= 14 && age <= 15)
                 ageGroups[2]++;
-            else
+            else if (age >= 16 && age <= 17)
                 ageGroups[3]++;
         }
 
         // Add data to bar chart
-        ageSeries.getData().add(new XYChart.Data<>("0-4", ageGroups[0]));
-        ageSeries.getData().add(new XYChart.Data<>("5-8", ageGroups[1]));
-        ageSeries.getData().add(new XYChart.Data<>("9-12", ageGroups[2]));
-        ageSeries.getData().add(new XYChart.Data<>("13-16", ageGroups[3]));
+        ageSeries.getData().add(new XYChart.Data<>("10-11", ageGroups[0]));
+        ageSeries.getData().add(new XYChart.Data<>("12-13", ageGroups[1]));
+        ageSeries.getData().add(new XYChart.Data<>("14-15", ageGroups[2]));
+        ageSeries.getData().add(new XYChart.Data<>("16-17", ageGroups[3]));
 
         barChart.getData().add(ageSeries);
 
         // Prepare data for pie chart (patients per purok)
         int[] purokCounts = new int[6]; // Purok 1 to 6
-
+        java.util.Set<String>[] purokPatientIds = new java.util.HashSet[6];
+        for (int i = 0; i < 6; i++)
+            purokPatientIds[i] = new java.util.HashSet<>();
         for (PatientData data : patientData) {
             String purok = data.getPurok();
             if (purok != null && purok.matches("Purok [1-6]")) {
                 int purokNumber = Integer.parseInt(purok.split(" ")[1]);
-                purokCounts[purokNumber - 1]++;
+                String patientId = data.getPatientId();
+                if (!purokPatientIds[purokNumber - 1].contains(patientId)) {
+                    purokPatientIds[purokNumber - 1].add(patientId);
+                    purokCounts[purokNumber - 1]++;
+                }
             }
         }
 
         // Add data to pie chart
+        final int total;
+        {
+            int t = 0;
+            for (int count : purokCounts)
+                t += count;
+            total = t;
+        }
         for (int i = 0; i < 6; i++) {
-            pieChart.getData().add(new PieChart.Data("Purok " + (i + 1), purokCounts[i]));
+            PieChart.Data data = new PieChart.Data("", purokCounts[i]); // Hide label
+            pieChart.getData().add(data);
+        }
+        // Add tooltips to pie chart slices
+        Platform.runLater(() -> {
+            for (int i = 0; i < pieChart.getData().size(); i++) {
+                PieChart.Data data = pieChart.getData().get(i);
+                int count = purokCounts[i];
+                double percent = total > 0 ? (count * 100.0 / total) : 0.0;
+                String tooltipText = String.format("Purok %d: %.1f%%", i + 1, percent);
+                Tooltip tooltip = new Tooltip(tooltipText);
+                Tooltip.install(data.getNode(), tooltip);
+            }
+        });
+
+        // Remove pie chart radial lines (chart lines)
+        pieChart.lookupAll(".chart-pie-label-line").forEach(node -> node.setStyle("-fx-stroke: transparent;"));
+
+        // Custom legend for Purok colors
+        purokLegendBox.getChildren().clear();
+        for (int i = 0; i < pieChart.getData().size(); i++) {
+            PieChart.Data data = pieChart.getData().get(i);
+            // Get the color from the pie slice
+            String color = data.getNode().getStyle();
+            // Fallback to default JavaFX pie colors if not set
+            if (color == null || color.isEmpty()) {
+                // JavaFX default pie colors
+                String[] defaultColors = { "#f3622d", "#fba71b", "#57b757", "#41a9c9", "#4258c9", "#9a42c8" };
+                color = "-fx-pie-color: " + defaultColors[i % defaultColors.length] + ";";
+            }
+            String pieColor = color.replace("-fx-pie-color:", "").replace(";", "").trim();
+            Circle circle = new Circle(7, Paint.valueOf(pieColor));
+            Label label = new Label("Purok " + (i + 1));
+            label.setStyle("-fx-font-size: 13px; -fx-padding: 0 6 0 4;");
+            HBox legendItem = new HBox(4, circle, label);
+            legendItem.setAlignment(Pos.CENTER);
+            purokLegendBox.getChildren().add(legendItem);
         }
     }
 
