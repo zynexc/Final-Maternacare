@@ -25,6 +25,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.geometry.Pos;
 import javafx.scene.layout.Priority;
+import javafx.scene.Parent;
 
 public class MaternalRecordDetailsPageController {
 
@@ -56,9 +57,11 @@ public class MaternalRecordDetailsPageController {
 
     // Vitals & Pregnancy Info
     @FXML
-    private Label temperatureLabel;
+    private Label aogDisplayLabel;
     @FXML
-    private Label aogLabel;
+    private Label aogWeeksLabel;
+    @FXML
+    private Label aogDaysLabel;
     @FXML
     private Label heightLabel;
     @FXML
@@ -114,6 +117,18 @@ public class MaternalRecordDetailsPageController {
     @FXML
     private Label pretermLabel;
 
+    @FXML
+    private Button addHighRiskButton;
+
+    @FXML
+    private Button removeHighRiskButton;
+
+    @FXML
+    private Label statusMessageLabel;
+
+    @FXML
+    private Label inlineNotificationLabel;
+
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MMM dd, yyyy");
 
     private Runnable onBackCallback;
@@ -125,6 +140,12 @@ public class MaternalRecordDetailsPageController {
     private MaternalRecordsController recordsController;
     private ObservableList<MaternalRecord> records;
     private MaternalRecordService maternalRecordService = new MaternalRecordService();
+
+    private java.util.List<javafx.scene.Node> originalContent;
+
+    public void setOriginalContent(java.util.List<javafx.scene.Node> originalContent) {
+        this.originalContent = originalContent;
+    }
 
     public void setOnBackCallback(Runnable callback) {
         this.onBackCallback = callback;
@@ -156,6 +177,12 @@ public class MaternalRecordDetailsPageController {
         if (backButton != null) {
             backButton.setOnAction(e -> handleBack(null));
         }
+        if (addHighRiskButton != null) {
+            addHighRiskButton.setOnAction(e -> handleAddHighRiskPatient());
+        }
+        if (removeHighRiskButton != null) {
+            removeHighRiskButton.setOnAction(e -> handleRemoveHighRiskPatient());
+        }
         if (deleteConfirmBox != null) {
             deleteConfirmBox.setVisible(false);
             deleteConfirmBox.setManaged(false);
@@ -181,8 +208,29 @@ public class MaternalRecordDetailsPageController {
         nextAppointmentLabel.setText(formatDate(record.getNextAppointment()));
 
         // Vitals & Pregnancy Info
-        temperatureLabel.setText(record.getTemperature());
-        aogLabel.setText(String.valueOf(record.getAgeOfGestation()));
+        if (record.getLastMenstrualPeriod() != null) {
+            java.time.LocalDate lmp = record.getLastMenstrualPeriod();
+            java.time.LocalDate today = java.time.LocalDate.now();
+            long totalDays = java.time.temporal.ChronoUnit.DAYS.between(lmp, today);
+            if (totalDays < 0)
+                totalDays = 0;
+            long weeks = totalDays / 7;
+            long days = totalDays % 7;
+            double weeksDecimal = totalDays / 7.0;
+            if (aogDisplayLabel != null)
+                aogDisplayLabel.setText(weeks + " weeks and " + days + " days");
+            if (aogWeeksLabel != null)
+                aogWeeksLabel.setText(String.format("%.1f %s", weeksDecimal, weeksDecimal == 1.0 ? "week" : "weeks"));
+            if (aogDaysLabel != null)
+                aogDaysLabel.setText(totalDays + (totalDays == 1 ? " day" : " days"));
+        } else {
+            if (aogDisplayLabel != null)
+                aogDisplayLabel.setText("");
+            if (aogWeeksLabel != null)
+                aogWeeksLabel.setText("");
+            if (aogDaysLabel != null)
+                aogDaysLabel.setText("");
+        }
         heightLabel.setText(String.valueOf(record.getHeight()));
         weightLabel.setText(String.valueOf(record.getWeight()));
         fhtLabel.setText(String.valueOf(record.getFetalHeartTone()));
@@ -212,6 +260,16 @@ public class MaternalRecordDetailsPageController {
 
         termLabel.setText(record.getTerm());
         pretermLabel.setText(record.getPreterm());
+
+        // Show/hide buttons based on high risk status
+        if (addHighRiskButton != null) {
+            addHighRiskButton.setVisible(!record.isHighRisk());
+            addHighRiskButton.setManaged(!record.isHighRisk());
+        }
+        if (removeHighRiskButton != null) {
+            removeHighRiskButton.setVisible(record.isHighRisk());
+            removeHighRiskButton.setManaged(record.isHighRisk());
+        }
     }
 
     private String formatDate(LocalDate date) {
@@ -381,6 +439,7 @@ public class MaternalRecordDetailsPageController {
             com.maternacare.controller.MaternalRecordEditFormController editController = loader.getController();
             editController.setRecordForEditing(currentRecord); // You implement this method in your new controller
             editController.setRecordsController(recordsController); // Pass the records controller for navigation
+            editController.setOriginalContent(originalContent); // Pass the originalContent for back navigation
 
             // Replace the main content area
             if (recordsController != null && recordsController.getMainApplication() != null) {
@@ -388,6 +447,13 @@ public class MaternalRecordDetailsPageController {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    // Add a public method to allow navigation back to details with originalContent
+    public void showDetailsWithOriginalContent(MaternalRecord record) {
+        if (recordsController != null) {
+            recordsController.showRecordDetails(record, originalContent);
         }
     }
 
@@ -416,5 +482,76 @@ public class MaternalRecordDetailsPageController {
 
     private void handleDeleteRecord() {
         showDeleteConfirmation();
+    }
+
+    private void showInlineNotification(String message, boolean isError) {
+        if (inlineNotificationLabel != null) {
+            inlineNotificationLabel.setText(message);
+            inlineNotificationLabel.setVisible(true);
+            inlineNotificationLabel.setManaged(true);
+            if (isError) {
+                inlineNotificationLabel.setStyle("-fx-text-fill: #eb0000;");
+            } else {
+                inlineNotificationLabel.setStyle("-fx-text-fill: #28a745;");
+            }
+            new Thread(() -> {
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException ignored) {
+                }
+                javafx.application.Platform.runLater(() -> {
+                    inlineNotificationLabel.setVisible(false);
+                    inlineNotificationLabel.setManaged(false);
+                });
+            }).start();
+        }
+    }
+
+    private void handleAddHighRiskPatient() {
+        if (currentRecord != null) {
+            currentRecord.setHighRisk(true);
+            if (recordsController != null) {
+                recordsController.saveRecord(currentRecord);
+            }
+            showInlineNotification("Patient added to High-Risk Patient Records.", false);
+            if (statusMessageLabel != null) {
+                statusMessageLabel.setText("");
+                statusMessageLabel.setVisible(false);
+                statusMessageLabel.setManaged(false);
+            }
+            // Update button visibility
+            if (addHighRiskButton != null) {
+                addHighRiskButton.setVisible(false);
+                addHighRiskButton.setManaged(false);
+            }
+            if (removeHighRiskButton != null) {
+                removeHighRiskButton.setVisible(true);
+                removeHighRiskButton.setManaged(true);
+            }
+        }
+    }
+
+    private void handleRemoveHighRiskPatient() {
+        if (currentRecord != null) {
+            currentRecord.setHighRisk(false);
+            if (recordsController != null) {
+                recordsController.saveRecord(currentRecord);
+            }
+            showInlineNotification("This has been removed from the high risk patient.", false);
+            if (statusMessageLabel != null) {
+                statusMessageLabel.setText("");
+                statusMessageLabel.setVisible(false);
+                statusMessageLabel.setManaged(false);
+            }
+            // Update button visibility
+            if (addHighRiskButton != null) {
+                addHighRiskButton.setVisible(true);
+                addHighRiskButton.setManaged(true);
+            }
+            if (removeHighRiskButton != null) {
+                removeHighRiskButton.setVisible(false);
+                removeHighRiskButton.setManaged(false);
+            }
+        }
     }
 }

@@ -203,7 +203,9 @@ public class PregnancyHistoryTableController {
         grid.setVgap(10);
         grid.setPadding(new javafx.geometry.Insets(20, 150, 10, 10));
 
-        TextField deliveryTypeField = new TextField(selectedHistory.getDeliveryType());
+        ComboBox<String> deliveryTypeField = new ComboBox<>();
+        deliveryTypeField.setItems(FXCollections.observableArrayList("Normal", "Caesarian", "Abortion"));
+        deliveryTypeField.setValue(selectedHistory.getDeliveryType());
         TextField genderField = new TextField(selectedHistory.getGender());
         TextField placeOfDeliveryField = new TextField(selectedHistory.getPlaceOfDelivery());
         TextField yearDeliveredField = new TextField(String.valueOf(selectedHistory.getYearDelivered()));
@@ -239,7 +241,7 @@ public class PregnancyHistoryTableController {
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == saveButtonType) {
                 try {
-                    selectedHistory.setDeliveryType(deliveryTypeField.getText());
+                    selectedHistory.setDeliveryType(deliveryTypeField.getValue());
                     selectedHistory.setGender(genderField.getText());
                     selectedHistory.setPlaceOfDelivery(placeOfDeliveryField.getText());
                     selectedHistory.setYearDelivered(Integer.parseInt(yearDeliveredField.getText()));

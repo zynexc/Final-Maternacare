@@ -7,7 +7,6 @@ com\maternacare\controller\PregnancyHistoryTableController.class
 com\maternacare\model\PregnancyHistory.class
 com\maternacare\service\MaternalRecordService.class
 com\maternacare\service\MaternalRecordService$ObjectPropertyAdapter.class
-com\maternacare\controller\MaternalRecordDetailsPopupController.class
 sample\LogIn.class
 com\maternacare\model\PatientData.class
 com\maternacare\controller\MaternalRecordsController$3.class

@@ -566,3 +566,47 @@ GridPane {
     -fx-hgap: 18;
     -fx-vgap: 16;
 }
+
+.toast-message {
+    -fx-background-color: #28a745;
+    -fx-text-fill: white;
+    -fx-padding: 12 24;
+    -fx-background-radius: 8;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, #00000044, 8, 0.2, 2, 2);
+    -fx-opacity: 0.95;
+    -fx-max-width: 320px;
+    -fx-alignment: center-right;
+    -fx-translate-y: 30;
+    -fx-translate-x: -30;
+    -fx-cursor: default;
+    -fx-z-index: 1000;
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
+    -fx-margin: 20;
+    -fx-position: absolute;
+}
+
+.inline-notification {
+    -fx-background-color: #fff;
+    -fx-text-fill: #eb0000;
+    -fx-padding: 14 32;
+    -fx-background-radius: 8;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-opacity: 0.97;
+    -fx-max-width: 400px;
+    -fx-alignment: center;
+    -fx-translate-y: 20;
+    -fx-cursor: default;
+    -fx-z-index: 1000;
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
+    -fx-position: absolute;
+    -fx-margin: 0 auto;
+    -fx-hgrow: ALWAYS;
+    -fx-display: flex;
+    -fx-justify-content: center;
+    -fx-text-alignment: center;
+}

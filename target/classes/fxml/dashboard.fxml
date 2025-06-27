@@ -93,7 +93,7 @@
         
         <TableView fx:id="recordsTable" VBox.vgrow="NEVER" styleClass="table-view" prefHeight="200.0">
             <columns>
-                <TableColumn fx:id="patientIdColumn" text="Patient ID"/>
+                <TableColumn fx:id="patientIdColumn" text="Patient ID" style="-fx-alignment: CENTER;"/>
                 <TableColumn fx:id="lastNameColumn" text="Full Name"/>
                 <TableColumn fx:id="firstNameColumn" text="First Name" visible="false"/>
                 <TableColumn fx:id="ageColumn" text="Age"/>

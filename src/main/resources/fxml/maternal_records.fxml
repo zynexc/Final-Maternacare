@@ -30,7 +30,7 @@
         
         <TableView fx:id="recordsTable" styleClass="records-table" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
             <columns>
-                <TableColumn fx:id="patientIdColumn" text="Patient ID" styleClass="record-id-bold" sortable="false" reorderable="false"/>
+                <TableColumn fx:id="patientIdColumn" text="Patient ID" styleClass="record-id-bold" sortable="false" reorderable="false" style="-fx-alignment: CENTER;"/>
                 <TableColumn fx:id="lastNameColumn" text="Full Name" styleClass="record-id-bold" sortable="false" reorderable="false"/>
                 <TableColumn fx:id="firstNameColumn" text="First Name" sortable="false" reorderable="false" visible="false"/>
                 <TableColumn fx:id="ageColumn" text="Age" sortable="false" reorderable="false" style="-fx-alignment: CENTER;"/>

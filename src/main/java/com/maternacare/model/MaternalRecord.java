@@ -30,8 +30,9 @@ public class MaternalRecord {
 
     // Vital Signs
     private final transient StringProperty bloodPressure;
-    private final transient StringProperty temperature; // Body Temperature
     private final transient StringProperty chiefComplaint;
+    private final transient StringProperty pulseRate;
+    private final transient StringProperty respiratoryRate;
 
     // Pregnancy Information
     private final transient ObjectProperty<LocalDate> lastMenstrualPeriod;
@@ -61,6 +62,9 @@ public class MaternalRecord {
     private final transient StringProperty term;
     private final transient StringProperty preterm;
 
+    // New field for high-risk status
+    private boolean highRisk;
+
     // Default constructor
     public MaternalRecord() {
         // Personal Information
@@ -83,8 +87,9 @@ public class MaternalRecord {
 
         // Vital Signs
         this.bloodPressure = new SimpleStringProperty("");
-        this.temperature = new SimpleStringProperty(""); // Body Temperature
         this.chiefComplaint = new SimpleStringProperty("");
+        this.pulseRate = new SimpleStringProperty("");
+        this.respiratoryRate = new SimpleStringProperty("");
 
         // Pregnancy Information
         this.lastMenstrualPeriod = new SimpleObjectProperty<>(null);
@@ -274,18 +279,6 @@ public class MaternalRecord {
         return bloodPressure;
     }
 
-    public String getTemperature() { // Body Temperature
-        return temperature.get();
-    }
-
-    public void setTemperature(String value) { // Body Temperature
-        temperature.set(value);
-    }
-
-    public StringProperty temperatureProperty() { // Body Temperature
-        return temperature;
-    }
-
     public String getChiefComplaint() {
         return chiefComplaint.get();
     }
@@ -296,6 +289,30 @@ public class MaternalRecord {
 
     public StringProperty chiefComplaintProperty() {
         return chiefComplaint;
+    }
+
+    public String getPulseRate() {
+        return pulseRate.get();
+    }
+
+    public void setPulseRate(String value) {
+        pulseRate.set(value);
+    }
+
+    public StringProperty pulseRateProperty() {
+        return pulseRate;
+    }
+
+    public String getRespiratoryRate() {
+        return respiratoryRate.get();
+    }
+
+    public void setRespiratoryRate(String value) {
+        respiratoryRate.set(value);
+    }
+
+    public StringProperty respiratoryRateProperty() {
+        return respiratoryRate;
     }
 
     // Getters and Setters for Pregnancy Information
@@ -521,6 +538,15 @@ public class MaternalRecord {
         return preterm;
     }
 
+    // Getter and Setter for High-Risk Status
+    public boolean isHighRisk() {
+        return highRisk;
+    }
+
+    public void setHighRisk(boolean highRisk) {
+        this.highRisk = highRisk;
+    }
+
     // Add DTO class for serialization
     public static class MaternalRecordDTO {
         public int id;
@@ -535,7 +561,6 @@ public class MaternalRecord {
         public String contactNumber;
         public String email;
         public String bloodPressure;
-        public String temperature;
         public String chiefComplaint;
         // Backward compatibility fields
         public String pulseRate;
@@ -563,6 +588,7 @@ public class MaternalRecord {
         public List<VitalSignsEntry> followUpVitalSigns;
         public String term;
         public String preterm;
+        public boolean highRisk;
 
         public MaternalRecordDTO() {
             this.childDetails = new ArrayList<>();
@@ -580,8 +606,9 @@ public class MaternalRecord {
         dto.contactNumber = getContactNumber();
         dto.email = getEmail();
         dto.bloodPressure = getBloodPressure();
-        dto.temperature = getTemperature();
         dto.chiefComplaint = getChiefComplaint();
+        dto.pulseRate = getPulseRate();
+        dto.respiratoryRate = getRespiratoryRate();
         dto.para = getPara();
         dto.abortion = getAbortion();
         dto.livingChildren = getLivingChildren();
@@ -607,6 +634,7 @@ public class MaternalRecord {
         dto.followUpVitalSigns = new ArrayList<>(followUpVitalSigns);
         dto.term = getTerm();
         dto.preterm = getPreterm();
+        dto.highRisk = isHighRisk();
         return dto;
     }
 
@@ -643,16 +671,9 @@ public class MaternalRecord {
         record.setContactNumber(dto.contactNumber);
         record.setEmail(dto.email);
         record.setBloodPressure(dto.bloodPressure);
-        record.setTemperature(dto.temperature);
-
-        // Handle migration for chief complaint
-        if (dto.chiefComplaint != null && !dto.chiefComplaint.isEmpty()) {
-            record.setChiefComplaint(dto.chiefComplaint);
-        } else {
-            // Set empty string for old records that don't have chief complaint
-            record.setChiefComplaint("");
-        }
-
+        record.setChiefComplaint(dto.chiefComplaint);
+        record.setPulseRate(dto.pulseRate);
+        record.setRespiratoryRate(dto.respiratoryRate);
         record.setPara(dto.para);
         record.setAbortion(dto.abortion);
         record.setLivingChildren(dto.livingChildren);
@@ -683,6 +704,7 @@ public class MaternalRecord {
         record.setFollowUpVitalSigns(dto.followUpVitalSigns);
         record.setTerm(dto.term);
         record.setPreterm(dto.preterm);
+        record.setHighRisk(dto.highRisk);
         return record;
     }
 

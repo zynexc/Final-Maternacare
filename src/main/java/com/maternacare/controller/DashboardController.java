@@ -179,26 +179,32 @@ public class DashboardController {
 
     private void loadMaternalRecords() {
         patientData.clear();
-
-        // Load maternal records
         List<MaternalRecord> records = recordService.loadRecords();
+        java.util.Set<String> addedPatientIds = new java.util.HashSet<>();
+
         for (MaternalRecord record : records) {
             if (record.getDateOfBirth() != null) {
-                int age = Period.between(record.getDateOfBirth(), LocalDate.now()).getYears();
-                // Only add patients aged 10-17 to patientData for the table
-                if (age >= 10 && age <= 17) {
-                    patientData.add(new PatientData(
-                            record.getPatientId(),
-                            record.getFullName(),
-                            age,
-                            record.getPurok(),
-                            record.getAgeOfGestation(),
-                            record.getBloodPressure(),
-                            record.getWeight(),
-                            record.getHeight(),
-                            record.getNextAppointment(),
-                            record.getContactNumber(),
-                            record.getEmail()));
+                int age = java.time.Period.between(record.getDateOfBirth(), java.time.LocalDate.now()).getYears();
+                boolean is10to17 = (age >= 10 && age <= 17);
+                boolean isHighRisk = record.isHighRisk();
+
+                if (is10to17 || isHighRisk) {
+                    // Avoid duplicates if a patient is both 10-17 and high-risk
+                    if (!addedPatientIds.contains(record.getPatientId())) {
+                        patientData.add(new PatientData(
+                                record.getPatientId(),
+                                record.getFullName(),
+                                age,
+                                record.getPurok(),
+                                record.getAgeOfGestation(),
+                                record.getBloodPressure(),
+                                record.getWeight(),
+                                record.getHeight(),
+                                record.getNextAppointment(),
+                                record.getContactNumber(),
+                                record.getEmail()));
+                        addedPatientIds.add(record.getPatientId());
+                    }
                 }
             }
         }

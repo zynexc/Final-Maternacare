@@ -22,6 +22,7 @@ import javafx.scene.layout.Priority;
 import com.maternacare.model.MaternalRecord;
 import javafx.scene.text.Font;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.StackPane;
 
 public class MainApplication extends Application {
 

@@ -46,8 +46,6 @@ public class MaternalRecordDetailsController {
         @FXML
         private Label bloodPressureLabel;
         @FXML
-        private Label temperatureLabel; // Body Temperature label
-        @FXML
         private Label chiefComplaintLabel;
         @FXML
         private Label fetalHeartToneLabel;
@@ -119,9 +117,6 @@ public class MaternalRecordDetailsController {
                                         : "N/A");
                         bloodPressureLabel
                                         .setText(record.getBloodPressure() != null ? record.getBloodPressure() : "N/A");
-                        temperatureLabel.setText(
-                                        record.getTemperature() != null ? record.getTemperature() + "°C" : "N/A"); // Body
-                                                                                                                   // Temperature
                         chiefComplaintLabel.setText(
                                         record.getChiefComplaint() != null ? record.getChiefComplaint() : "N/A");
                         fetalHeartToneLabel.setText(

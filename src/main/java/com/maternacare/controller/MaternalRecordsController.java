@@ -23,6 +23,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import javafx.scene.layout.VBox;
 import javafx.scene.Node;
+import javafx.scene.layout.StackPane;
 
 public class MaternalRecordsController {
     @FXML
@@ -59,9 +60,6 @@ public class MaternalRecordsController {
 
     private MaternalFormController formController;
     private MainApplication mainApplication;
-
-    private MaternalRecordDetailsPopupController lastDetailsPopupController = null;
-    private MaternalRecord lastDetailsPopupRecord = null;
 
     @FXML
     private VBox rootVBox;
@@ -224,7 +222,13 @@ public class MaternalRecordsController {
         }
     }
 
-    private void showRecordDetails(MaternalRecord record) {
+    // Overload for initial call from records table
+    public void showRecordDetails(MaternalRecord record) {
+        showRecordDetails(record, null);
+    }
+
+    // Main method that accepts originalContent
+    public void showRecordDetails(MaternalRecord record, java.util.List<javafx.scene.Node> originalContent) {
         System.out.println("showRecordDetails called for record: " + record.getPatientId());
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/maternal_record_details_page.fxml"));
@@ -233,12 +237,17 @@ public class MaternalRecordsController {
             controller.setMaternalRecord(record);
             controller.setRecordsController(this, records);
 
-            // Save the current content to restore later
-            var originalContent = new java.util.ArrayList<>(rootVBox.getChildren());
+            // If originalContent is null, set it to the current VBox children (from records
+            // table)
+            if (originalContent == null) {
+                originalContent = new java.util.ArrayList<>(rootVBox.getChildren());
+            }
+            controller.setOriginalContent(originalContent);
 
             // Set up a back callback to restore the records table view
+            java.util.List<javafx.scene.Node> finalOriginalContent = originalContent;
             controller.setOnBackCallback(() -> {
-                rootVBox.getChildren().setAll(originalContent);
+                rootVBox.getChildren().setAll(finalOriginalContent);
                 refreshTable();
             });
 
@@ -258,6 +267,22 @@ public class MaternalRecordsController {
                     return true;
                 }
                 String lowerCaseFilter = newValue.toLowerCase();
+                // Check if search is a number (age)
+                try {
+                    int ageFilter = Integer.parseInt(lowerCaseFilter);
+                    if (record.getDateOfBirth() != null) {
+                        int age = java.time.Period.between(record.getDateOfBirth(), java.time.LocalDate.now())
+                                .getYears();
+                        return age == ageFilter;
+                    }
+                } catch (NumberFormatException e) {
+                    // Not a number, continue
+                }
+                // Check if search matches district (purok)
+                if (record.getPurok() != null && record.getPurok().toLowerCase().contains(lowerCaseFilter)) {
+                    return true;
+                }
+                // Default: search by name or patient ID
                 return record.getFullName().toLowerCase().contains(lowerCaseFilter) ||
                         record.getPatientId().toLowerCase().contains(lowerCaseFilter);
             });
@@ -329,7 +354,7 @@ public class MaternalRecordsController {
         try {
             // Load the maternal form FXML
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/maternal_form.fxml"));
-            VBox formRoot = loader.load();
+            StackPane formRoot = loader.load();
             // Get the controller and pre-fill the form
             MaternalFormController formController = loader.getController();
             formController.editRecord(record); // pre-fill fields for editing
@@ -357,7 +382,7 @@ public class MaternalRecordsController {
         refreshTable();
     }
 
-    private void refreshTable() {
+    public void refreshTable() {
         // Instead of clearing the list, update it with the latest data
         List<MaternalRecord> savedRecords = maternalRecordService.loadRecords();
         records.setAll(savedRecords);
@@ -410,5 +435,26 @@ public class MaternalRecordsController {
 
     public List<MaternalRecord> getAllRecords() {
         return records;
+    }
+
+    public VBox getRootVBox() {
+        return rootVBox;
+    }
+
+    public void showRecordDetailsWithBack(MaternalRecord record, java.util.List<javafx.scene.Node> originalContent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/maternal_record_details_page.fxml"));
+            Parent detailsPage = loader.load();
+            MaternalRecordDetailsPageController detailsController = loader.getController();
+            detailsController.setMaternalRecord(record);
+            detailsController.setRecordsController(this, null);
+            detailsController.setOnBackCallback(() -> {
+                rootVBox.getChildren().setAll(originalContent);
+                refreshTable();
+            });
+            rootVBox.getChildren().setAll(detailsPage);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

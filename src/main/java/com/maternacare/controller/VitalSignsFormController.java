@@ -11,6 +11,7 @@ import java.util.function.Consumer;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.control.ComboBox;
 
 public class VitalSignsFormController {
     @FXML
@@ -36,7 +37,7 @@ public class VitalSignsFormController {
     @FXML
     private TextField fhtField;
     @FXML
-    private TextField presentationField;
+    private ComboBox<String> presentationComboBox;
     @FXML
     private TextField chiefComplaintField;
     @FXML
@@ -79,15 +80,15 @@ public class VitalSignsFormController {
         String temp = temperatureField.getText();
         String pulse = pulseRateField.getText();
         String resp = respiratoryRateField.getText();
-        String aog = aogField.getText();
         String height = heightField.getText();
         String weight = weightField.getText();
         String fht = fhtField.getText();
-        String presentation = presentationField.getText();
+        String presentation = presentationComboBox.getValue();
         String chiefComplaint = chiefComplaintField.getText();
         String remarks = remarksField.getText();
         java.time.LocalDate toComeBack = toComeBackPicker.getValue();
-        VitalSignsEntry entry = new VitalSignsEntry(LocalDate.now(), bp, temp, pulse, resp, remarks, aog, height,
+        VitalSignsEntry entry = new VitalSignsEntry(java.time.LocalDate.now(), bp, temp, pulse, resp, remarks, null,
+                height,
                 weight, fht, presentation, chiefComplaint, toComeBack);
         if (onSaveCallback != null) {
             onSaveCallback.accept(entry);
@@ -103,11 +104,10 @@ public class VitalSignsFormController {
                 temperatureField.getText().trim().isEmpty() ||
                 pulseRateField.getText().trim().isEmpty() ||
                 respiratoryRateField.getText().trim().isEmpty() ||
-                aogField.getText().trim().isEmpty() ||
                 heightField.getText().trim().isEmpty() ||
                 weightField.getText().trim().isEmpty() ||
                 fhtField.getText().trim().isEmpty() ||
-                presentationField.getText().trim().isEmpty() ||
+                presentationComboBox.getValue() == null ||
                 chiefComplaintField.getText().trim().isEmpty() ||
                 toComeBackPicker.getValue() == null;
     }
@@ -134,11 +134,10 @@ public class VitalSignsFormController {
         temperatureField.setText(entry.getTemperature());
         pulseRateField.setText(entry.getPulseRate());
         respiratoryRateField.setText(entry.getRespiratoryRate());
-        aogField.setText(entry.getAog());
         heightField.setText(entry.getHeight());
         weightField.setText(entry.getWeight());
         fhtField.setText(entry.getFht());
-        presentationField.setText(entry.getPresentation());
+        presentationComboBox.setValue(entry.getPresentation());
         chiefComplaintField.setText(entry.getChiefComplaint());
         remarksField.setText(entry.getRemarks());
         toComeBackPicker.setValue(entry.getToComeBack());

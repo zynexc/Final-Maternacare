@@ -60,8 +60,6 @@ public class MaternalRecordEditFormController {
     @FXML
     private TextField fetalHeartToneField;
     @FXML
-    private TextField temperatureField;
-    @FXML
     private TextField fundalHeightField;
     @FXML
     private TextField bloodPressureField;
@@ -73,8 +71,13 @@ public class MaternalRecordEditFormController {
     private TextArea remarksField;
     @FXML
     private Label messageLabel;
+    @FXML
+    private TextField ageOfGestationWeeksField;
+    @FXML
+    private TextField ageOfGestationDaysField;
     private MaternalRecord currentRecord;
     private MaternalRecordsController recordsController;
+    private java.util.List<javafx.scene.Node> originalContent;
 
     public void setRecordForEditing(MaternalRecord record) {
         this.currentRecord = record;
@@ -101,7 +104,6 @@ public class MaternalRecordEditFormController {
         ageOfGestationField.setText(String.valueOf(record.getAgeOfGestation()));
         weightField.setText(String.valueOf(record.getWeight()));
         fetalHeartToneField.setText(String.valueOf(record.getFetalHeartTone()));
-        temperatureField.setText(record.getTemperature());
         fundalHeightField.setText(String.valueOf(record.getFundalHeight()));
         bloodPressureField.setText(record.getBloodPressure());
         presentationCombo.setValue(record.getPresentation());
@@ -113,15 +115,24 @@ public class MaternalRecordEditFormController {
         this.recordsController = controller;
     }
 
+    public void setOriginalContent(java.util.List<javafx.scene.Node> originalContent) {
+        this.originalContent = originalContent;
+    }
+
     @FXML
     private void handleBack() {
-        if (recordsController != null && currentRecord != null) {
+        if (recordsController != null && currentRecord != null && originalContent != null) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/maternal_record_details_page.fxml"));
                 Parent detailsPage = loader.load();
                 MaternalRecordDetailsPageController detailsController = loader.getController();
                 detailsController.setMaternalRecord(currentRecord);
                 detailsController.setRecordsController(recordsController, null);
+                detailsController.setOriginalContent(originalContent);
+                detailsController.setOnBackCallback(() -> {
+                    recordsController.getRootVBox().getChildren().setAll(originalContent);
+                    recordsController.refreshTable();
+                });
                 if (recordsController.getMainApplication() != null) {
                     recordsController.getMainApplication().setContent(detailsPage);
                 }
@@ -158,7 +169,6 @@ public class MaternalRecordEditFormController {
         currentRecord.setAgeOfGestation(parseDouble(ageOfGestationField.getText()));
         currentRecord.setWeight(parseDouble(weightField.getText()));
         currentRecord.setFetalHeartTone(parseInt(fetalHeartToneField.getText()));
-        currentRecord.setTemperature(temperatureField.getText());
         currentRecord.setFundalHeight(parseDouble(fundalHeightField.getText()));
         currentRecord.setBloodPressure(bloodPressureField.getText());
         currentRecord.setPresentation(presentationCombo.getValue());
@@ -228,6 +238,14 @@ public class MaternalRecordEditFormController {
     }
 
     @FXML
+    private void handleClear() {
+        // Reset all fields to the current record's values (not blank)
+        if (currentRecord != null) {
+            setRecordForEditing(currentRecord);
+        }
+    }
+
+    @FXML
     private void initialize() {
         rootPane.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
@@ -235,5 +253,37 @@ public class MaternalRecordEditFormController {
                         .add(getClass().getResource("/styles/maternal_record_edit_form.css").toExternalForm());
             }
         });
+        // Add listener to last menstrual period to calculate expected delivery date and
+        // AOG
+        lastMenstrualPeriodPicker.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                // Add 280 days (40 weeks) to LMP to get EDD
+                expectedDeliveryDatePicker.setValue(newVal.plusDays(280));
+                updateAOGFields(newVal);
+            }
+        });
+        // If LMP is already set (editing), update AOG
+        if (lastMenstrualPeriodPicker.getValue() != null) {
+            updateAOGFields(lastMenstrualPeriodPicker.getValue());
+        }
+    }
+
+    private void updateAOGFields(java.time.LocalDate lmp) {
+        if (lmp == null) {
+            ageOfGestationField.setText("");
+            ageOfGestationWeeksField.setText("");
+            ageOfGestationDaysField.setText("");
+            return;
+        }
+        java.time.LocalDate today = java.time.LocalDate.now();
+        long totalDays = java.time.temporal.ChronoUnit.DAYS.between(lmp, today);
+        if (totalDays < 0)
+            totalDays = 0;
+        long weeks = totalDays / 7;
+        long days = totalDays % 7;
+        double weeksDecimal = totalDays / 7.0;
+        ageOfGestationField.setText(weeks + " weeks and " + days + " days");
+        ageOfGestationWeeksField.setText(String.format("%.1f", weeksDecimal));
+        ageOfGestationDaysField.setText(String.valueOf(totalDays));
     }
 }

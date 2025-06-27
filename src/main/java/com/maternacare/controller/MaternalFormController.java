@@ -33,6 +33,7 @@ import javafx.util.converter.LocalDateStringConverter;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.ContentDisplay;
 import javafx.collections.ListChangeListener;
+import java.time.temporal.ChronoUnit;
 
 public class MaternalFormController {
 
@@ -83,8 +84,6 @@ public class MaternalFormController {
     private ComboBox<String> presentationCombo;
     @FXML
     private DatePicker toComeBackPicker;
-    @FXML
-    private TextField temperatureField;
     @FXML
     private TextField chiefComplaintField;
 
@@ -167,7 +166,17 @@ public class MaternalFormController {
     private TextField pretermField;
 
     @FXML
-    private Label messageLabel;
+    private Label inlineNotificationLabel;
+
+    @FXML
+    private TextField ageOfGestationWeeksField;
+    @FXML
+    private TextField ageOfGestationDaysField;
+
+    @FXML
+    private TextField pulseRateField;
+    @FXML
+    private TextField respiratoryRateField;
 
     @FXML
     public void initialize() {
@@ -226,19 +235,21 @@ public class MaternalFormController {
             Platform.runLater(this::initializePregnancyHistoryTableView);
             System.out.println("Pregnancy history table setup scheduled.");
 
-            // Make gravidaField non-editable
-            gravidaField.setEditable(false);
-            // Bind gravidaField to pregnancyHistoryList size
-            pregnancyHistoryList.addListener((ListChangeListener<PregnancyHistory>) change -> {
-                updateGravidaField();
-            });
-            // Set initial value
-            updateGravidaField();
-
             // Generate and set a new patient ID
             patientIdField.setEditable(false);
 
             System.out.println("MaternalFormController initialization completed successfully.");
+
+            ageOfGestationField.setEditable(false);
+            ageOfGestationWeeksField.setEditable(false);
+            ageOfGestationDaysField.setEditable(false);
+            lastMenstrualPeriodPicker.valueProperty().addListener((obs, oldDate, newDate) -> {
+                updateAOGFields(newDate);
+            });
+            // If LMP is already set (editing), update AOG
+            if (lastMenstrualPeriodPicker.getValue() != null) {
+                updateAOGFields(lastMenstrualPeriodPicker.getValue());
+            }
         } catch (Exception e) {
             System.err.println("Error during MaternalFormController initialization: " + e.getMessage());
             e.printStackTrace();
@@ -270,7 +281,7 @@ public class MaternalFormController {
         // Enable editing
         pregnancyHistoryTableView.setEditable(true);
         phDeliveryTypeColumn.setCellFactory(
-                ComboBoxTableCell.forTableColumn(FXCollections.observableArrayList("Normal", "Caesarian")));
+                ComboBoxTableCell.forTableColumn(FXCollections.observableArrayList("Normal", "Caesarian", "Abortion")));
         phGenderColumn
                 .setCellFactory(ComboBoxTableCell.forTableColumn(FXCollections.observableArrayList("Male", "Female")));
         phStatusColumn.setCellFactory(
@@ -332,6 +343,16 @@ public class MaternalFormController {
         // Commit handlers with autosave
         phDeliveryTypeColumn.setOnEditCommit(event -> {
             event.getRowValue().setDeliveryType(event.getNewValue());
+            if ("Abortion".equals(event.getNewValue())) {
+                event.getRowValue().setGender("N/A");
+                event.getRowValue().setPlaceOfDelivery("N/A");
+                event.getRowValue().setYearDelivered(0);
+                event.getRowValue().setAttendedBy("N/A");
+                event.getRowValue().setStatus("N/A");
+                event.getRowValue().setBirthDate(null);
+                event.getRowValue().setTtInjection("N/A");
+                pregnancyHistoryTableView.refresh();
+            }
             savePregnancyHistoryOnly();
         });
         phGenderColumn.setOnEditCommit(event -> {
@@ -402,7 +423,6 @@ public class MaternalFormController {
         fundalHeightField.setTooltip(new Tooltip("Enter fundal height in centimeters"));
         presentationCombo.setTooltip(new Tooltip("Select the position of the baby"));
         toComeBackPicker.setTooltip(new Tooltip("Select the next appointment date"));
-        temperatureField.setTooltip(new Tooltip("Enter body temperature in Celsius"));
         chiefComplaintField.setTooltip(new Tooltip("Enter chief complaint"));
 
         // Pregnancy Information
@@ -425,7 +445,6 @@ public class MaternalFormController {
         addRequiredIndicator(purokCombo, "Select Purok *");
         addRequiredIndicator(contactNumberField, "Enter Contact Number *");
         addRequiredIndicator(bloodPressureField, "Enter Blood Pressure *");
-        addRequiredIndicator(temperatureField, "Enter Body Temperature *");
         addRequiredIndicator(lastMenstrualPeriodPicker, "Select Last Menstrual Period *");
     }
 
@@ -453,15 +472,6 @@ public class MaternalFormController {
                 bloodPressureField.setStyle("-fx-border-color: #dc3545;");
             } else {
                 bloodPressureField.setStyle("");
-            }
-        });
-
-        // Add validation for body temperature format (e.g., "37.5" or "37")
-        temperatureField.textProperty().addListener((obs, oldVal, newVal) -> {
-            if (!newVal.isEmpty() && !newVal.matches("\\d+(\\.\\d+)?")) {
-                temperatureField.setStyle("-fx-border-color: #dc3545;");
-            } else {
-                temperatureField.setStyle("");
             }
         });
 
@@ -553,7 +563,6 @@ public class MaternalFormController {
         fundalHeightField.setText(String.valueOf(record.getFundalHeight()));
         presentationCombo.setValue(record.getPresentation());
         toComeBackPicker.setValue(record.getNextAppointment());
-        temperatureField.setText(String.valueOf(record.getTemperature()));
         chiefComplaintField.setText(record.getChiefComplaint());
         remarksField.setText(record.getRemarks());
 
@@ -562,6 +571,9 @@ public class MaternalFormController {
         paraField.setText(String.valueOf(record.getPara()));
         abortionField.setText(String.valueOf(record.getAbortion()));
         livingChildrenField.setText(String.valueOf(record.getLivingChildren()));
+
+        pulseRateField.setText(record.getPulseRate());
+        respiratoryRateField.setText(record.getRespiratoryRate());
 
         // Update child details forms based on pregnancy history size
         if (record.getPregnancyHistory() != null) {
@@ -630,8 +642,6 @@ public class MaternalFormController {
             record.setWeight(parseDouble(weightField.getText()));
             record.setHeight(parseDouble(heightField.getText()));
             record.setBloodPressure(bloodPressureField.getText());
-            record.setTemperature(temperatureField.getText());
-            record.setChiefComplaint(chiefComplaintField.getText());
             record.setFetalHeartTone(parseInt(fetalHeartToneField.getText()));
             record.setFundalHeight(parseDouble(fundalHeightField.getText()));
             record.setPresentation(presentationCombo.getValue());
@@ -644,6 +654,8 @@ public class MaternalFormController {
             record.setTerm(termField.getText());
             record.setPreterm(pretermField.getText());
             record.setRemarks(remarksField.getText());
+            record.setPulseRate(pulseRateField.getText());
+            record.setRespiratoryRate(respiratoryRateField.getText());
             List<ChildDetails> childDetails = new ArrayList<>();
             for (ChildDetailsController controller : childDetailsControllers) {
                 childDetails.add(controller.getData());
@@ -653,12 +665,12 @@ public class MaternalFormController {
             if (recordsController != null) {
                 recordsController.saveRecord(record);
             }
-            showMessage("Maternal record saved successfully!", false);
+            showInlineNotification("Maternal record saved successfully!", false);
             clearForm();
             pregnancyHistoryList.clear();
             updatePregnancyHistoryTableView();
         } catch (Exception e) {
-            showMessage("Failed to save maternal record: " + e.getMessage(), true);
+            showInlineNotification("Failed to save maternal record: " + e.getMessage(), true);
             e.printStackTrace();
         }
     }
@@ -693,7 +705,6 @@ public class MaternalFormController {
         fundalHeightField.clear();
         presentationCombo.setValue(null);
         toComeBackPicker.setValue(null);
-        temperatureField.clear();
         chiefComplaintField.clear();
 
         // Clear pregnancy information
@@ -709,6 +720,8 @@ public class MaternalFormController {
 
         // Clear remarks
         remarksField.clear();
+        pulseRateField.clear();
+        respiratoryRateField.clear();
         // Generate new patient ID
         generateAndSetPatientId();
     }
@@ -751,9 +764,6 @@ public class MaternalFormController {
         // Vital Signs
         if (ageOfGestationField.getText().isEmpty()) {
             showFieldError(ageOfGestationField, "Age of gestation is required");
-            isValid = false;
-        } else if (!ageOfGestationField.getText().matches("\\d+wks?")) {
-            showFieldError(ageOfGestationField, "Invalid AOG format (e.g., 28wks)");
             isValid = false;
         }
 
@@ -967,14 +977,27 @@ public class MaternalFormController {
         }
     }
 
-    private void updateGravidaField() {
-        if (gravidaField != null) {
-            gravidaField.setText(String.valueOf(pregnancyHistoryList.size()));
+    private void showInlineNotification(String message, boolean isError) {
+        if (inlineNotificationLabel != null) {
+            inlineNotificationLabel.setText(message);
+            inlineNotificationLabel.setVisible(true);
+            inlineNotificationLabel.setManaged(true);
+            if (isError) {
+                inlineNotificationLabel.setStyle("-fx-text-fill: #eb0000;");
+            } else {
+                inlineNotificationLabel.setStyle("-fx-text-fill: #28a745;");
+            }
+            new Thread(() -> {
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException ignored) {
+                }
+                javafx.application.Platform.runLater(() -> {
+                    inlineNotificationLabel.setVisible(false);
+                    inlineNotificationLabel.setManaged(false);
+                });
+            }).start();
         }
-    }
-
-    public VBox getRootPane() {
-        return rootPane;
     }
 
     private void generateAndSetPatientId() {
@@ -999,30 +1022,23 @@ public class MaternalFormController {
         }
     }
 
-    private void showMessage(String message, boolean isError) {
-        if (messageLabel != null) {
-            messageLabel.setText(message);
-            messageLabel.setVisible(true);
-            messageLabel.setManaged(true);
-            if (isError) {
-                messageLabel.setStyle(
-                        "-fx-text-fill: #d32f2f; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 0 0 10 0;");
-            } else {
-                messageLabel.setStyle(
-                        "-fx-text-fill: #28a745; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 0 0 10 0;");
-            }
-            // Hide after 1.2 seconds
-            new Thread(() -> {
-                try {
-                    Thread.sleep(1200);
-                } catch (InterruptedException ignored) {
-                }
-                javafx.application.Platform.runLater(() -> {
-                    messageLabel.setVisible(false);
-                    messageLabel.setManaged(false);
-                });
-            }).start();
+    private void updateAOGFields(java.time.LocalDate lmp) {
+        if (lmp == null) {
+            ageOfGestationField.setText("");
+            ageOfGestationWeeksField.setText("");
+            ageOfGestationDaysField.setText("");
+            return;
         }
+        java.time.LocalDate today = java.time.LocalDate.now();
+        long totalDays = ChronoUnit.DAYS.between(lmp, today);
+        if (totalDays < 0)
+            totalDays = 0;
+        long weeks = totalDays / 7;
+        long days = totalDays % 7;
+        double weeksDecimal = totalDays / 7.0;
+        ageOfGestationField.setText(weeks + " weeks and " + days + " days");
+        ageOfGestationWeeksField.setText(String.format("%.1f", weeksDecimal));
+        ageOfGestationDaysField.setText(String.valueOf(totalDays));
     }
 
 }
