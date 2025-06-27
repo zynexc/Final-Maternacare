@@ -174,7 +174,7 @@
 
             <!-- Button Container -->
             <HBox styleClass="button-container">
-                <Button fx:id="clearButton" text="Clear" styleClass="clear-button" onAction="#handleClear"/>
+                <Button fx:id="backButton" text="Back" styleClass="clear-button" onAction="#handleBack"/>
                 <Button fx:id="saveButton" text="Save" styleClass="save-button" onAction="#handleSave"/>
             </HBox>
         </VBox>

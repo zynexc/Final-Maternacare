@@ -237,7 +237,11 @@ public class MaternalRecordDetailsPageController {
         presentationLabel.setText(record.getPresentation());
         chiefComplaintLabel.setText(record.getChiefComplaint());
         toComeBackLabel.setText(formatDate(record.getNextAppointment()));
-        remarksLabel.setText(record.getRemarks());
+        if (record.getRemarks() != null && !record.getRemarks().isEmpty()) {
+            remarksLabel.setText("\n" + record.getRemarks());
+        } else {
+            remarksLabel.setText("");
+        }
 
         // Stats
         gravidaLabel.setText(record.getGravida());

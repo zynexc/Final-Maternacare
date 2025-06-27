@@ -463,20 +463,23 @@
 .save-button {
     -fx-background-color: #eb0000;
     -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
     -fx-background-radius: 5;
-    -fx-font-family: "Poppins Regular";
     -fx-cursor: hand;
 }
 
 .save-button:hover {
-    -fx-background-color: #d32f2f;
+    -fx-background-color: #a33c3c;
 }
 
 .clear-button {
     -fx-background-color: #6c757d;
     -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 10 20;
     -fx-background-radius: 5;
-    -fx-font-family: "Poppins Regular";
     -fx-cursor: hand;
 }
 

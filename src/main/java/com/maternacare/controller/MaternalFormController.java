@@ -939,8 +939,7 @@ public class MaternalFormController {
 
     @FXML
     private void handleAddPregnancyHistory() {
-        // You may want to show a dialog to enter new pregnancy history details
-        // For now, add a blank row for demonstration
+        // Add a blank row for demonstration
         PregnancyHistory ph = new PregnancyHistory();
         ph.setPregnancyNumber(pregnancyHistoryList.size() + 1);
         pregnancyHistoryList.add(ph);

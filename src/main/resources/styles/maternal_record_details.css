@@ -604,7 +604,6 @@ GridPane {
     -fx-border-width: 0;
     -fx-border-color: transparent;
     -fx-position: absolute;
-    -fx-margin: 0 auto;
     -fx-hgrow: ALWAYS;
     -fx-display: flex;
     -fx-justify-content: center;

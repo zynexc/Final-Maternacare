@@ -71,8 +71,13 @@
                     <StackPane GridPane.columnIndex="3" GridPane.rowIndex="3" alignment="CENTER_RIGHT">
                         <TextField fx:id="emailField" styleClass="form-field padded-text-field" maxWidth="Infinity" promptText="Enter Email*"/>
                     </StackPane>
+                    <!-- Barangay Residency Field -->
                     <Label text="Purok:" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
                     <ComboBox fx:id="purokCombo" styleClass="form-field combo-box" GridPane.columnIndex="1" GridPane.rowIndex="4" maxWidth="Infinity" promptText="Select Purok *"/>
+                    <Label text="Barangay Residency Number:" styleClass="form-label" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+                    <StackPane GridPane.columnIndex="3" GridPane.rowIndex="4" alignment="CENTER_RIGHT">
+                        <TextField fx:id="barangayResidencyField" styleClass="form-field padded-text-field" maxWidth="Infinity" promptText="T-2023-0000*"/>
+                    </StackPane>
                 </GridPane>
             </VBox>
 
