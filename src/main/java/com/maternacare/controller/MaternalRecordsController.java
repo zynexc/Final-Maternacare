@@ -176,7 +176,10 @@ public class MaternalRecordsController {
                     viewMoreButton.setOnAction(event -> {
                         MaternalRecord record = getTableView().getItems().get(getIndex());
                         if (record != null) {
-                            showRecordDetails(record);
+                            // Capture the current content before navigating
+                            java.util.List<javafx.scene.Node> originalContent = new java.util.ArrayList<>(
+                                    rootVBox.getChildren());
+                            showRecordDetails(record, originalContent);
                         }
                     });
                 }
@@ -229,29 +232,19 @@ public class MaternalRecordsController {
 
     // Main method that accepts originalContent
     public void showRecordDetails(MaternalRecord record, java.util.List<javafx.scene.Node> originalContent) {
-        System.out.println("showRecordDetails called for record: " + record.getPatientId());
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/maternal_record_details_page.fxml"));
             Parent detailsPage = loader.load();
             MaternalRecordDetailsPageController controller = loader.getController();
             controller.setMaternalRecord(record);
             controller.setRecordsController(this, records);
-
-            // If originalContent is null, set it to the current VBox children (from records
-            // table)
-            if (originalContent == null) {
-                originalContent = new java.util.ArrayList<>(rootVBox.getChildren());
-            }
             controller.setOriginalContent(originalContent);
-
-            // Set up a back callback to restore the records table view
+            controller.setRootVBox(rootVBox);
             java.util.List<javafx.scene.Node> finalOriginalContent = originalContent;
             controller.setOnBackCallback(() -> {
                 rootVBox.getChildren().setAll(finalOriginalContent);
                 refreshTable();
             });
-
-            // Replace the VBox content with the details page
             rootVBox.getChildren().setAll(detailsPage);
         } catch (IOException e) {
             e.printStackTrace();
@@ -280,6 +273,11 @@ public class MaternalRecordsController {
                 }
                 // Check if search matches district (purok)
                 if (record.getPurok() != null && record.getPurok().toLowerCase().contains(lowerCaseFilter)) {
+                    return true;
+                }
+                // Check if search matches Barangay Residency Number
+                if (record.getBarangayResidencyNumber() != null
+                        && record.getBarangayResidencyNumber().toLowerCase().contains(lowerCaseFilter)) {
                     return true;
                 }
                 // Default: search by name or patient ID

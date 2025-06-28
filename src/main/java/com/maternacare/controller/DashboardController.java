@@ -255,11 +255,13 @@ public class DashboardController {
         java.util.Set<String>[] purokPatientIds = new java.util.HashSet[6];
         for (int i = 0; i < 6; i++)
             purokPatientIds[i] = new java.util.HashSet<>();
-        for (PatientData data : patientData) {
-            String purok = data.getPurok();
+        // Use all records for pie chart, not just patientData
+        List<MaternalRecord> allRecordsForPie = recordService.loadRecords();
+        for (MaternalRecord record : allRecordsForPie) {
+            String purok = record.getPurok();
             if (purok != null && purok.matches("Purok [1-6]")) {
                 int purokNumber = Integer.parseInt(purok.split(" ")[1]);
-                String patientId = data.getPatientId();
+                String patientId = record.getPatientId();
                 if (!purokPatientIds[purokNumber - 1].contains(patientId)) {
                     purokPatientIds[purokNumber - 1].add(patientId);
                     purokCounts[purokNumber - 1]++;
@@ -287,6 +289,11 @@ public class DashboardController {
                 double percent = total > 0 ? (count * 100.0 / total) : 0.0;
                 String tooltipText = String.format("Purok %d: %.1f%%", i + 1, percent);
                 Tooltip tooltip = new Tooltip(tooltipText);
+                tooltip.setShowDelay(javafx.util.Duration.ZERO);
+                tooltip.setHideDelay(javafx.util.Duration.ZERO);
+                tooltip.setShowDuration(javafx.util.Duration.INDEFINITE);
+                tooltip.setStyle(
+                        "-fx-background-color: #FEE2E2; -fx-text-fill: #eb0000; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 8; -fx-padding: 8 14 8 14; -fx-border-color: #eb0000; -fx-border-width: 1; -fx-border-radius: 8;");
                 Tooltip.install(data.getNode(), tooltip);
             }
         });

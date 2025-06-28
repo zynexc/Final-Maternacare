@@ -33,7 +33,7 @@ done - sunod sunod pababa (lmp, edd, aog, weeks, days)
 
 - General Concern 
 	- bold each text in every title example: basic & contact information, vital signs, pregnancy history
-	- remarks in the follow up, it should be under the remarks:
+done- remarks in the follow up, it should be under the remarks:
 			-sample:
 				from:
 				Rermarks: (details) 

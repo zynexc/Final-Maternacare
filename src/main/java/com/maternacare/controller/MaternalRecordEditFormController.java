@@ -75,9 +75,18 @@ public class MaternalRecordEditFormController {
     private TextField ageOfGestationWeeksField;
     @FXML
     private TextField ageOfGestationDaysField;
+    @FXML
+    private TextField pulseRateField;
+    @FXML
+    private TextField respiratoryRateField;
+    @FXML
+    private TextField barangayResidencyNumberField;
+    @FXML
+    private Label inlineNotificationLabel;
     private MaternalRecord currentRecord;
     private MaternalRecordsController recordsController;
     private java.util.List<javafx.scene.Node> originalContent;
+    private VBox rootVBox;
 
     public void setRecordForEditing(MaternalRecord record) {
         this.currentRecord = record;
@@ -86,6 +95,13 @@ public class MaternalRecordEditFormController {
         patientIdField.setText(record.getPatientId());
         fullNameField.setText(record.getFullName());
         dateOfBirthPicker.setValue(record.getDateOfBirth());
+        // Calculate and display age if date of birth is set
+        if (record.getDateOfBirth() != null) {
+            int age = java.time.Period.between(record.getDateOfBirth(), java.time.LocalDate.now()).getYears();
+            ageField.setText(String.valueOf(age));
+        } else {
+            ageField.setText("");
+        }
         husbandNameField.setText(record.getHusbandName());
         addressField.setText(record.getAddress());
         contactNumberField.setText(record.getContactNumber());
@@ -105,10 +121,13 @@ public class MaternalRecordEditFormController {
         weightField.setText(String.valueOf(record.getWeight()));
         fetalHeartToneField.setText(String.valueOf(record.getFetalHeartTone()));
         fundalHeightField.setText(String.valueOf(record.getFundalHeight()));
-        bloodPressureField.setText(record.getBloodPressure());
+        bloodPressureField.setText(record.getBloodPressure() != null ? record.getBloodPressure() : "");
         presentationCombo.setValue(record.getPresentation());
         toComeBackPicker.setValue(record.getNextAppointment());
         remarksField.setText(record.getRemarks());
+        pulseRateField.setText(record.getPulseRate() != null ? record.getPulseRate() : "");
+        respiratoryRateField.setText(record.getRespiratoryRate() != null ? record.getRespiratoryRate() : "");
+        barangayResidencyNumberField.setText(record.getBarangayResidencyNumber());
     }
 
     public void setRecordsController(MaternalRecordsController controller) {
@@ -119,26 +138,16 @@ public class MaternalRecordEditFormController {
         this.originalContent = originalContent;
     }
 
+    public void setRootVBox(VBox rootVBox) {
+        this.rootVBox = rootVBox;
+    }
+
     @FXML
     private void handleBack() {
-        if (recordsController != null && currentRecord != null && originalContent != null) {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/maternal_record_details_page.fxml"));
-                Parent detailsPage = loader.load();
-                MaternalRecordDetailsPageController detailsController = loader.getController();
-                detailsController.setMaternalRecord(currentRecord);
-                detailsController.setRecordsController(recordsController, null);
-                detailsController.setOriginalContent(originalContent);
-                detailsController.setOnBackCallback(() -> {
-                    recordsController.getRootVBox().getChildren().setAll(originalContent);
-                    recordsController.refreshTable();
-                });
-                if (recordsController.getMainApplication() != null) {
-                    recordsController.getMainApplication().setContent(detailsPage);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        if (rootVBox != null && originalContent != null) {
+            rootVBox.getChildren().setAll(originalContent);
+        } else if (recordsController != null && currentRecord != null && originalContent != null) {
+            recordsController.showRecordDetails(currentRecord, originalContent);
         }
     }
 
@@ -156,7 +165,7 @@ public class MaternalRecordEditFormController {
         currentRecord.setAddress(addressField.getText());
         currentRecord.setContactNumber(contactNumberField.getText());
         currentRecord.setEmail(emailField.getText());
-        currentRecord.setPurok(purokCombo.getValue());
+        currentRecord.setPurok(purokCombo != null ? purokCombo.getValue() : null);
         currentRecord.setLastMenstrualPeriod(lastMenstrualPeriodPicker.getValue());
         currentRecord.setExpectedDeliveryDate(expectedDeliveryDatePicker.getValue());
         currentRecord.setPara(paraField.getText());
@@ -170,10 +179,16 @@ public class MaternalRecordEditFormController {
         currentRecord.setWeight(parseDouble(weightField.getText()));
         currentRecord.setFetalHeartTone(parseInt(fetalHeartToneField.getText()));
         currentRecord.setFundalHeight(parseDouble(fundalHeightField.getText()));
-        currentRecord.setBloodPressure(bloodPressureField.getText());
-        currentRecord.setPresentation(presentationCombo.getValue());
+        currentRecord.setBloodPressure(bloodPressureField.getText() != null ? bloodPressureField.getText().trim() : "");
+        currentRecord.setPresentation(presentationCombo != null ? presentationCombo.getValue() : null);
         currentRecord.setNextAppointment(toComeBackPicker.getValue());
         currentRecord.setRemarks(remarksField.getText());
+        currentRecord.setPulseRate(pulseRateField.getText() != null ? pulseRateField.getText().trim() : "");
+        currentRecord.setRespiratoryRate(
+                respiratoryRateField.getText() != null ? respiratoryRateField.getText().trim() : "");
+        currentRecord.setBarangayResidencyNumber(barangayResidencyNumberField.getText());
+        currentRecord.setGravida(gravidaField.getText());
+
         // TODO: update pregnancy history and other fields as needed
 
         // Save the record
@@ -192,26 +207,43 @@ public class MaternalRecordEditFormController {
     }
 
     private void showMessage(String message, boolean isError) {
+        showInlineNotification(message, isError);
         if (messageLabel != null) {
             messageLabel.setText(message);
             messageLabel.setVisible(true);
             messageLabel.setManaged(true);
-            if (isError) {
-                messageLabel.setStyle(
-                        "-fx-text-fill: #d32f2f; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 0 0 10 0;");
-            } else {
-                messageLabel.setStyle(
-                        "-fx-text-fill: #28a745; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 0 0 10 0;");
-            }
+        }
+    }
+
+    private void showInlineNotification(String message, boolean isError) {
+        if (inlineNotificationLabel != null) {
+            inlineNotificationLabel.setText(message);
+            inlineNotificationLabel.getStyleClass().removeAll("success", "error");
+            inlineNotificationLabel.getStyleClass().add(isError ? "error" : "success");
+            inlineNotificationLabel.setVisible(true);
+            inlineNotificationLabel.setManaged(true);
+            // Hide after 1.5 seconds
+            new Thread(() -> {
+                try {
+                    Thread.sleep(1500);
+                } catch (InterruptedException ignored) {
+                }
+                javafx.application.Platform.runLater(() -> {
+                    inlineNotificationLabel.setVisible(false);
+                    inlineNotificationLabel.setManaged(false);
+                });
+            }).start();
         }
     }
 
     // Helper methods for parsing
     private double parseDouble(String value) {
         try {
-            if (value == null || value.trim().isEmpty())
+            if (value == null || value.trim().isEmpty()) {
                 return 0.0;
-            return Double.parseDouble(value.replaceAll("[^\\d.]", ""));
+            }
+            String cleaned = value.replaceAll("[^\\d.]", "");
+            return Double.parseDouble(cleaned);
         } catch (NumberFormatException e) {
             return 0.0;
         }
@@ -253,6 +285,13 @@ public class MaternalRecordEditFormController {
                         .add(getClass().getResource("/styles/maternal_record_edit_form.css").toExternalForm());
             }
         });
+
+        // Initialize purok combo box
+        if (purokCombo != null) {
+            purokCombo.setItems(javafx.collections.FXCollections.observableArrayList(
+                    "Purok 1", "Purok 2", "Purok 3", "Purok 4", "Purok 5", "Purok 6", "Purok 7", "Purok 8"));
+        }
+
         // Add listener to last menstrual period to calculate expected delivery date and
         // AOG
         lastMenstrualPeriodPicker.valueProperty().addListener((obs, oldVal, newVal) -> {
@@ -265,6 +304,10 @@ public class MaternalRecordEditFormController {
         // If LMP is already set (editing), update AOG
         if (lastMenstrualPeriodPicker.getValue() != null) {
             updateAOGFields(lastMenstrualPeriodPicker.getValue());
+        }
+        if (presentationCombo != null) {
+            presentationCombo.setItems(javafx.collections.FXCollections.observableArrayList(
+                    "Cephalic", "Breech", "Transverse", "Oblique", "No Information"));
         }
     }
 

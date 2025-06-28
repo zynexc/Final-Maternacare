@@ -84,15 +84,6 @@
     -fx-background-color: white;
 }
 
-.records-table .table-row-cell:selected {
-    -fx-background-color: #f5f5f5;
-    -fx-text-fill: black;
-}
-
-.records-table .table-row-cell:selected .text {
-    -fx-fill: black;
-}
-
 .records-table .table-cell {
     -fx-text-fill: black;
     -fx-font-family: 'Poppins', Arial, sans-serif;
@@ -167,11 +158,6 @@
     -fx-background-color: #ffffff;
 }
 
-.maternal-records-table .table-row-cell:selected {
-    -fx-background-color: #B0D9B0;
-    -fx-text-fill: black;
-}
-
 .maternal-records-table .filler {
     -fx-background-color: #4CAF50;
 }
@@ -189,11 +175,6 @@
 
 .view-more-button:hover {
     -fx-background-color: #a33c3c;
-}
-
-/* Keep button text white when its row is selected by targeting the inner text node */
-.records-table .table-row-cell:selected .view-more-button .text {
-    -fx-fill: white;
 }
 
 /* Responsive column widths */

@@ -181,3 +181,9 @@
     -fx-text-fill: #d32f2f;
     -fx-padding: 0 0 10 0;
 }
+
+.pie-legend-box {
+    -fx-font-size: 3px;
+    -fx-alignment: bottom-center;
+    -fx-padding: 0 0 0 40px;
+}

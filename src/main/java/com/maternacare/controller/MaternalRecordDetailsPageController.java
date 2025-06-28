@@ -53,7 +53,7 @@ public class MaternalRecordDetailsPageController {
     @FXML
     private Label eddLabel;
     @FXML
-    private Label nextAppointmentLabel;
+    private Label barangayResidencyNumberLabel;
 
     // Vitals & Pregnancy Info
     @FXML
@@ -76,6 +76,14 @@ public class MaternalRecordDetailsPageController {
     private Label toComeBackLabel;
     @FXML
     private Label remarksLabel;
+    @FXML
+    private Label pulseRateLabel;
+    @FXML
+    private Label respiratoryRateLabel;
+    @FXML
+    private Label bloodPressureLabel;
+    @FXML
+    private Label fundalHeightLabel;
 
     // Stats
     @FXML
@@ -86,6 +94,10 @@ public class MaternalRecordDetailsPageController {
     private Label livingChildrenLabel;
     @FXML
     private Label abortionLabel;
+    @FXML
+    private Label termLabel;
+    @FXML
+    private Label pretermLabel;
 
     // Dynamic containers
     @FXML
@@ -113,11 +125,6 @@ public class MaternalRecordDetailsPageController {
     private Button backButton;
 
     @FXML
-    private Label termLabel;
-    @FXML
-    private Label pretermLabel;
-
-    @FXML
     private Button addHighRiskButton;
 
     @FXML
@@ -143,6 +150,11 @@ public class MaternalRecordDetailsPageController {
 
     private java.util.List<javafx.scene.Node> originalContent;
 
+    private VBox rootVBox;
+
+    public MaternalRecordDetailsPageController() {
+    }
+
     public void setOriginalContent(java.util.List<javafx.scene.Node> originalContent) {
         this.originalContent = originalContent;
     }
@@ -156,6 +168,11 @@ public class MaternalRecordDetailsPageController {
         if (onBackCallback != null) {
             onBackCallback.run();
         }
+    }
+
+    @FXML
+    private void handleBackDebug(ActionEvent event) {
+        handleBack(event);
     }
 
     @FXML
@@ -205,7 +222,10 @@ public class MaternalRecordDetailsPageController {
         husbandNameLabel.setText(record.getHusbandName() != null ? record.getHusbandName() : "N/A");
         lmpLabel.setText(formatDate(record.getLastMenstrualPeriod()));
         eddLabel.setText(formatDate(record.getExpectedDeliveryDate()));
-        nextAppointmentLabel.setText(formatDate(record.getNextAppointment()));
+        if (barangayResidencyNumberLabel != null) {
+            String brn = record.getBarangayResidencyNumber();
+            barangayResidencyNumberLabel.setText(brn != null && !brn.isEmpty() ? brn : "N/A");
+        }
 
         // Vitals & Pregnancy Info
         if (record.getLastMenstrualPeriod() != null) {
@@ -235,19 +255,40 @@ public class MaternalRecordDetailsPageController {
         weightLabel.setText(String.valueOf(record.getWeight()));
         fhtLabel.setText(String.valueOf(record.getFetalHeartTone()));
         presentationLabel.setText(record.getPresentation());
-        chiefComplaintLabel.setText(record.getChiefComplaint());
+        if (chiefComplaintLabel != null) {
+            String complaint = record.getChiefComplaint();
+            chiefComplaintLabel.setText(complaint != null && !complaint.isEmpty() ? complaint : "N/A");
+        }
         toComeBackLabel.setText(formatDate(record.getNextAppointment()));
         if (record.getRemarks() != null && !record.getRemarks().isEmpty()) {
             remarksLabel.setText("\n" + record.getRemarks());
         } else {
             remarksLabel.setText("");
         }
+        if (pulseRateLabel != null) {
+            String pulse = record.getPulseRate();
+            pulseRateLabel.setText(pulse != null && !pulse.isEmpty() ? pulse : "N/A");
+        }
+        if (respiratoryRateLabel != null) {
+            String resp = record.getRespiratoryRate();
+            respiratoryRateLabel.setText(resp != null && !resp.isEmpty() ? resp : "N/A");
+        }
+        if (bloodPressureLabel != null) {
+            String bp = record.getBloodPressure();
+            bloodPressureLabel.setText(bp != null && !bp.isEmpty() ? bp : "N/A");
+        }
+        if (fundalHeightLabel != null) {
+            double fh = record.getFundalHeight();
+            fundalHeightLabel.setText(fh > 0.0 ? String.format("%.1f", fh) : "N/A");
+        }
 
         // Stats
         gravidaLabel.setText(record.getGravida());
         paraLabel.setText(record.getPara());
-        livingChildrenLabel.setText(record.getLivingChildren());
+        termLabel.setText(record.getTerm());
+        pretermLabel.setText(record.getPreterm());
         abortionLabel.setText(record.getAbortion());
+        livingChildrenLabel.setText(record.getLivingChildren());
 
         // Pregnancy History
         pregnancyHistoryContainer.getChildren().clear();
@@ -261,9 +302,6 @@ public class MaternalRecordDetailsPageController {
         for (VitalSignsEntry entry : record.getFollowUpVitalSigns()) {
             followUpContainer.getChildren().add(createFollowUpCard(entry));
         }
-
-        termLabel.setText(record.getTerm());
-        pretermLabel.setText(record.getPreterm());
 
         // Show/hide buttons based on high risk status
         if (addHighRiskButton != null) {
@@ -344,8 +382,6 @@ public class MaternalRecordDetailsPageController {
         int row = 0;
         grid.add(new Label("Blood Pressure:"), 0, row);
         grid.add(new Label(entry.getBloodPressure()), 1, row++);
-        grid.add(new Label("Temperature:"), 0, row);
-        grid.add(new Label(entry.getTemperature()), 1, row++);
         grid.add(new Label("Pulse Rate:"), 0, row);
         grid.add(new Label(entry.getPulseRate()), 1, row++);
         grid.add(new Label("Respiratory Rate:"), 0, row);
@@ -441,13 +477,12 @@ public class MaternalRecordDetailsPageController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/maternal_record_edit_form.fxml"));
             VBox editFormRoot = loader.load();
             com.maternacare.controller.MaternalRecordEditFormController editController = loader.getController();
-            editController.setRecordForEditing(currentRecord); // You implement this method in your new controller
-            editController.setRecordsController(recordsController); // Pass the records controller for navigation
-            editController.setOriginalContent(originalContent); // Pass the originalContent for back navigation
-
-            // Replace the main content area
-            if (recordsController != null && recordsController.getMainApplication() != null) {
-                recordsController.getMainApplication().setContent(editFormRoot);
+            editController.setRecordForEditing(currentRecord);
+            editController.setRecordsController(recordsController);
+            editController.setOriginalContent(originalContent);
+            editController.setRootVBox(rootVBox);
+            if (rootVBox != null) {
+                rootVBox.getChildren().setAll(editFormRoot);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -557,5 +592,9 @@ public class MaternalRecordDetailsPageController {
                 removeHighRiskButton.setManaged(false);
             }
         }
+    }
+
+    public void setRootVBox(VBox rootVBox) {
+        this.rootVBox = rootVBox;
     }
 }

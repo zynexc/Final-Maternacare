@@ -85,7 +85,7 @@
     -fx-background-color: #a33c3c;
 }
 
-.clear-button {
+.back-button {
     -fx-background-color: #6c757d;
     -fx-text-fill: white;
     -fx-font-size: 14px;
@@ -98,7 +98,7 @@
     -fx-cursor: hand;
 }
 
-.clear-button:hover {
+.backs-button:hover {
     -fx-background-color: #5a6268;
 }
 
@@ -110,7 +110,6 @@
 
 .date-picker .text-field {
     -fx-background-color: transparent;
-    -fx-border-color: transparent;
 }
 
 .combo-box {
@@ -161,7 +160,6 @@
 
 .combo-box .text-field {
     -fx-background-color: transparent;
-    -fx-border-color: transparent;
 }
 
 .required-field {
@@ -482,4 +480,35 @@
 
 .clear-button:hover {
     -fx-background-color: #5a6268;
+}
+
+/* Final: Force visible borders on all TextField controls, including on focus and hover */
+.text-field, .form-field, .form-field .text-field {
+    -fx-background-color: #f8f9fa !important;
+    -fx-border-color: #dee2e6 !important;
+    -fx-border-width: 1.5 !important;
+    -fx-border-radius: 4 !important;
+    -fx-background-radius: 4 !important;
+    -fx-padding: 8 !important;
+    -fx-font-size: 14px !important;
+}
+.text-field:focused, .form-field:focused, .form-field .text-field:focused {
+    -fx-border-color: #007bff !important;
+    -fx-background-color: #fff !important;
+}
+
+.inline-notification {
+    -fx-font-weight: bold;
+    -fx-padding: 8 16;
+    -fx-background-radius: 8;
+    -fx-font-size: 14px;
+    -fx-alignment: center;
+}
+.inline-notification.success {
+    -fx-text-fill: white;
+    -fx-background-color: #388e3c;
+}
+.inline-notification.error {
+    -fx-text-fill: white;
+    -fx-background-color: #d32f2f;
 }

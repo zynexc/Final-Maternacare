@@ -7,17 +7,19 @@
     "purok": "Purok 2",
     "contactNumber": "09654521455",
     "email": "christinepapagayo@gmail.com",
-    "bloodPressure": "120/80",
-    "chiefComplaint": "Vomiting",
+    "bloodPressure": "120/71",
+    "chiefComplaint": "VomitingSSS",
+    "pulseRate": "1",
+    "respiratoryRate": "1",
     "para": "3",
     "abortion": "0",
     "livingChildren": "2",
-    "presentation": "No Information",
+    "presentation": "Breech",
     "ageOfGestation": 26.0,
     "weight": 56.0,
     "height": 156.0,
     "fetalHeartTone": 56,
-    "fundalHeight": 56.0,
+    "fundalHeight": 67.0,
     "dateOfBirth": "1996-01-20",
     "lastMenstrualPeriod": "2025-06-18",
     "expectedDeliveryDate": "2026-03-25",
@@ -50,6 +52,26 @@
         "status": "Alive",
         "birthDate": "2015-01-02",
         "ttInjection": "3"
+      },
+      {
+        "pregnancyNumber": 0,
+        "deliveryType": "",
+        "gender": "",
+        "placeOfDelivery": "",
+        "yearDelivered": 0,
+        "attendedBy": "",
+        "status": "",
+        "ttInjection": ""
+      },
+      {
+        "pregnancyNumber": 0,
+        "deliveryType": "",
+        "gender": "",
+        "placeOfDelivery": "",
+        "yearDelivered": 0,
+        "attendedBy": "",
+        "status": "",
+        "ttInjection": ""
       }
     ],
     "followUpVitalSigns": [
@@ -71,7 +93,9 @@
     ],
     "term": "2",
     "preterm": "2",
-    "highRisk": false
+    "highRisk": false,
+    "barangayResidencyNumber": "T-2025-0001",
+    "gravida": "4"
   },
   {
     "id": 2,
@@ -118,7 +142,8 @@
     "followUpVitalSigns": [],
     "term": "1",
     "preterm": "0",
-    "highRisk": false
+    "highRisk": false,
+    "gravida": "1"
   },
   {
     "id": 3,
@@ -153,7 +178,8 @@
     "followUpVitalSigns": [],
     "term": "0",
     "preterm": "0",
-    "highRisk": true
+    "highRisk": true,
+    "gravida": "0"
   },
   {
     "id": 4,
@@ -211,7 +237,8 @@
     "followUpVitalSigns": [],
     "term": "2",
     "preterm": "0",
-    "highRisk": true
+    "highRisk": true,
+    "gravida": "2"
   },
   {
     "id": 5,
@@ -258,7 +285,8 @@
     "followUpVitalSigns": [],
     "term": "1",
     "preterm": "0",
-    "highRisk": false
+    "highRisk": false,
+    "gravida": "1"
   },
   {
     "id": 6,
@@ -316,7 +344,8 @@
     "followUpVitalSigns": [],
     "term": "2",
     "preterm": "0",
-    "highRisk": false
+    "highRisk": false,
+    "gravida": "2"
   },
   {
     "id": 7,
@@ -363,7 +392,8 @@
     "followUpVitalSigns": [],
     "term": "1",
     "preterm": "0",
-    "highRisk": false
+    "highRisk": false,
+    "gravida": "1"
   },
   {
     "id": 8,
@@ -432,7 +462,8 @@
     "followUpVitalSigns": [],
     "term": "3",
     "preterm": "0",
-    "highRisk": true
+    "highRisk": true,
+    "gravida": "3"
   },
   {
     "id": 9,
@@ -479,7 +510,8 @@
     "followUpVitalSigns": [],
     "term": "1",
     "preterm": "0",
-    "highRisk": true
+    "highRisk": true,
+    "gravida": "1"
   },
   {
     "id": 10,
@@ -537,7 +569,8 @@
     "followUpVitalSigns": [],
     "term": "2",
     "preterm": "0",
-    "highRisk": true
+    "highRisk": true,
+    "gravida": "2"
   },
   {
     "id": 11,
@@ -572,7 +605,8 @@
     "followUpVitalSigns": [],
     "term": "0",
     "preterm": "0",
-    "highRisk": false
+    "highRisk": false,
+    "gravida": "0"
   },
   {
     "id": 12,
@@ -607,7 +641,8 @@
     "followUpVitalSigns": [],
     "term": "0",
     "preterm": "0",
-    "highRisk": false
+    "highRisk": false,
+    "gravida": "0"
   },
   {
     "id": 13,
@@ -642,7 +677,8 @@
     "followUpVitalSigns": [],
     "term": "0",
     "preterm": "0",
-    "highRisk": false
+    "highRisk": false,
+    "gravida": "0"
   },
   {
     "id": 14,
@@ -677,7 +713,8 @@
     "followUpVitalSigns": [],
     "term": "0",
     "preterm": "0",
-    "highRisk": false
+    "highRisk": false,
+    "gravida": "0"
   },
   {
     "id": 15,
@@ -712,7 +749,8 @@
     "followUpVitalSigns": [],
     "term": "0",
     "preterm": "0",
-    "highRisk": false
+    "highRisk": false,
+    "gravida": "0"
   },
   {
     "id": 16,
@@ -747,7 +785,8 @@
     "followUpVitalSigns": [],
     "term": "0",
     "preterm": "0",
-    "highRisk": false
+    "highRisk": false,
+    "gravida": "0"
   },
   {
     "id": 17,
@@ -782,7 +821,8 @@
     "followUpVitalSigns": [],
     "term": "0",
     "preterm": "0",
-    "highRisk": false
+    "highRisk": false,
+    "gravida": "0"
   },
   {
     "id": 18,
@@ -817,7 +857,8 @@
     "followUpVitalSigns": [],
     "term": "0",
     "preterm": "0",
-    "highRisk": false
+    "highRisk": false,
+    "gravida": "0"
   },
   {
     "id": 19,
@@ -829,9 +870,9 @@
     "email": "bea.francisco@email.com",
     "bloodPressure": "109/69",
     "chiefComplaint": "Breast tenderness and fatigue",
-    "para": "0",
-    "abortion": "0",
-    "livingChildren": "0",
+    "para": "2",
+    "abortion": "5",
+    "livingChildren": "6",
     "presentation": "Cephalic",
     "ageOfGestation": 9.0,
     "weight": 43.0,
@@ -850,9 +891,10 @@
     "formTimestamp": "2025-06-25T11:35",
     "pregnancyHistory": [],
     "followUpVitalSigns": [],
-    "term": "0",
-    "preterm": "0",
-    "highRisk": false
+    "term": "3",
+    "preterm": "4",
+    "highRisk": false,
+    "gravida": "1"
   },
   {
     "id": 20,
@@ -862,17 +904,19 @@
     "purok": "Purok 2",
     "contactNumber": "09953776473",
     "email": "marinelolazo00@gmail.com",
-    "bloodPressure": "120/80",
+    "bloodPressure": "12/12",
     "chiefComplaint": "N/A",
-    "para": "0",
-    "abortion": "0",
-    "livingChildren": "0",
+    "pulseRate": "1",
+    "respiratoryRate": "12311",
+    "para": "2",
+    "abortion": "5",
+    "livingChildren": "6",
     "presentation": "Breech",
     "ageOfGestation": 13.0,
     "weight": 43.0,
     "height": 170.0,
     "fetalHeartTone": 13,
-    "fundalHeight": 153.0,
+    "fundalHeight": 1212.0,
     "dateOfBirth": "2005-04-22",
     "lastMenstrualPeriod": "2025-05-30",
     "expectedDeliveryDate": "2026-03-06",
@@ -883,7 +927,118 @@
     "gender": "",
     "remarks": "My remarks is that I have a fever. HSDWYGUGYFBERBUFB .EFNUFHR HFEGYERBEJFUE    FHUDFGEUGFUEHUEH.\nDGSDFD\nRHGDFGDSHUEUIE\nFURGURGUEGRUE",
     "formTimestamp": "2025-06-25T16:33:29.446866700",
-    "pregnancyHistory": [],
+    "pregnancyHistory": [
+      {
+        "pregnancyNumber": 0,
+        "deliveryType": "",
+        "gender": "",
+        "placeOfDelivery": "",
+        "yearDelivered": 0,
+        "attendedBy": "",
+        "status": "",
+        "ttInjection": ""
+      },
+      {
+        "pregnancyNumber": 0,
+        "deliveryType": "",
+        "gender": "",
+        "placeOfDelivery": "",
+        "yearDelivered": 0,
+        "attendedBy": "",
+        "status": "",
+        "ttInjection": ""
+      },
+      {
+        "pregnancyNumber": 0,
+        "deliveryType": "",
+        "gender": "",
+        "placeOfDelivery": "",
+        "yearDelivered": 0,
+        "attendedBy": "",
+        "status": "",
+        "ttInjection": ""
+      },
+      {
+        "pregnancyNumber": 0,
+        "deliveryType": "",
+        "gender": "",
+        "placeOfDelivery": "",
+        "yearDelivered": 0,
+        "attendedBy": "",
+        "status": "",
+        "ttInjection": ""
+      },
+      {
+        "pregnancyNumber": 0,
+        "deliveryType": "",
+        "gender": "",
+        "placeOfDelivery": "",
+        "yearDelivered": 0,
+        "attendedBy": "",
+        "status": "",
+        "ttInjection": ""
+      },
+      {
+        "pregnancyNumber": 0,
+        "deliveryType": "",
+        "gender": "",
+        "placeOfDelivery": "",
+        "yearDelivered": 0,
+        "attendedBy": "",
+        "status": "",
+        "ttInjection": ""
+      },
+      {
+        "pregnancyNumber": 0,
+        "deliveryType": "",
+        "gender": "",
+        "placeOfDelivery": "",
+        "yearDelivered": 0,
+        "attendedBy": "",
+        "status": "",
+        "ttInjection": ""
+      },
+      {
+        "pregnancyNumber": 0,
+        "deliveryType": "",
+        "gender": "",
+        "placeOfDelivery": "",
+        "yearDelivered": 0,
+        "attendedBy": "",
+        "status": "",
+        "ttInjection": ""
+      },
+      {
+        "pregnancyNumber": 0,
+        "deliveryType": "",
+        "gender": "",
+        "placeOfDelivery": "",
+        "yearDelivered": 0,
+        "attendedBy": "",
+        "status": "",
+        "ttInjection": ""
+      },
+      {
+        "pregnancyNumber": 0,
+        "deliveryType": "",
+        "gender": "",
+        "placeOfDelivery": "",
+        "yearDelivered": 0,
+        "attendedBy": "",
+        "status": "",
+        "ttInjection": ""
+      },
+      {
+        "pregnancyNumber": 0,
+        "deliveryType": "",
+        "gender": "",
+        "placeOfDelivery": "",
+        "yearDelivered": 0,
+        "attendedBy": "",
+        "status": "",
+        "ttInjection": ""
+      }
+    ],
     "followUpVitalSigns": [
       {
         "date": "2025-06-25",
@@ -916,8 +1071,71 @@
         "toComeBack": "2025-08-05"
       }
     ],
-    "term": "0",
-    "preterm": "0",
-    "highRisk": false
+    "term": "5",
+    "preterm": "4",
+    "highRisk": false,
+    "barangayResidencyNumber": "T-2025-0002",
+    "gravida": "11"
+  },
+  {
+    "id": 21,
+    "patientId": "P021",
+    "fullName": "Angelo Diongco",
+    "address": "Tagapo AMihan",
+    "purok": "Purok 3",
+    "contactNumber": "09553408093",
+    "email": "angelo@gmial.com",
+    "bloodPressure": "120/80",
+    "chiefComplaint": "123",
+    "pulseRate": "12",
+    "respiratoryRate": "12",
+    "para": "2",
+    "abortion": "5",
+    "livingChildren": "6",
+    "presentation": "Cephalic",
+    "ageOfGestation": 135.0,
+    "weight": 12.0,
+    "height": 12.0,
+    "fetalHeartTone": 12,
+    "fundalHeight": 12.0,
+    "dateOfBirth": "2004-09-20",
+    "lastMenstrualPeriod": "2025-03-24",
+    "expectedDeliveryDate": "2025-12-29",
+    "nextAppointment": "2025-07-12",
+    "childDetails": [],
+    "husbandName": "Angel Diongco",
+    "deliveryType": "",
+    "gender": "",
+    "remarks": "asdasdasdwadsd",
+    "formTimestamp": "2025-06-28T03:22:16.621556800",
+    "pregnancyHistory": [
+      {
+        "pregnancyNumber": 1,
+        "deliveryType": "Abortion",
+        "gender": "N/A",
+        "placeOfDelivery": "N/A",
+        "yearDelivered": 0,
+        "attendedBy": "N/A",
+        "status": "N/A",
+        "ttInjection": "N/A"
+      },
+      {
+        "pregnancyNumber": 2,
+        "deliveryType": "Normal",
+        "gender": "Male",
+        "placeOfDelivery": "Hospital",
+        "yearDelivered": 2023,
+        "attendedBy": "Doctor",
+        "status": "Alive",
+        "birthDate": "2023-05-27",
+        "ttInjection": "yes 2024"
+      }
+    ],
+    "followUpVitalSigns": [],
+    "term": "3",
+    "preterm": "4",
+    "highRisk": false,
+    "barangayResidencyNumber": "123",
+    "gravida": "4"
   }
 ]

@@ -65,6 +65,12 @@ public class MaternalRecord {
     // New field for high-risk status
     private boolean highRisk;
 
+    // Add field
+    private final transient StringProperty barangayResidencyNumber;
+
+    // New field for manual gravida
+    private String manualGravida = null;
+
     // Default constructor
     public MaternalRecord() {
         // Personal Information
@@ -116,6 +122,9 @@ public class MaternalRecord {
         // New fields for term and preterm
         this.term = new SimpleStringProperty("");
         this.preterm = new SimpleStringProperty("");
+
+        // Add field
+        this.barangayResidencyNumber = new SimpleStringProperty("");
     }
 
     // Getters and Setters for Personal Information
@@ -510,7 +519,7 @@ public class MaternalRecord {
 
     // Returns the number of pregnancies (gravida) as a String
     public String getGravida() {
-        return String.valueOf(pregnancyHistory.size());
+        return manualGravida != null ? manualGravida : String.valueOf(pregnancyHistory.size());
     }
 
     // Getters and Setters for Term and Preterm
@@ -589,6 +598,8 @@ public class MaternalRecord {
         public String term;
         public String preterm;
         public boolean highRisk;
+        public String barangayResidencyNumber;
+        public String gravida;
 
         public MaternalRecordDTO() {
             this.childDetails = new ArrayList<>();
@@ -635,6 +646,8 @@ public class MaternalRecord {
         dto.term = getTerm();
         dto.preterm = getPreterm();
         dto.highRisk = isHighRisk();
+        dto.barangayResidencyNumber = getBarangayResidencyNumber();
+        dto.gravida = getGravida();
         return dto;
     }
 
@@ -705,6 +718,8 @@ public class MaternalRecord {
         record.setTerm(dto.term);
         record.setPreterm(dto.preterm);
         record.setHighRisk(dto.highRisk);
+        record.setBarangayResidencyNumber(dto.barangayResidencyNumber);
+        record.setGravida(dto.gravida);
         return record;
     }
 
@@ -724,5 +739,26 @@ public class MaternalRecord {
         record.setPara(para.get());
         record.setAbortion(abortion.get());
         // ... existing code ...
+    }
+
+    // Add getter, setter, and property
+    public String getBarangayResidencyNumber() {
+        return barangayResidencyNumber.get();
+    }
+
+    public void setBarangayResidencyNumber(String value) {
+        barangayResidencyNumber.set(value);
+    }
+
+    public StringProperty barangayResidencyNumberProperty() {
+        return barangayResidencyNumber;
+    }
+
+    public void setGravida(String value) {
+        if (value != null && !value.trim().isEmpty()) {
+            manualGravida = value.trim();
+        } else {
+            manualGravida = null;
+        }
     }
 }

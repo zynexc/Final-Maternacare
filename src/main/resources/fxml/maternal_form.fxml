@@ -18,6 +18,7 @@
     <HBox alignment="CENTER">
         <Label fx:id="inlineNotificationLabel" styleClass="inline-notification" visible="false" managed="false" />
     </HBox>
+    
 
     <Label text="Maternal Form" styleClass="title" />
     <Text styleClass="subtitle" text="Initial Data Entry for New and Ongoing Maternal Cases"/>

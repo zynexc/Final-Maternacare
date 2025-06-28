@@ -67,6 +67,10 @@ public class MaternalFormController {
     @FXML
     private ComboBox<String> purokCombo;
 
+    // Barangay Residency Number Field
+    @FXML
+    private TextField barangayResidencyField;
+
     // Vital Signs Fields
     @FXML
     private TextField ageOfGestationField;
@@ -646,6 +650,8 @@ public class MaternalFormController {
             record.setFundalHeight(parseDouble(fundalHeightField.getText()));
             record.setPresentation(presentationCombo.getValue());
             record.setNextAppointment(toComeBackPicker.getValue());
+            record.setChiefComplaint(chiefComplaintField.getText());
+            record.setBarangayResidencyNumber(barangayResidencyField.getText());
             record.setLastMenstrualPeriod(lastMenstrualPeriodPicker.getValue());
             record.setExpectedDeliveryDate(expectedDeliveryDatePicker.getValue());
             record.setPara(paraField.getText());
@@ -695,6 +701,7 @@ public class MaternalFormController {
         purokCombo.setValue(null);
         contactNumberField.clear();
         emailField.clear();
+        barangayResidencyField.clear();
 
         // Clear vital signs
         ageOfGestationField.clear();
@@ -979,16 +986,14 @@ public class MaternalFormController {
     private void showInlineNotification(String message, boolean isError) {
         if (inlineNotificationLabel != null) {
             inlineNotificationLabel.setText(message);
+            inlineNotificationLabel.getStyleClass().removeAll("success", "error");
+            inlineNotificationLabel.getStyleClass().add(isError ? "error" : "success");
             inlineNotificationLabel.setVisible(true);
             inlineNotificationLabel.setManaged(true);
-            if (isError) {
-                inlineNotificationLabel.setStyle("-fx-text-fill: #eb0000;");
-            } else {
-                inlineNotificationLabel.setStyle("-fx-text-fill: #28a745;");
-            }
+            // Hide after 1.5 seconds
             new Thread(() -> {
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(1500);
                 } catch (InterruptedException ignored) {
                 }
                 javafx.application.Platform.runLater(() -> {
